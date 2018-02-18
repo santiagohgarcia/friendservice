@@ -1,0 +1,33 @@
+<mat-toolbar color="primary">
+  <button mat-icon-button routerLink="/statuses">
+    <mat-icon>arrow_back</mat-icon>
+  </button>
+  <h1>{{ saveFunction == 'add' && status.id === null ? 'Create Status' : 'Update Status' }}</h1>
+  <span class="spacer"></span>
+  <button *ngIf="status.id" mat-icon-button color="warn" (click)="delete()">
+    <mat-icon>delete</mat-icon>
+  </button>
+</mat-toolbar>
+
+<div *ngIf="loading">
+  <mat-progress-bar mode="indeterminate" color="accent"></mat-progress-bar>
+</div>
+
+<mat-card *ngIf="saveFunction == 'add' || ( status.id != null )" class="card">
+  <mat-card-header>
+    <mat-card-title>Status</mat-card-title>
+  </mat-card-header>
+  <div class="example-container">
+    <form [formGroup]="statusForm" class="form">
+      <mat-form-field class="full-width">
+        <input matInput placeholder="Description" [formControl]="description" [(ngModel)]="status.description" [(value)]="status.description">
+        <mat-error *ngIf="description.invalid">Required field</mat-error>
+      </mat-form-field>
+    </form>
+    <div class="button-row">
+      <button mat-fab color="primary" class="fab" (click)="save()">
+        <mat-icon>done</mat-icon>
+      </button>
+    </div>
+  </div>
+</mat-card>

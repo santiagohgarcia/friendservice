@@ -1,0 +1,32 @@
+<div class="container">
+    <mat-toolbar color="primary" class="toolbar">
+      <button mat-icon-button (click)="sidenav.toggle()">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <h1>Todo App</h1>
+    </mat-toolbar>
+  
+    <mat-sidenav-container class="sidenav-container" (backdropClick)="close()">
+  
+      <mat-sidenav-content>
+        <router-outlet></router-outlet>
+      </mat-sidenav-content>
+  
+      <mat-sidenav class="sidenav-container" #sidenav (keydown.escape)="close()" disableClose>
+        <mat-nav-list>
+          <h3 mat-subheader>Entities</h3>
+          <mat-list-item>
+            <button mat-button mat-line class="button" routerLink="/todos">Todos</button>
+          </mat-list-item>
+          <mat-divider></mat-divider>
+          <mat-list-item>
+            <button mat-button mat-line class="button" routerLink="/statuses">Statuses</button>
+          </mat-list-item>
+          <mat-divider></mat-divider>
+          <mat-list-item>
+            <button mat-button mat-line class="button" color="warn" (click)="logout()">LogOut</button>
+          </mat-list-item>
+        </mat-nav-list>
+      </mat-sidenav>
+    </mat-sidenav-container>
+  </div>

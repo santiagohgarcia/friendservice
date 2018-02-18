@@ -1,0 +1,46 @@
+
+.list {
+  margin-left: 10px;
+  margin-right: 10px;
+  height: 100%;
+}
+
+.fab {
+  position: fixed;
+  right: 20px;
+  bottom: 15px;
+  margin-left: -28px;
+}
+
+.card {
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.cardContent {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+
+.is-mobile .toolbar {
+  position: fixed;
+  /* Make sure the toolbar will stay on top of the content as it scrolls past. */
+  z-index: 2;
+}
+
+.checkGreen {
+  color: green;
+}
+
+.full-width{
+  width: 100%;
+}
+
+.error-snack-bar {
+  background: red;
+  color: red;
+}

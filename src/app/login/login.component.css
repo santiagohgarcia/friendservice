@@ -1,0 +1,47 @@
+
+.back {
+    height: 100%;
+    width: 100%;
+}
+.button-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+  }
+
+  .divider {
+      color: black;
+  }
+
+.facebook-button{
+    background-color: #4267b2;
+    color: white;
+    margin-right: 5px;
+}
+
+.google-button{
+    background-color: #db4437; 
+    color: white;
+    margin-left: 5px;
+}
+
+.card {
+    margin: auto;
+    padding: 15% 0;
+    max-width: 300px;
+}
+
+  
+ .buttons { 
+    color:white;
+    width: 100%;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.error-snack-bar {
+    background: red;
+    color: red;
+  }
