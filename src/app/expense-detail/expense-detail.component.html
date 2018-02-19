@@ -20,7 +20,7 @@
   <div class="example-container">
     <form [formGroup]="expenseForm" class="form">
       <mat-form-field class="full-width">
-        <input matInput placeholder="Description" [formControl]="title" [(ngModel)]="expense.title" [(value)]="expense.title">
+        <input matInput placeholder="Title" [formControl]="title" [(ngModel)]="expense.title" [(value)]="expense.title">
         <mat-error *ngIf="title.invalid">Required field</mat-error>
       </mat-form-field>
     </form>

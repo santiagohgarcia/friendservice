@@ -6,22 +6,21 @@
         <mat-divider *ngIf="i != 0"></mat-divider>
         <mat-list-item>
             <mat-icon mat-list-icon>assignment</mat-icon>
-            <h4 mat-line>{{expense.title}}</h4>
-            <p mat-line> {{expense.date | date}} </p>
+            <h3 mat-line>{{expense.title}}</h3>
+            <h5 mat-line>Total Amount: {{expense.totalAmount}}  Date: {{expense.date | date}} </h5>
             <button mat-icon-button [matMenuTriggerFor]="menu" [matMenuTriggerData]="expense">
                 <mat-icon mat-list-icon>more_vert</mat-icon>
             </button>
             <mat-menu #menu="matMenu">
-                <button mat-menu-item>
+                <a mat-menu-item routerLink="/expenses/{{expense.id}}">
                     <mat-icon>mode_edit</mat-icon>
                     <span>Edit</span>
-                </button>
+                </a>
                 <button mat-menu-item disabled>
                     <mat-icon>attach_money</mat-icon>
-                    <span>Pay</span>
+                    <span>Pay Off</span>
                 </button>
             </mat-menu>
-
         </mat-list-item>
     </div>
 </mat-list>
