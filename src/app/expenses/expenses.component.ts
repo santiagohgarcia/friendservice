@@ -1,36 +1,34 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { AngularFirestore } from 'angularfire2/firestore';
-import Status from '../status';
 import { MatSnackBar } from '@angular/material';
+import Expense from '../expense';
+import 'rxjs/add/operator/catch';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-statuses',
-  templateUrl: './statuses.component.html',
-  styleUrls: ['./statuses.component.css']
+  selector: 'app-expenses',
+  templateUrl: './expenses.component.html',
+  styleUrls: ['./expenses.component.css']
 })
-export class StatusesComponent implements OnInit {
+export class ExpensesComponent implements OnInit {
 
-  statuses: Observable<Status[]> = null;
+  expenses: Observable<Expense[]> = null;
+  selectedExpenseId : string;
 
   constructor(private db: AngularFirestore,
-    private router: Router,
-    public snackBar: MatSnackBar) {
-    this.statuses = db.collection('statuses').snapshotChanges()
+    public snackBar: MatSnackBar,
+    private router: Router) {
+    this.expenses = db.collection('expenses').snapshotChanges()
       .map(actions => actions.map(a => {
-        var status = a.payload.doc.data() as Status
-        status.id = a.payload.doc.id;
-     //   var dat = null;
-     //   while(dat==null){};
-        return status;
+        var expense = a.payload.doc.data() as Expense
+        expense.id = a.payload.doc.id;
+        return expense;
       }))
       .catch((e: any) => Observable.throw(this.openSnackBar(e.message)));
   }
-  
 
   ngOnInit() {
-
   }
 
   openSnackBar(message: string, action: string = "OK") {
@@ -39,4 +37,5 @@ export class StatusesComponent implements OnInit {
       extraClasses: ['error-snack-bar']
     });
   }
+
 }

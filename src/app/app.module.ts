@@ -12,14 +12,9 @@ import { HttpClient, HttpClientModule }    from '@angular/common/http';
 import {CdkTableModule} from '@angular/cdk/table';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './/app-routing.module';
-import { TodosComponent } from './todos/todos.component';
-import { TodosDetailComponent } from './todos-detail/todos-detail.component';
-import { StatusesComponent } from './statuses/statuses.component';
-import { StatusesDetailComponent } from './statuses-detail/statuses-detail.component';
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { AngularFireAuthModule } from 'angularfire2/auth';
-import { RegisterComponent } from './login/components/register.component';
 
 import {
   MatAutocompleteModule,
@@ -54,6 +49,10 @@ import {
   MatTooltipModule,
   MatStepperModule,
 } from '@angular/material';
+import { ExpensesComponent } from './expenses/expenses.component';
+import { PersonsComponent } from './persons/persons.component';
+import { GroupsComponent } from './groups/groups.component';
+import { ExpenseDetailComponent } from './expense-detail/expense-detail.component';
 
 @NgModule({
   exports: [
@@ -98,13 +97,12 @@ export class MaterialModule {}
 @NgModule({
   declarations: [
     AppComponent,
-    TodosComponent,
-    TodosDetailComponent,
-    StatusesComponent,
-    StatusesDetailComponent, 
     HomeComponent,
     LoginComponent,
-    RegisterComponent
+    ExpensesComponent,
+    PersonsComponent, 
+    GroupsComponent,
+    ExpenseDetailComponent
   ],
   imports: [
     BrowserModule,
@@ -119,7 +117,6 @@ export class MaterialModule {}
     AngularFirestoreModule,
     AngularFireAuthModule
   ],
-  entryComponents: [RegisterComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,6 +1,6 @@
 import { AppPage } from './app.po';
 
-describe('todoapp-angular-material App', () => {
+describe('friendservice App', () => {
   let page: AppPage;
 
   beforeEach(() => {

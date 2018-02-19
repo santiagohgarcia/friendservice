@@ -8,12 +8,18 @@
     right: 0;
   }
 
-.sidenav-container {
-  flex: 1;
-  min-width: 200px;
+.demo-tab-group {
+  border: 1px solid #e8e8e8;
 }
 
-.button {
-  text-align: left;
-  text-indent: 10px;
+.demo-tab-content {
+  padding: 16px;
+}
+
+.example-spacer {
+  flex: 1 1 auto;
+}
+
+.logout {
+  color: red;
 }
