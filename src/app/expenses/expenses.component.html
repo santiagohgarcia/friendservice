@@ -5,9 +5,10 @@
     <div *ngFor="let expense of expenses | async; let i = index;">
         <mat-divider *ngIf="i != 0"></mat-divider>
         <mat-list-item>
-            <mat-icon mat-list-icon>assignment</mat-icon>
+            <mat-icon mat-list-icon>monetization_on</mat-icon>
             <h3 mat-line>{{expense.title}}</h3>
-            <h5 mat-line>Total Amount: {{expense.totalAmount}}  Date: {{expense.date | date}} </h5>
+            <h5 mat-line>Total Amount: {{expense.totalAmount | number:'1.2-2'}}</h5>
+            <h5 mat-line>Date: {{expense.date | date}} </h5>
             <button mat-icon-button [matMenuTriggerFor]="menu" [matMenuTriggerData]="expense">
                 <mat-icon mat-list-icon>more_vert</mat-icon>
             </button>
@@ -24,6 +25,8 @@
         </mat-list-item>
     </div>
 </mat-list>
+
+
 
 
 

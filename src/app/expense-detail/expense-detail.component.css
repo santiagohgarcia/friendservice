@@ -46,3 +46,7 @@
 .full-width {
   width: 100%;
 }
+
+.right-align {
+  text-align: right;
+}

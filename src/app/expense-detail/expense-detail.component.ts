@@ -1,11 +1,15 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Location } from '@angular/common';
+import { Location, DecimalPipe } from '@angular/common';
 import { MatSnackBar } from '@angular/material';
-import  Expense  from '../expense';
+import Expense from '../expense';
 import { Observable } from 'rxjs/Observable';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { AngularFirestore, AngularFirestoreDocument  } from 'angularfire2/firestore';
+import { AngularFirestore, AngularFirestoreDocument } from 'angularfire2/firestore';
+import { AngularFireAuth } from 'angularfire2/auth';
+import User from '../user';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+
 @Component({
   selector: 'app-expense-detail',
   templateUrl: './expense-detail.component.html',
@@ -14,12 +18,21 @@ import { AngularFirestore, AngularFirestoreDocument  } from 'angularfire2/firest
 export class ExpenseDetailComponent implements OnInit {
 
   loading: boolean = true;
-  expense: Expense = {id:null,title:""} as Expense;
-  expenseDoc : AngularFirestoreDocument<Expense>;
+  expense: Expense = { id: null, title: "", date: null, totalAmount: 0 } as Expense;
+  friends: User;
+  expenseDoc: AngularFirestoreDocument<Expense>;
+  formattedAmount: String = '0.00';
+  userDisplayName: String;
   saveFunction;
   title = new FormControl('', [Validators.required]);
+  date = new FormControl('', [Validators.required]);
+  totalAmount = new FormControl({ disabled: true }, [Validators.required])
+  friendsCtrl = new FormControl('');
   expenseForm: FormGroup = new FormGroup({
-    expense: this.title
+    expense: this.title,
+    date: this.date,
+    totalAmount: this.totalAmount,
+    friendsCtrl: this.friendsCtrl
   });
 
   constructor(
@@ -27,57 +40,98 @@ export class ExpenseDetailComponent implements OnInit {
     private router: Router,
     private location: Location,
     public snackBar: MatSnackBar,
-    private db: AngularFirestore) { }
+    private db: AngularFirestore,
+    private decimalPipe: DecimalPipe,
+    private afAuth: AngularFireAuth,
+    private http: HttpClient) { }
 
-    ngOnInit(): void {
-      this.getExpense();
-    } 
-  
-    getExpense(): void {
-      const id = this.route.snapshot.paramMap.get('id');
-      if (id) {
-          this.expenseDoc = this.db.doc<Expense>(`expenses/${id}`);
-          this.expenseDoc.ref.get().then(s => { var expense = s.data() as Expense //TODO: cambiar esto cuando se me ocurra una mejor implementacion
-                                               expense.id  = s.id;
-                                               this.expense = expense;
-                                               this.loading = false; } )
-                                  .catch(e => this.openSnackBar(e.message));
-          this.saveFunction = 'update'
-      } else {
+  ngOnInit(): void {
+    this.getExpense();
+    this.getUserName();
+    this.getFriends();
+  }
+
+  getFriends() {
+    this.afAuth.authState.subscribe(u =>
+      this.http.get('https://graph.facebook.com/v2.12/' +
+                    u.providerData.map(pd => pd.uid) +
+                    '/friends?access_token=' +
+                    localStorage.getItem('facebookToken') +
+                    '&fields=cover,name&limit=10')
+        .subscribe(fs => 
+          this.friends = fs['data'].map( f => this.createUser(f.id,f.name,f.cover.source))));
+  }
+
+  createUser(id,name,picture){
+    return { id: id,
+      name: name, 
+      picture: picture } as User
+  }
+
+  getExpense(): void {
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.expenseDoc = this.db.doc<Expense>(`expenses/${id}`);
+      this.expenseDoc.ref.get().then(s => {
+        var expense = s.data() as Expense //TODO: cambiar esto cuando se me ocurra una mejor implementacion
+        expense.id = s.id;
+        this.expense = expense;
+        this.formattedAmount = this.decimalPipe.transform(this.expense.totalAmount, '1.2-2');
         this.loading = false;
-        this.saveFunction = 'add'
-      }
+      })
+        .catch(e => this.openSnackBar(e.message));
+      this.saveFunction = 'update'
+    } else {
+      this.loading = false;
+      this.saveFunction = 'add'
     }
-  
-    goBack(): void {
-      this.router.navigate(['/expenses']);
+  }
+
+  goBack(): void {
+    this.router.navigate(['/expenses']);
+  }
+
+  save(): void {
+    if (this.expenseForm.valid) {
+      this[this.saveFunction]()
+        .then(res => this.goBack())
+        .catch(e => this.openSnackBar(e.message));
     }
-  
-    save(): void {
-      if (this.expenseForm.valid) {
-        this[this.saveFunction]()
-          .then( res => this.goBack())
-          .catch(e=>this.openSnackBar(e.message));        
-      }
+  }
+
+  add(): Promise<any> {
+    return this.db.collection<Expense>('expenses').add(this.expense);
+  }
+
+  update(): Promise<any> {
+    return this.expenseDoc.update(this.expense);
+  }
+
+  delete() {
+    this.expenseDoc.delete().then(res => this.goBack())
+      .catch(e => this.openSnackBar(e.message));
+  }
+
+  openSnackBar(message: string, action: string = "OK") {
+    this.snackBar.open(message, action, {
+      duration: 2000,
+      extraClasses: ['error-snack-bar']
+    });
+  }
+
+  transformAmount(element) {
+    try {
+      this.formattedAmount = this.decimalPipe.transform(+this.formattedAmount.replace(/,/g, ''), '1.2-2')
+      element.target.value = this.formattedAmount;
+      this.expense.totalAmount = +this.formattedAmount.replace(/,/g, '');
+      this.totalAmount.setErrors(null);
+    } catch (error) {
+      this.totalAmount.setErrors({ invalid: true });
     }
-  
-    add(): Promise<any> {
-      return this.db.collection<Expense>('expenses').add(this.expense);
-    }
-  
-    update(): Promise<any> {
-      return this.expenseDoc.update(this.expense);
-    }
-    
-    delete() {
-      this.expenseDoc.delete().then( res => this.goBack())
-                             .catch(e=>this.openSnackBar(e.message));     
-    }
-  
-    openSnackBar(message: string, action: string = "OK") {
-      this.snackBar.open(message, action, {
-        duration: 2000,
-        extraClasses: ['error-snack-bar']
-      });
-    }
+  }
+
+  getUserName() {
+    return this.afAuth.authState.subscribe(u => this.userDisplayName = u.displayName);
+  }
 }
+

@@ -9,12 +9,20 @@ import { environment } from '../environments/environment';
 import { AngularFirestoreModule } from 'angularfire2/firestore';
 import { HttpModule } from '@angular/http';
 import { HttpClient, HttpClientModule }    from '@angular/common/http';
-import {CdkTableModule} from '@angular/cdk/table';
+import { CdkTableModule } from '@angular/cdk/table';
+import { CdkAccordionModule } from '@angular/cdk/accordion';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './/app-routing.module';
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { AngularFireAuthModule } from 'angularfire2/auth';
+import { ExpensesComponent } from './expenses/expenses.component';
+import { PersonsComponent } from './persons/persons.component';
+import { GroupsComponent } from './groups/groups.component';
+import { ExpenseDetailComponent } from './expense-detail/expense-detail.component';
+import { DecimalPipe } from '@angular/common';
+import { NumericInputComponent} from 'ng2-numeric-input/src/numeric-input.component'
+
 
 import {
   MatAutocompleteModule,
@@ -48,15 +56,14 @@ import {
   MatToolbarModule,
   MatTooltipModule,
   MatStepperModule,
+  MAT_DATE_LOCALE,
 } from '@angular/material';
-import { ExpensesComponent } from './expenses/expenses.component';
-import { PersonsComponent } from './persons/persons.component';
-import { GroupsComponent } from './groups/groups.component';
-import { ExpenseDetailComponent } from './expense-detail/expense-detail.component';
+
 
 @NgModule({
   exports: [
     CdkTableModule,
+    CdkAccordionModule,
     MatAutocompleteModule,
     MatButtonModule,
     MatButtonToggleModule,
@@ -117,6 +124,8 @@ export class MaterialModule {}
     AngularFirestoreModule,
     AngularFireAuthModule
   ],
+  providers: [ {provide: MAT_DATE_LOCALE, useValue: 'es-ES'},
+                DecimalPipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
