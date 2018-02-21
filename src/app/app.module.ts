@@ -1,9 +1,9 @@
 import '../polyfills';
-import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
-import {BrowserModule} from '@angular/platform-browser';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {NgModule} from '@angular/core';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NgModule } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AngularFireModule } from 'angularfire2';
 import { environment } from '../environments/environment';
 import { AngularFirestoreModule } from 'angularfire2/firestore';
@@ -21,8 +21,6 @@ import { PersonsComponent } from './persons/persons.component';
 import { GroupsComponent } from './groups/groups.component';
 import { ExpenseDetailComponent } from './expense-detail/expense-detail.component';
 import { DecimalPipe } from '@angular/common';
-import { NumericInputComponent} from 'ng2-numeric-input/src/numeric-input.component'
-
 
 import {
   MatAutocompleteModule,

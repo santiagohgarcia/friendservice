@@ -1,7 +1,7 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location, DecimalPipe } from '@angular/common';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar, MatAutocompleteTrigger, MatAutocompleteSelectedEvent, MatChipList, MatChipInput, MatChipEvent } from '@angular/material';
 import Expense from '../expense';
 import { Observable } from 'rxjs/Observable';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -9,6 +9,8 @@ import { AngularFirestore, AngularFirestoreDocument } from 'angularfire2/firesto
 import { AngularFireAuth } from 'angularfire2/auth';
 import User from '../user';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { startWith } from 'rxjs/operators/startWith';
+import { map } from 'rxjs/operators/map';
 
 @Component({
   selector: 'app-expense-detail',
@@ -17,9 +19,17 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 })
 export class ExpenseDetailComponent implements OnInit {
 
+  @ViewChild('chipList') chiplist: MatChipList;
+
   loading: boolean = true;
-  expense: Expense = { id: null, title: "", date: null, totalAmount: 0 } as Expense;
-  friends: User;
+  expense: Expense = {
+    id: null, title: "",
+    date: null,
+    totalAmount: 0,
+    users: []
+  } as Expense;
+  friends: User[] = [];
+  filteredFriends: Observable<User[]>;
   expenseDoc: AngularFirestoreDocument<Expense>;
   formattedAmount: String = '0.00';
   userDisplayName: String;
@@ -49,23 +59,42 @@ export class ExpenseDetailComponent implements OnInit {
     this.getExpense();
     this.getUserName();
     this.getFriends();
+
+    this.filteredFriends = this.friendsCtrl.valueChanges
+      .pipe(
+      startWith(''),
+      map(val => this.filter(val)));
   }
+
+  filter(val: string): User[] {
+    return this.friends.filter(f =>
+      !this.chiplist.chips.find(chip => chip.value === f.id) &&
+      f.name.toLowerCase().includes(val.toLowerCase()));
+  }
+
 
   getFriends() {
-    this.afAuth.authState.subscribe(u =>
-      this.http.get('https://graph.facebook.com/v2.12/' +
-                    u.providerData.map(pd => pd.uid) +
-                    '/friends?access_token=' +
-                    localStorage.getItem('facebookToken') +
-                    '&fields=cover,name&limit=10')
-        .subscribe(fs => 
-          this.friends = fs['data'].map( f => this.createUser(f.id,f.name,f.cover.source))));
+    this.afAuth.authState.subscribe(u => {
+      const uid : string[] = u.providerData.map(pd => pd.uid);
+      const name : string [] = u.providerData.map(pd => pd.displayName);
+      this.expense.users.push({ id: uid[0],
+                                name: name[0]
+                              } as User);
+      this.http.get('https://graph.facebook.com/v2.12/' + uid +
+        '/friends?access_token=' +
+        localStorage.getItem('facebookToken') +
+        '&fields=cover,name&limit=10')
+        .subscribe(fs =>
+          this.friends = fs['data'].map(f => this.createUser(f.id, f.name, f.cover.source)))
+    });
   }
 
-  createUser(id,name,picture){
-    return { id: id,
-      name: name, 
-      picture: picture } as User
+  createUser(id, name, picture) {
+    return {
+      id: id,
+      name: name,
+      picture: picture
+    } as User
   }
 
   getExpense(): void {
@@ -83,7 +112,7 @@ export class ExpenseDetailComponent implements OnInit {
       this.saveFunction = 'update'
     } else {
       this.loading = false;
-      this.saveFunction = 'add'
+      this.saveFunction = 'add';
     }
   }
 
@@ -132,6 +161,20 @@ export class ExpenseDetailComponent implements OnInit {
 
   getUserName() {
     return this.afAuth.authState.subscribe(u => this.userDisplayName = u.displayName);
+  }
+
+  friendSelection(event: MatAutocompleteSelectedEvent) {
+    this.friendsCtrl.setValue('');
+    this.expense.users.push({
+      id: event.option.value,
+      name: event.option.viewValue
+    } as User)
+    this.friendsCtrl.updateValueAndValidity();
+  }
+
+  removeFriend(event: MatChipEvent) {
+    this.expense.users = this.expense.users.filter(u => u.id != event.chip.value)
+    this.friendsCtrl.updateValueAndValidity();
   }
 }
 
