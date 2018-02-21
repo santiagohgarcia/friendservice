@@ -10,6 +10,12 @@
 
 .demo-tab-group {
   border: 1px solid #e8e8e8;
+  display: flex;
+  justify-content: space-between;
+}
+
+.tab{
+  width: 100%;
 }
 
 .demo-tab-content {

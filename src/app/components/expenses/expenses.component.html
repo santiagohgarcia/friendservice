@@ -13,14 +13,14 @@
                 <mat-icon mat-list-icon>more_vert</mat-icon>
             </button>
             <mat-menu #menu="matMenu">
-                <a mat-menu-item routerLink="/expenses/{{expense.id}}">
-                    <mat-icon>mode_edit</mat-icon>
-                    <span>Edit</span>
-                </a>
                 <button mat-menu-item disabled>
                     <mat-icon>attach_money</mat-icon>
                     <span>Pay Off</span>
                 </button>
+                <a mat-menu-item routerLink="/expenses/{{expense.id}}">
+                    <mat-icon>mode_edit</mat-icon>
+                    <span>Edit</span>
+                </a>
             </mat-menu>
         </mat-list-item>
     </div>

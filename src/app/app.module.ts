@@ -13,13 +13,13 @@ import { CdkTableModule } from '@angular/cdk/table';
 import { CdkAccordionModule } from '@angular/cdk/accordion';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './/app-routing.module';
-import { HomeComponent } from './home/home.component';
-import { LoginComponent } from './login/login.component';
+import { HomeComponent } from './components/home/home.component';
+import { LoginComponent } from './components/login/login.component';
 import { AngularFireAuthModule } from 'angularfire2/auth';
-import { ExpensesComponent } from './expenses/expenses.component';
-import { PersonsComponent } from './persons/persons.component';
-import { GroupsComponent } from './groups/groups.component';
-import { ExpenseDetailComponent } from './expense-detail/expense-detail.component';
+import { ExpensesComponent } from './components/expenses/expenses.component';
+import { PersonsComponent } from './components/persons/persons.component';
+import { GroupsComponent } from './components/groups/groups.component';
+import { ExpenseDetailComponent } from './components/expense-detail/expense-detail.component';
 import { DecimalPipe } from '@angular/common';
 
 import {

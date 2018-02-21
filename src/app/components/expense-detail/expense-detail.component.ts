@@ -2,12 +2,12 @@ import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location, DecimalPipe } from '@angular/common';
 import { MatSnackBar, MatAutocompleteTrigger, MatAutocompleteSelectedEvent, MatChipList, MatChipInput, MatChipEvent } from '@angular/material';
-import Expense from '../expense';
+import Expense from '../../model/expense';
 import { Observable } from 'rxjs/Observable';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AngularFirestore, AngularFirestoreDocument } from 'angularfire2/firestore';
 import { AngularFireAuth } from 'angularfire2/auth';
-import User from '../user';
+import User from '../../model/user' 
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { startWith } from 'rxjs/operators/startWith';
 import { map } from 'rxjs/operators/map';
@@ -31,7 +31,7 @@ export class ExpenseDetailComponent implements OnInit {
   friends: User[] = [];
   filteredFriends: Observable<User[]>;
   expenseDoc: AngularFirestoreDocument<Expense>;
-  formattedAmount: String = '0.00';
+  formattedAmount: String = '';
   userDisplayName: String;
   saveFunction;
   title = new FormControl('', [Validators.required]);
@@ -68,7 +68,7 @@ export class ExpenseDetailComponent implements OnInit {
 
   filter(val: string): User[] {
     return this.friends.filter(f =>
-      !this.chiplist.chips.find(chip => chip.value === f.id) &&
+      !this.expense.users.find(user => user.id === f.id) &&
       f.name.toLowerCase().includes(val.toLowerCase()));
   }
 
@@ -76,9 +76,8 @@ export class ExpenseDetailComponent implements OnInit {
   getFriends() {
     this.afAuth.authState.subscribe(u => {
       const uid : string[] = u.providerData.map(pd => pd.uid);
-      const name : string [] = u.providerData.map(pd => pd.displayName);
       this.expense.users.push({ id: uid[0],
-                                name: name[0]
+                                name: this.userDisplayName
                               } as User);
       this.http.get('https://graph.facebook.com/v2.12/' + uid +
         '/friends?access_token=' +
@@ -164,17 +163,15 @@ export class ExpenseDetailComponent implements OnInit {
   }
 
   friendSelection(event: MatAutocompleteSelectedEvent) {
-    this.friendsCtrl.setValue('');
+    this.friendsCtrl.setValue("");
     this.expense.users.push({
       id: event.option.value,
       name: event.option.viewValue
     } as User)
-    this.friendsCtrl.updateValueAndValidity();
   }
 
   removeFriend(event: MatChipEvent) {
     this.expense.users = this.expense.users.filter(u => u.id != event.chip.value)
-    this.friendsCtrl.updateValueAndValidity();
   }
 }
 

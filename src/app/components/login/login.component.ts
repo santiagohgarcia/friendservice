@@ -44,8 +44,6 @@ export class LoginComponent implements OnInit {
       .then(_ => this.afAuth.auth.signInWithRedirect(this.provider)
       .catch(e => this.openSnackBar(e.message)))
       .catch(e => this.openSnackBar(e.message));
-
-  
   }
 
   rememberMe(evt) {

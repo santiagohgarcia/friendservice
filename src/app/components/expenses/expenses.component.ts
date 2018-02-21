@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { MatSnackBar } from '@angular/material';
-import Expense from '../expense';
+import Expense from '../../model/expense';
 import 'rxjs/add/operator/catch';
 import { Router } from '@angular/router';
 

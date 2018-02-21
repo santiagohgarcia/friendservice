@@ -24,7 +24,7 @@
         <input matInput placeholder="Title" [formControl]="title" [(ngModel)]="expense.title" [(value)]="expense.title">
         <mat-error *ngIf="title.invalid">Required field</mat-error>
       </mat-form-field>
-      
+
       <mat-form-field class="full-width">
         <input matInput [matDatepicker]="picker" placeholder="Date" [formControl]="date" [(ngModel)]="expense.date" [(value)]="expense.date">
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
@@ -41,11 +41,11 @@
 
       <mat-form-field class="full-width">
         <mat-chip-list #chipList class="full-width">
-          <mat-chip *ngFor="let user of expense.users" (removed)="removeFriend($event)" value="{{user.id}}">{{user.name}}
-            <mat-icon matChipRemove>cancel</mat-icon>
+          <mat-chip *ngFor="let user of expense.users" (removed)="removeFriend($event)" value="{{user.id}}">{{user.name}}(ARS{{expense.totalAmount/expense.users.length | number:'1.2-2'}})
+            <mat-icon *ngIf="user.id != '10207951590607465'" matChipRemove>cancel</mat-icon>
           </mat-chip>
         </mat-chip-list>
-        <input matInput class="full-width" placeholder="Divide with" [matChipInputFor]="chipList" [matAutocomplete]="auto" [formControl]="friendsCtrl">
+        <input matInput class="full-width" placeholder="Divide between" [matChipInputFor]="chipList" [matAutocomplete]="auto" [formControl]="friendsCtrl">
         <mat-autocomplete #auto="matAutocomplete" class="full-width" (optionSelected)="friendSelection($event)">
           <mat-option *ngFor="let friend of filteredFriends | async" [value]="friend.id">
             <img style="vertical-align:middle;" aria-hidden src="{{friend.picture}}" height="25" />
