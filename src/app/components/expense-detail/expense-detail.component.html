@@ -41,8 +41,11 @@
 
       <mat-form-field class="full-width">
         <mat-chip-list #chipList class="full-width">
-          <mat-chip *ngFor="let user of expense.users" (removed)="removeFriend($event)" value="{{user.id}}">{{user.name}}(ARS{{expense.totalAmount/expense.users.length | number:'1.2-2'}})
-            <mat-icon *ngIf="user.id != '10207951590607465'" matChipRemove>cancel</mat-icon>
+          <mat-chip *ngFor="let user of expense.users"
+                    (removed)="removeFriend($event)" 
+                    value="{{user.id}}"
+                    removable="{{user.id != userInfo.uid}}">{{user.name}}(ARS {{expense.totalAmount/expense.users.length | number:'1.2-2'}})
+            <mat-icon *ngIf="user.id != userInfo.uid" matChipRemove>cancel</mat-icon>
           </mat-chip>
         </mat-chip-list>
         <input matInput class="full-width" placeholder="Divide between" [matChipInputFor]="chipList" [matAutocomplete]="auto" [formControl]="friendsCtrl">

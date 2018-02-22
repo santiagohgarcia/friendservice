@@ -16,7 +16,6 @@ export class HomeComponent implements OnInit {
               private afAuth: AngularFireAuth) { }
 
   ngOnInit() {
-
   }
 
   close() {
@@ -26,7 +25,6 @@ export class HomeComponent implements OnInit {
   logout() {
     this.afAuth.auth.signOut();
   }
-
 
 }
 

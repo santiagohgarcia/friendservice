@@ -15,7 +15,6 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     this.afAuth.authState.subscribe(user => {
       if (!user) {
-        // User is not logged in
         this.router.navigateByUrl("/login");
       }
     });

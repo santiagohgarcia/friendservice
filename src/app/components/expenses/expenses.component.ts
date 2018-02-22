@@ -1,10 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { AngularFirestore } from 'angularfire2/firestore';
-import { MatSnackBar } from '@angular/material';
 import Expense from '../../model/expense';
 import 'rxjs/add/operator/catch';
 import { Router } from '@angular/router';
+import { ExpenseService } from '../../services/expense.service'
+import { MessagesService } from '../../services/messages.service'
 
 @Component({
   selector: 'app-expenses',
@@ -14,28 +14,14 @@ import { Router } from '@angular/router';
 export class ExpensesComponent implements OnInit {
 
   expenses: Observable<Expense[]> = null;
-  selectedExpenseId : string;
 
-  constructor(private db: AngularFirestore,
-    public snackBar: MatSnackBar,
-    private router: Router) {
-    this.expenses = db.collection('expenses').snapshotChanges()
-      .map(actions => actions.map(a => {
-        var expense = a.payload.doc.data() as Expense
-        expense.id = a.payload.doc.id;
-        return expense;
-      }))
-      .catch((e: any) => Observable.throw(this.openSnackBar(e.message)));
+  constructor(private expenseService: ExpenseService,
+              private messagesService: MessagesService) {
   }
 
   ngOnInit() {
-  }
-
-  openSnackBar(message: string, action: string = "OK") {
-    this.snackBar.open(message, action, {
-      duration: 2000,
-      extraClasses: ['error-snack-bar']
-    });
+    this.expenses = this.expenseService.getExpenses()
+                    .catch((e: any) => Observable.throw(this.messagesService.error(e.message)));
   }
 
 }

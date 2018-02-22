@@ -5,7 +5,6 @@ import { Router } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MatIconRegistry, MatSnackBar } from '@angular/material';
 import { MatDialog, DialogPosition } from '@angular/material';
-
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 
 @Component({
@@ -21,11 +20,13 @@ export class LoginComponent implements OnInit {
   provider = new firebase.auth.FacebookAuthProvider();
 
   constructor(private afAuth: AngularFireAuth,
-    private router: Router,
-    iconRegistry: MatIconRegistry,
-    sanitizer: DomSanitizer,
-    public snackBar: MatSnackBar) {
+              private router: Router,
+              iconRegistry: MatIconRegistry,
+              sanitizer: DomSanitizer,
+              public snackBar: MatSnackBar) {
+
     this.provider.addScope('user_friends');
+
     this.afAuth.authState.subscribe(user => {
       if (user) {
         this.afAuth.auth.getRedirectResult()
@@ -33,6 +34,7 @@ export class LoginComponent implements OnInit {
         this.router.navigateByUrl("/home");
       }
     });
+
     iconRegistry.addSvgIcon('facebook_icon', sanitizer.bypassSecurityTrustResourceUrl('assets/icons/facebook-logo.svg'));
   }
 
@@ -41,9 +43,8 @@ export class LoginComponent implements OnInit {
 
   withFacebook() {
     this.afAuth.auth.setPersistence(this.persistance)
-      .then(_ => this.afAuth.auth.signInWithRedirect(this.provider)
-      .catch(e => this.openSnackBar(e.message)))
-      .catch(e => this.openSnackBar(e.message));
+      .then(_ => this.afAuth.auth.signInWithRedirect(this.provider))
+      .catch(e => this.openSnackBar(e.message))
   }
 
   rememberMe(evt) {

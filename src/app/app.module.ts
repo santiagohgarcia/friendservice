@@ -8,7 +8,7 @@ import { AngularFireModule } from 'angularfire2';
 import { environment } from '../environments/environment';
 import { AngularFirestoreModule } from 'angularfire2/firestore';
 import { HttpModule } from '@angular/http';
-import { HttpClient, HttpClientModule }    from '@angular/common/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { CdkTableModule } from '@angular/cdk/table';
 import { CdkAccordionModule } from '@angular/cdk/accordion';
 import { AppComponent } from './app.component';
@@ -21,6 +21,9 @@ import { PersonsComponent } from './components/persons/persons.component';
 import { GroupsComponent } from './components/groups/groups.component';
 import { ExpenseDetailComponent } from './components/expense-detail/expense-detail.component';
 import { DecimalPipe } from '@angular/common';
+import { ExpenseService } from './services/expense.service'
+import { MessagesService } from './services/messages.service';
+import { FacebookService } from './services/facebook.service';
 
 import {
   MatAutocompleteModule,
@@ -56,7 +59,6 @@ import {
   MatStepperModule,
   MAT_DATE_LOCALE,
 } from '@angular/material';
-
 
 @NgModule({
   exports: [
@@ -96,7 +98,7 @@ import {
   ],
   imports: [AppRoutingModule]
 })
-export class MaterialModule {}
+export class MaterialModule { }
 
 
 @NgModule({
@@ -105,7 +107,7 @@ export class MaterialModule {}
     HomeComponent,
     LoginComponent,
     ExpensesComponent,
-    PersonsComponent, 
+    PersonsComponent,
     GroupsComponent,
     ExpenseDetailComponent
   ],
@@ -122,8 +124,12 @@ export class MaterialModule {}
     AngularFirestoreModule,
     AngularFireAuthModule
   ],
-  providers: [ {provide: MAT_DATE_LOCALE, useValue: 'es-ES'},
-                DecimalPipe],
+  providers: [
+    { provide: MAT_DATE_LOCALE, useValue: 'es-ES' },
+    DecimalPipe,
+    ExpenseService,
+    FacebookService,
+    MessagesService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
