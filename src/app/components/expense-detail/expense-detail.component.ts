@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location, DecimalPipe } from '@angular/common';
 import { MatSnackBar, MatAutocompleteSelectedEvent, MatChipList, MatChipEvent } from '@angular/material';
-import Expense from '../../model/expense';
+import { Expense, InitialExpense } from '../../model/expense';
 import { Observable } from 'rxjs/Observable';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AngularFirestore, AngularFirestoreDocument } from 'angularfire2/firestore';
@@ -16,29 +16,21 @@ import { MessagesService } from '../../services/messages.service'
 import 'rxjs/add/operator/first';
 import { UserInfo } from 'firebase/app';
 
-const initialExpense: Expense = {
-  id: null,
-  title: "",
-  date: null,
-  totalAmount: 0,
-  users: []
-} as Expense;
-
 @Component({
   selector: 'app-expense-detail',
   templateUrl: './expense-detail.component.html',
   styleUrls: ['./expense-detail.component.css']
 })
-export class ExpenseDetailComponent implements OnInit {
+export class ExpenseDetailComponent {
 
   @ViewChild('chipList') chiplist: MatChipList;
 
   loading: boolean = true;
-  expense: Expense = initialExpense;
+  expense: Expense = InitialExpense;
   friends: User[] = [];
   filteredFriends: Observable<User[]>;
 
-  userInfo: UserInfo;
+  userInfo: Observable<UserInfo>;
 
   formattedAmount: String = '';
   saveFunction;
@@ -63,18 +55,14 @@ export class ExpenseDetailComponent implements OnInit {
     private afAuth: AngularFireAuth,
     private expenseService: ExpenseService,
     private facebookService: FacebookService,
-    private messageService: MessagesService) { }
+    private messageService: MessagesService) {
+      
+     }
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
+    this.userInfo = this.facebookService.getProviderData();
     this.getExpense();
-    this.getUserProviderInfo();
     this.getFriends();
-  }
-
-  filter(val: string): User[] {
-    return this.friends.filter(f =>
-      !this.expense.users.find(user => user.id === f.id) &&
-      f.name.toLowerCase().includes(val.toLowerCase()));
   }
 
   async getExpense() {
@@ -83,28 +71,31 @@ export class ExpenseDetailComponent implements OnInit {
       this.expense = await this.expenseService.getExpense(id).first().toPromise()
         .catch(e => {
           this.messageService.error(e.message);
-          return initialExpense;
+          return InitialExpense;
         });
       this.formattedAmount = this.decimalPipe.transform(this.expense.totalAmount, '1.2-2');
       this.saveFunction = 'updateExpense';
     } else {
-      var providerData = await this.facebookService.getProviderData().first().toPromise();
-      this.expense.users.push({ id: providerData[0].uid, name: providerData[0].displayName } as User)
+      var providerData = await this.userInfo.first().toPromise();
+      this.expense.users = [];
+      this.expense.users.push({ id: providerData.uid, name: providerData.displayName, picture: providerData.photoURL } as User)
       this.saveFunction = 'addExpense';
     }
     this.loading = false;
   }
 
   async getFriends() {
-    this.friends = await this.facebookService.getFriends().catch(e => this.messageService.error(e.message));
     this.filteredFriends = this.friendsCtrl.valueChanges
       .pipe(
       startWith(''),
       map(val => this.filter(val)));
+      this.friends = await this.facebookService.getFriends().catch(e => this.messageService.error(e.message));
   }
 
-  async getUserProviderInfo() {
-     this.userInfo = (await this.facebookService.getProviderData().first().toPromise())[0];
+  filter(val: string): User[] {
+    return this.friends.filter(f =>
+      !this.expense.users.find(user => user.id === f.id) &&
+      f.name.toLowerCase().includes(val.toLowerCase()));
   }
 
   goBack(): void {
@@ -114,22 +105,15 @@ export class ExpenseDetailComponent implements OnInit {
   save(): void {
     if (this.expenseForm.valid) {
       this.expenseService[this.saveFunction](this.expense)
-        .then(res => this.goBack())
+        .then(_ => this.goBack())
         .catch(e => this.messageService.error(e.message));
     }
   }
 
-  delete(expenseId: string) {
-    this.expenseService.deleteExpense(expenseId)
+  delete() {
+    this.expenseService.deleteExpense(this.expense.id)
       .then(res => this.goBack())
       .catch(e => this.messageService.error(e.message));
-  }
-
-  openSnackBar(message: string, action: string = "OK") {
-    this.snackBar.open(message, action, {
-      duration: 2000,
-      extraClasses: ['error-snack-bar']
-    });
   }
 
   transformAmount(element) {
@@ -145,7 +129,9 @@ export class ExpenseDetailComponent implements OnInit {
 
   friendSelection(event: MatAutocompleteSelectedEvent) {
     this.friendsCtrl.setValue("");
-    this.expense.users.push({ id: event.option.value, name: event.option.viewValue } as User)
+    if(!this.expense.users.find(u => u.id ===  event.option.value)){
+      this.expense.users.push(this.friends.find(u => u.id === event.option.value))
+    }
   }
 
   removeFriend(event: MatChipEvent) {

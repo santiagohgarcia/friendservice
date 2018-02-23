@@ -2,7 +2,7 @@
   <button mat-icon-button routerLink="/expenses">
     <mat-icon>arrow_back</mat-icon>
   </button>
-  <h1>{{ saveFunction == 'add' && expense.id === null ? 'Create Expense' : 'Update Expense' }}</h1>
+  <h1>{{ saveFunction == 'addExpense' && expense.id === null ? 'Create Expense' : 'Update Expense' }}</h1>
   <span class="spacer"></span>
   <button *ngIf="expense.id" mat-icon-button color="warn" (click)="delete()">
     <mat-icon>delete</mat-icon>
@@ -13,20 +13,18 @@
   <mat-progress-bar mode="indeterminate" color="accent"></mat-progress-bar>
 </div>
 
-<mat-card *ngIf="saveFunction == 'add' || ( expense.id != null )" class="card">
-  <mat-card-header>
-    <mat-card-title>Expense</mat-card-title>
-  </mat-card-header>
+<mat-card *ngIf="saveFunction == 'addExpense' || ( expense.id != null )" class="card">
+  <h3 class="subheading-2">Expense</h3>
   <div class="example-container">
     <form [formGroup]="expenseForm" class="form">
 
       <mat-form-field class="full-width">
-        <input matInput placeholder="Title" [formControl]="title" [(ngModel)]="expense.title" [(value)]="expense.title">
+        <input matInput placeholder="Title" [formControl]="title" [(ngModel)]="expense.title" [(value)]="expense.title" [disabled]="loading">
         <mat-error *ngIf="title.invalid">Required field</mat-error>
       </mat-form-field>
 
       <mat-form-field class="full-width">
-        <input matInput [matDatepicker]="picker" placeholder="Date" [formControl]="date" [(ngModel)]="expense.date" [(value)]="expense.date">
+        <input matInput [matDatepicker]="picker" placeholder="Date" [formControl]="date" [(ngModel)]="expense.date" [(value)]="expense.date" [disabled]="loading">
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
         <mat-error *ngIf="date.invalid">Insert a valid date</mat-error>
@@ -41,21 +39,21 @@
 
       <mat-form-field class="full-width">
         <mat-chip-list #chipList class="full-width">
-          <mat-chip *ngFor="let user of expense.users"
-                    (removed)="removeFriend($event)" 
-                    value="{{user.id}}"
-                    removable="{{user.id != userInfo.uid}}">{{user.name}}(ARS {{expense.totalAmount/expense.users.length | number:'1.2-2'}})
-            <mat-icon *ngIf="user.id != userInfo.uid" matChipRemove>cancel</mat-icon>
+          <mat-chip *ngFor="let user of expense.users" (removed)="removeFriend($event)" value="{{user.id}}" removable="{{user.id != (userInfo | async)?.uid}}">
+            <img mat-card-avatar style="vertical-align:middle;" aria-hidden src="{{user.picture}}" height="20" />{{user.name}}(ARS {{expense.totalAmount/expense.users.length | number:'1.2-2'}})
+            <mat-icon *ngIf="user.id != (userInfo | async)?.uid" matChipRemove>cancel</mat-icon>
           </mat-chip>
         </mat-chip-list>
         <input matInput class="full-width" placeholder="Divide between" [matChipInputFor]="chipList" [matAutocomplete]="auto" [formControl]="friendsCtrl">
         <mat-autocomplete #auto="matAutocomplete" class="full-width" (optionSelected)="friendSelection($event)">
-          <mat-option *ngFor="let friend of filteredFriends | async" [value]="friend.id">
-            <img style="vertical-align:middle;" aria-hidden src="{{friend.picture}}" height="25" />
-            <span>{{ friend.name }}</span>
-          </mat-option>
+          <mat-optgroup label="Friends">
+            <mat-option *ngFor="let friend of filteredFriends | async" [value]="friend.id">
+              <img mat-card-avatar style="vertical-align:middle;" aria-hidden src="{{friend.picture}}" height="25" />
+              <span>{{ friend.name }}</span>
+            </mat-option>
+          </mat-optgroup>
         </mat-autocomplete>
-        <mat-icon matSuffix>search</mat-icon>  
+        <mat-icon matSuffix>search</mat-icon>
       </mat-form-field>
 
     </form>
