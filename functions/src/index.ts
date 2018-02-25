@@ -1,14 +1,29 @@
-import * as functions from 'firebase-functions';
+import * as admin from 'firebase-admin'
+import * as functions from 'firebase-functions'
+import * as users from './users/users'
+import * as expenses from './expenses/expenses'
 
-// // Start writing Firebase Functions
-// // https://firebase.google.com/docs/functions/typescript
-//
-// export const helloWorld = functions.https.onRequest((request, response) => {
-//  response.send("Hello from Firebase!");
-// });
+admin.initializeApp(functions.config().firebase);
 
-exports.personsUpdate = functions.firestore.document('/expenses/{expenseId}') 
-    .onCreate(event => {
-            event.data.data();
+const db : FirebaseFirestore.Firestore = admin.firestore();
 
-    })
+exports.createUser = functions.auth.user().onCreate(event => {
+  return users.createUser(event.data.providerData[0].uid,db)
+    });
+
+exports.addExpense = functions.firestore.document('/expenses/{expenseId}').onCreate( event => {
+  return  expenses.updateExpenseInUsersList(event.data.ref,db)
+});
+
+exports.updExpense = functions.firestore.document('/expenses/{expenseId}').onUpdate( event => {
+  return  expenses.updateExpenseInUsersList(event.data.ref,db)
+});
+
+exports.removeExpense = functions.firestore.document('/expenses/{expenseId}').onDelete( event => {
+  return expenses.removeExpenseInUsersList(event.data.ref)
+});
+
+exports.addExpenseInUsersList = functions.firestore.document('/users/{userId}/expenses/{expenseId}')
+  .onWrite(event => { 
+  //  users.recalculateRelations(event.data.ref)
+  })

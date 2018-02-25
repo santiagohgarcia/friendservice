@@ -24,6 +24,7 @@ import { DecimalPipe } from '@angular/common';
 import { ExpenseService } from './services/expense.service'
 import { MessagesService } from './services/messages.service';
 import { FacebookService } from './services/facebook.service';
+import { UserService } from './services/user.service'
 
 import {
   MatAutocompleteModule,
@@ -129,7 +130,8 @@ export class MaterialModule { }
     DecimalPipe,
     ExpenseService,
     FacebookService,
-    MessagesService],
+    MessagesService,
+    UserService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -14,7 +14,9 @@ import { ExpenseService } from '../../services/expense.service'
 import { FacebookService } from '../../services/facebook.service'
 import { MessagesService } from '../../services/messages.service'
 import 'rxjs/add/operator/first';
-import { UserInfo } from 'firebase/app';
+import { UserInfo, firestore } from 'firebase/app';
+import { DocumentReference } from '@firebase/firestore-types';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-expense-detail',
@@ -26,11 +28,11 @@ export class ExpenseDetailComponent {
   @ViewChild('chipList') chiplist: MatChipList;
 
   loading: boolean = true;
-  expense: Expense = InitialExpense;
+  expense: Expense = InitialExpense();
   friends: User[] = [];
   filteredFriends: Observable<User[]>;
 
-  userInfo: Observable<UserInfo>;
+  user: DocumentReference;
 
   formattedAmount: String = '';
   saveFunction;
@@ -55,12 +57,13 @@ export class ExpenseDetailComponent {
     private afAuth: AngularFireAuth,
     private expenseService: ExpenseService,
     private facebookService: FacebookService,
-    private messageService: MessagesService) {
-      
-     }
+    private messageService: MessagesService,
+    private userService: UserService) {
+
+  }
 
   ngAfterViewInit(): void {
-    this.userInfo = this.facebookService.getProviderData();
+    //this.user = this.userService.getUserRef();
     this.getExpense();
     this.getFriends();
   }
@@ -71,14 +74,13 @@ export class ExpenseDetailComponent {
       this.expense = await this.expenseService.getExpense(id).first().toPromise()
         .catch(e => {
           this.messageService.error(e.message);
-          return InitialExpense;
+          return InitialExpense();
         });
       this.formattedAmount = this.decimalPipe.transform(this.expense.totalAmount, '1.2-2');
       this.saveFunction = 'updateExpense';
     } else {
-      var providerData = await this.userInfo.first().toPromise();
-      this.expense.users = [];
-      this.expense.users.push({ id: providerData.uid, name: providerData.displayName, picture: providerData.photoURL } as User)
+      this.expense.creatorId = this.afAuth.auth.currentUser.providerData[0].uid;
+      this.expense.expenseUsersIds.push(this.expense.creatorId)
       this.saveFunction = 'addExpense';
     }
     this.loading = false;
@@ -87,15 +89,15 @@ export class ExpenseDetailComponent {
   async getFriends() {
     this.filteredFriends = this.friendsCtrl.valueChanges
       .pipe(
-      startWith(''),
-      map(val => this.filter(val)));
-      this.friends = await this.facebookService.getFriends().catch(e => this.messageService.error(e.message));
+        startWith(''),
+        map(val => this.filter(val)));
+    this.friends = await this.facebookService.getFriends().catch(e => this.messageService.error(e.message));
   }
 
   filter(val: string): User[] {
-    return this.friends.filter(f =>
-      !this.expense.users.find(user => user.id === f.id) &&
-      f.name.toLowerCase().includes(val.toLowerCase()));
+    return this.friends.filter(async f =>
+      !(this.expense.expenseUsersIds.find(id => f.id === id)) &&
+      f.id.toLowerCase().includes(val.toLowerCase()));
   }
 
   goBack(): void {
@@ -128,14 +130,13 @@ export class ExpenseDetailComponent {
   }
 
   friendSelection(event: MatAutocompleteSelectedEvent) {
-    this.friendsCtrl.setValue("");
-    if(!this.expense.users.find(u => u.id ===  event.option.value)){
-      this.expense.users.push(this.friends.find(u => u.id === event.option.value))
+    if (!this.expense.expenseUsersIds.find(id => event.option.value === id)) {
+      this.expense.expenseUsersIds.push(event.option.value);
     }
   }
 
   removeFriend(event: MatChipEvent) {
-    this.expense.users = this.expense.users.filter(u => u.id != event.chip.value)
+    this.expense.expenseUsersIds = this.expense.expenseUsersIds.filter(id => id!=event.chip.value)
   }
 }
 

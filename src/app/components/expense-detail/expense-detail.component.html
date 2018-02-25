@@ -39,8 +39,8 @@
 
       <mat-form-field class="full-width">
         <mat-chip-list #chipList class="full-width">
-          <mat-chip *ngFor="let user of expense.users" (removed)="removeFriend($event)" value="{{user.id}}" removable="{{user.id != (userInfo | async)?.uid}}">
-            <img mat-card-avatar style="vertical-align:middle;" aria-hidden src="{{user.picture}}" height="20" />{{user.name}}(ARS {{expense.totalAmount/expense.users.length | number:'1.2-2'}})
+          <mat-chip *ngFor="let user of expense.expenseUsers" (removed)="removeFriend($event)" value="{{user.id}}" removable="{{user.id != (userInfo | async)?.uid}}">
+            <img mat-card-avatar style="vertical-align:middle;" aria-hidden src="{{user.picture}}" height="20" />{{user.name}}(ARS {{expense.totalAmount/expense.expenseUsers.length | number:'1.2-2'}})
             <mat-icon *ngIf="user.id != (userInfo | async)?.uid" matChipRemove>cancel</mat-icon>
           </mat-chip>
         </mat-chip-list>

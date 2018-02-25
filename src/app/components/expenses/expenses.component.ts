@@ -13,7 +13,6 @@ import { MessagesService } from '../../services/messages.service'
 })
 export class ExpensesComponent implements OnInit {
   
-  loading: boolean = true;
   expenses: Observable<Expense[]>;
 
   constructor(private expenseService: ExpenseService,
@@ -23,7 +22,6 @@ export class ExpensesComponent implements OnInit {
   ngOnInit() {
     this.expenses = this.expenseService.getExpenses()
                     .catch(e => { this.messagesService.error(e.message);
-                                  this.loading = false;
                                   return []; });
   }
 

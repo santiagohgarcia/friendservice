@@ -4,34 +4,38 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import User from '../model/user';
 import { Expense, InitialExpense } from '../model/expense';
+import  FacebookFriend from '../model/facebook-friend'
 import 'rxjs/add/operator/elementAt';
 import { UserInfo } from 'firebase/app';
+import { ProviderData } from '@angular/core/src/view';
+
+
 @Injectable()
 export class FacebookService {
 
   constructor(private afAuth: AngularFireAuth,
     private http: HttpClient) { }
 
-  getProviderData() {
-   return this.afAuth.authState
-   .timeout(50)
-   .map(pd => pd.providerData[0] )
+  getUserData(id:string = 'me'): Observable<FacebookFriend> {
+      return this.http.get('https://graph.facebook.com/v2.12/' + id +
+                           '?access_token=' +
+                            localStorage.getItem('facebookToken') +
+                            '&fields=picture,name')
+          .map( (user: any) => this.createFacebookFriend(user.id, user.name, user.picture.data.url) )
   }
 
  async getFriends() : Promise<any> {
-      var providerData: UserInfo = await this.getProviderData().first().toPromise();
-      return this.http.get('https://graph.facebook.com/v2.12/' + providerData.uid +
+      return this.http.get('https://graph.facebook.com/v2.12/me' +
         '/friends?access_token=' +
         localStorage.getItem('facebookToken') +
-        '&fields=cover,name&limit=10')
+        '&fields=picture,name&limit=10')
         .map(facebookFriend => facebookFriend['data']
-        .map( data => this.createUser(data.id, data.name, data.cover.source)))
-        .timeout(50)
+        .map( data => this.createFacebookFriend(data.id, data.name, data.picture.data.url)))
         .first().toPromise();
   } 
 
- private createUser(id, name, picture) {
-    return { id: id, name: name, picture: picture } as User
+ private createFacebookFriend(id, name, picture) {
+    return { id: id, name: name, picture: picture } as FacebookFriend
   }
 
 }

@@ -12,7 +12,6 @@ export class ExpenseService {
 
   getExpenses(): Observable<Expense[]> {
     return this.db.collection('expenses').snapshotChanges()
-      .timeout(25000)
       .map(actions => actions.map(a => {
         var expense = a.payload.doc.data() as Expense
         expense.id = a.payload.doc.id;
@@ -22,7 +21,6 @@ export class ExpenseService {
 
   getExpense(id: string): Observable<Expense> {
       return this.db.doc(`expenses/${id}`).snapshotChanges()
-        .timeout(50)
         .map(doc => {
           var expense = doc.payload.data() as Expense
           expense.id = doc.payload.id;
@@ -38,7 +36,7 @@ export class ExpenseService {
     return this.db.doc(`expenses/${expense.id}`).update(expense);
   }
 
-  deleteExpense(expenseId:string){
+  deleteExpense(expenseId:string): Promise<any>{
     return this.db.doc(`expenses/${expenseId}`).delete();
   }
 
