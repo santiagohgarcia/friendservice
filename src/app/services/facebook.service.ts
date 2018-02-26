@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
-import User from '../model/user';
-import { Expense, InitialExpense } from '../model/expense';
+import FacebookUser from '../model/facebook-user';
+import { Expense } from '../model/expense';
 import 'rxjs/add/operator/elementAt';
 import { UserInfo } from 'firebase/app';
 @Injectable()
@@ -14,7 +14,6 @@ export class FacebookService {
 
   getProviderData() {
    return this.afAuth.authState
-   .timeout(50)
    .map(pd => pd.providerData[0] )
   }
 
@@ -26,12 +25,11 @@ export class FacebookService {
         '&fields=cover,name&limit=10')
         .map(facebookFriend => facebookFriend['data']
         .map( data => this.createUser(data.id, data.name, data.cover.source)))
-        .timeout(50)
         .first().toPromise();
   } 
 
  private createUser(id, name, picture) {
-    return { id: id, name: name, picture: picture } as User
+    return { id: id, name: name, picture: picture } as FacebookUser
   }
 
 }

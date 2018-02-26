@@ -1,14 +1,44 @@
 import * as functions from 'firebase-functions';
+import * as admin from 'firebase-admin'
+import * as users from './users'
 
-// // Start writing Firebase Functions
-// // https://firebase.google.com/docs/functions/typescript
-//
-// export const helloWorld = functions.https.onRequest((request, response) => {
-//  response.send("Hello from Firebase!");
-// });
+import * as expenses from './expenses'
+import { Expense } from './model/expense';
+import User from './model/user';
 
-exports.personsUpdate = functions.firestore.document('/expenses/{expenseId}') 
-    .onCreate(event => {
-            event.data.data();
+admin.initializeApp(functions.config().firebase);
 
-    })
+const db : FirebaseFirestore.Firestore = admin.firestore();
+
+
+exports.userCreation = functions.auth.user().onCreate(event =>{
+    return users.createUser(event.data.providerData[0].uid,db);
+})
+
+exports.addExpense = functions.firestore.document('expenses/{expensesId}').onCreate( event =>{
+    let expense = event.data.data() as Expense;
+    expense.id = event.data.id;
+    expenses.writeExpense(expense,db);
+    return 0;
+})
+
+exports.updExpense = functions.firestore.document('expenses/{expensesId}').onUpdate( event =>{
+    let expense = event.data.data() as Expense;
+    expense.id = event.data.id;
+    expenses.writeExpense(expense,db);
+    return 0;
+})
+
+exports.delExpense = functions.firestore.document('expenses/{expensesId}').onDelete( event =>{
+    console.log(event);
+    console.log(event.data.previous.data())
+    console.log(event.data.previous.id)
+    let expense = event.data.previous.data() as Expense;
+    expense.id = event.data.previous.id;
+    expenses.deleteExpense(expense,db);
+    return 0;
+})
+
+exports.userUpdate = functions.firestore.document('users/{userId}').onUpdate(event => {
+   // users.recalculateRelations(event.data.data() as User);
+})

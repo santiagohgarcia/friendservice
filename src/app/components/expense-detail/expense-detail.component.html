@@ -24,7 +24,8 @@
       </mat-form-field>
 
       <mat-form-field class="full-width">
-        <input matInput [matDatepicker]="picker" placeholder="Date" [formControl]="date" [(ngModel)]="expense.date" [(value)]="expense.date" [disabled]="loading">
+        <input matInput [matDatepicker]="picker" placeholder="Date" [formControl]="date" [(ngModel)]="expense.date" [(value)]="expense.date"
+          [disabled]="loading">
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
         <mat-error *ngIf="date.invalid">Insert a valid date</mat-error>
@@ -39,9 +40,14 @@
 
       <mat-form-field class="full-width">
         <mat-chip-list #chipList class="full-width">
-          <mat-chip *ngFor="let user of expense.users" (removed)="removeFriend($event)" value="{{user.id}}" removable="{{user.id != (userInfo | async)?.uid}}">
-            <img mat-card-avatar style="vertical-align:middle;" aria-hidden src="{{user.picture}}" height="20" />{{user.name}}(ARS {{expense.totalAmount/expense.users.length | number:'1.2-2'}})
-            <mat-icon *ngIf="user.id != (userInfo | async)?.uid" matChipRemove>cancel</mat-icon>
+          <mat-chip value="{{creator.uid}}">
+            <img mat-card-avatar style="vertical-align:middle;" aria-hidden src="{{creator.photoURL}}" height="20" />{{creator.displayName}}(ARS {{expense.totalAmount/(expense.users.length+1) | number:'1.2-2'}})
+          </mat-chip>
+          <mat-chip *ngFor="let user of expense.users" 
+                            (removed)="removeFriend($event)"
+                            value="{{user.ref}}">
+            <img mat-card-avatar style="vertical-align:middle;" aria-hidden src="{{this.getFbInfo(user.ref)?.picture}}" height="20" />{{this.getFbInfo(user.ref)?.name}}(ARS {{expense.totalAmount/(expense.users.length+1) | number:'1.2-2'}})
+            <mat-icon matChipRemove>cancel</mat-icon>
           </mat-chip>
         </mat-chip-list>
         <input matInput class="full-width" placeholder="Divide between" [matChipInputFor]="chipList" [matAutocomplete]="auto" [formControl]="friendsCtrl">

@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { Expense, InitialExpense } from '../../model/expense';
+import { Expense } from '../../model/expense';
 import 'rxjs/add/operator/catch';
 import { Router } from '@angular/router';
 import { ExpenseService } from '../../services/expense.service'
@@ -13,7 +13,6 @@ import { MessagesService } from '../../services/messages.service'
 })
 export class ExpensesComponent implements OnInit {
   
-  loading: boolean = true;
   expenses: Observable<Expense[]>;
 
   constructor(private expenseService: ExpenseService,
@@ -23,7 +22,6 @@ export class ExpensesComponent implements OnInit {
   ngOnInit() {
     this.expenses = this.expenseService.getExpenses()
                     .catch(e => { this.messagesService.error(e.message);
-                                  this.loading = false;
                                   return []; });
   }
 
