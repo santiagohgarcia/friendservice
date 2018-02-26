@@ -22,12 +22,12 @@ exports.writeExpense = function (expense, db) {
     // agregar el expense al usuario creador
     exports.addExpenseToUser(expense.creator, expense.id, db);
     // agregar el expense a los usuarios deudores
-    expense.users.forEach(uid => exports.addExpenseToUser(expense.creator, expense.id, db));
+    expense.users.forEach(uid => exports.addExpenseToUser(uid.ref, expense.id, db));
 };
 exports.deleteExpense = function (expense, db) {
     // delete el expense al usuario creador
     exports.deleteExpenseToUser(expense.creator, expense.id, db);
     // delete el expense a los usuarios deudores
-    expense.users.forEach(uid => exports.deleteExpenseToUser(expense.creator, expense.id, db));
+    expense.users.forEach(uid => exports.deleteExpenseToUser(uid.ref, expense.id, db));
 };
 //# sourceMappingURL=expenses.js.map

@@ -40,5 +40,7 @@ exports.delExpense = functions.firestore.document('expenses/{expensesId}').onDel
 })
 
 exports.userUpdate = functions.firestore.document('users/{userId}').onUpdate(event => {
-   // users.recalculateRelations(event.data.data() as User);
+    console.log(event.data.data())
+    users.recalculateRelations(event.data.data() as User,db).catch(err => console.log(err))
+    return 0;
 })

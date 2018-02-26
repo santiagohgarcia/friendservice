@@ -33,12 +33,12 @@ export const writeExpense = function (expense: Expense, db: FirebaseFirestore.Fi
     // agregar el expense al usuario creador
     addExpenseToUser(expense.creator,expense.id,db);
     // agregar el expense a los usuarios deudores
-    expense.users.forEach( uid => addExpenseToUser(expense.creator,expense.id,db))
+    expense.users.forEach( uid => addExpenseToUser(uid.ref,expense.id,db))
 }
 
 export const deleteExpense = function (expense: Expense, db: FirebaseFirestore.Firestore) {
     // delete el expense al usuario creador
     deleteExpenseToUser(expense.creator,expense.id,db);
     // delete el expense a los usuarios deudores
-    expense.users.forEach( uid => deleteExpenseToUser(expense.creator,expense.id,db))
+    expense.users.forEach( uid => deleteExpenseToUser(uid.ref,expense.id,db))
 }

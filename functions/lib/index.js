@@ -30,4 +30,9 @@ exports.delExpense = functions.firestore.document('expenses/{expensesId}').onDel
     expenses.deleteExpense(expense, db);
     return 0;
 });
+exports.userUpdate = functions.firestore.document('users/{userId}').onUpdate(event => {
+    console.log(event.data.data());
+    users.recalculateRelations(event.data.data(), db).catch(err => console.log(err));
+    return 0;
+});
 //# sourceMappingURL=index.js.map
