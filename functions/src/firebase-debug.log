@@ -1,0 +1,17 @@
+[debug] [2018-02-27T19:38:50.046Z] ----------------------------------------------------------------------
+[debug] [2018-02-27T19:38:50.046Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\sgarc10\AppData\Roaming\npm\node_modules\firebase-tools\bin\firebase experimental:functions:shell
+[debug] [2018-02-27T19:38:50.046Z] CLI Version:   3.17.4
+[debug] [2018-02-27T19:38:50.046Z] Platform:      win32
+[debug] [2018-02-27T19:38:50.046Z] Node Version:  v8.9.4
+[debug] [2018-02-27T19:38:50.046Z] Time:          Tue Feb 27 2018 16:38:50 GMT-0300 (SA Eastern Standard Time)
+[debug] [2018-02-27T19:38:50.056Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2018-02-27T19:38:50.076Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2018-02-27T19:38:50.076Z] > authorizing via signed-in user
+[debug] [2018-02-27T19:38:50.086Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/friend-service-15f6e  
+  
+ Tue Feb 27 2018 16:38:50 GMT-0300 (SA Eastern Standard Time)
+[debug] [2018-02-27T19:38:52.530Z] <<< HTTP RESPONSE 200
+[debug] [2018-02-27T19:38:52.530Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/friend-service-15f6e/tokens  
+  
+ Tue Feb 27 2018 16:38:52 GMT-0300 (SA Eastern Standard Time)
