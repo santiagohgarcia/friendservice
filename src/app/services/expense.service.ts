@@ -3,6 +3,7 @@ import { Observable } from 'rxjs/Observable';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { Expense } from '../model/expense';
 import { DocumentSnapshot } from '@firebase/firestore-types';
+import { Reference } from '../model/reference';
 
 @Injectable()
 export class ExpenseService {
@@ -27,17 +28,36 @@ export class ExpenseService {
       });
   }
 
-  addExpense(expense: Expense): Promise<any> {
-    return this.db.collection('expenses').add(expense);
-
+  getExpenseUsers(id: string): Observable<string[]> {
+    return this.db.collection(`expenses/${id}/users`).snapshotChanges()
+      .map(action => action.map(a => a.payload.doc.id));
   }
 
-  updateExpense(expense: Expense): Promise<any> {
-    return this.db.doc(`expenses/${expense.id}`).update(expense);
+  addExpense(expense: Expense, expenseUsers: string[]): Promise<any> {
+      return this.db.collection('expenses').add(expense)
+      .then( doc => expenseUsers.forEach( user => doc.collection('users').doc(user).set({}) )           
+    )
+  }
+
+  updateExpense(expense: Expense,expenseUsers: string[]): Promise<any> {
+    let expenseRef = this.db.doc(`expenses/${expense.id}`);
+    let expenseUsersRef = this.db.collection(`expenses/${expense.id}/users`).ref;
+    return Promise.all([
+      expenseRef.update(expense)
+      .then(_ => expenseUsersRef.get()
+                    .then(query => query.docs.map(doc => doc.ref.delete())) )
+      .then(_ => expenseUsers.map(user => expenseUsersRef.doc(user).set({}) ) )
+    ]) 
   }
 
   deleteExpense(expenseId: string) {
-    return this.db.doc(`expenses/${expenseId}`).delete();
+    return this.deleteExpenseUsers(expenseId).then(_ => 
+           this.db.doc(`expenses/${expenseId}`).delete() )
+  }
+
+  deleteExpenseUsers(expenseId: string): Promise<any>{ // TODO: hacerlo por cloud functions
+    return this.db.collection(`expenses/${expenseId}/users`).ref.get()
+      .then(query => query.docs.map(doc => doc.ref.delete()))
   }
 
 }

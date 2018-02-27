@@ -7,8 +7,6 @@ export interface Expense {
     date: Date;
     creator: string,
     totalAmount: number;
-    users: Reference[];
-
 }
 
 export function InitialExpense(creatorId: string): Expense {
@@ -17,7 +15,6 @@ export function InitialExpense(creatorId: string): Expense {
        title: "",
        date: null,
        creator: creatorId,
-       totalAmount: 0,
-       users: []
+       totalAmount: 0
    } as Expense
 }

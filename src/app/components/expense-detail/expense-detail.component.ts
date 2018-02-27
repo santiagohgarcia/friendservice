@@ -29,13 +29,13 @@ export class ExpenseDetailComponent {
   loading: boolean = true;
   friends: FacebookUser[] = [];
   filteredFriends: Observable<FacebookUser[]>;
-
   formattedAmount: String = '';
   saveFunction;
 
   creator = this.afAuth.auth.currentUser.providerData[0];
 
   expense: Expense = InitialExpense(this.creator.uid);
+  expenseUsers: string[] = []
 
   title = new FormControl('', [Validators.required]);
   date = new FormControl('', [Validators.required]);
@@ -74,6 +74,11 @@ export class ExpenseDetailComponent {
           this.messageService.error(e.message);
           return InitialExpense(this.creator.uid);
         });
+      this.expenseUsers = await this.expenseService.getExpenseUsers(id).first().toPromise()
+        .catch(e => {
+          this.messageService.error(e.message);
+          return [];
+        });
       this.formattedAmount = this.decimalPipe.transform(this.expense.totalAmount, '1.2-2');
       this.saveFunction = 'updateExpense';
     } else {
@@ -92,7 +97,7 @@ export class ExpenseDetailComponent {
 
   filter(val: string): FacebookUser[] {
     return this.friends.filter(f =>
-      !this.expense.users.find(userRef => userRef.ref === f.id) &&
+      !this.expenseUsers.find(userRef => userRef === f.id) &&
       f.name.toLowerCase().includes(val.toLowerCase()));
   }
 
@@ -102,7 +107,7 @@ export class ExpenseDetailComponent {
 
   save(): void {
     if (this.expenseForm.valid) {
-      this.expenseService[this.saveFunction](this.expense)
+      this.expenseService[this.saveFunction](this.expense,this.expenseUsers)
         .then(_ => this.goBack())
         .catch(e => this.messageService.error(e.message));
     }
@@ -126,13 +131,13 @@ export class ExpenseDetailComponent {
   }
 
   friendSelection(event: MatAutocompleteSelectedEvent) {
-    if(!this.expense.users.find(userRef => userRef.ref ===  event.option.value)){
-      this.expense.users.push({ ref: event.option.value } as Reference);
+    if(!this.expenseUsers.find(userRef => userRef ===  event.option.value)){
+      this.expenseUsers.push(event.option.value);
     }
   }
 
   removeFriend(event: MatChipEvent) {
-    this.expense.users = this.expense.users.filter(userRef => userRef.ref != event.chip.value)
+    this.expenseUsers = this.expenseUsers.filter(userRef => userRef != event.chip.value)
   }
 
   getFbInfo(id: string): FacebookUser {
