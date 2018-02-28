@@ -34,28 +34,28 @@ export class ExpenseService {
   }
 
   addExpense(expense: Expense, expenseUsers: string[]): Promise<any> {
-      return this.db.collection('expenses').add(expense)
-      .then( doc => expenseUsers.forEach( user => doc.collection('users').doc(user).set({}) )           
-    )
+    return this.db.collection('expenses').add(expense)
+      .then(doc => expenseUsers.forEach(user => doc.collection('users').doc(user).set({}))
+      )
   }
 
-  updateExpense(expense: Expense,expenseUsers: string[]): Promise<any> {
+  updateExpense(expense: Expense, expenseUsers: string[]): Promise<any> {
     let expenseRef = this.db.doc(`expenses/${expense.id}`);
     let expenseUsersRef = this.db.collection(`expenses/${expense.id}/users`).ref;
-    return Promise.all([
-      expenseRef.update(expense)
+    return expenseRef.update(expense)
       .then(_ => expenseUsersRef.get()
-                    .then(query => query.docs.map(doc => doc.ref.delete())) )
-      .then(_ => expenseUsers.map(user => expenseUsersRef.doc(user).set({}) ) )
-    ]) 
-  }
+        .then(query => query.docs.forEach(doc => {
+          if (!expenseUsers.find(eu => eu === doc.id)) { doc.ref.delete() }
+        })))
+        .then(_ => expenseUsers.map(user => expenseUsersRef.doc(user).set({})))
+      }
 
   deleteExpense(expenseId: string) {
-    return this.deleteExpenseUsers(expenseId).then(_ => 
-           this.db.doc(`expenses/${expenseId}`).delete() )
+    return this.deleteExpenseUsers(expenseId).then(_ =>
+      this.db.doc(`expenses/${expenseId}`).delete())
   }
 
-  deleteExpenseUsers(expenseId: string): Promise<any>{ // TODO: hacerlo por cloud functions
+  deleteExpenseUsers(expenseId: string): Promise<any> { // TODO: hacerlo por cloud functions
     return this.db.collection(`expenses/${expenseId}/users`).ref.get()
       .then(query => query.docs.map(doc => doc.ref.delete()))
   }

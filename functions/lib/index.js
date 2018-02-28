@@ -36,9 +36,9 @@ const recalculateRelations = function (userId) {
             expense.id = e.id;
             relationsProm = db.collection(`expenses/${expense.id}/users`).get()
                 .then(query => {
-                let users = query.docs.map(d => d.id);
+                let users = query.docs.map(d => d.id).filter(id => id != expense.creator);
                 console.log(users);
-                let individualAmount = (expense.totalAmount / (users.length + 1));
+                let individualAmount = expense.totalAmount / (users.length + 1);
                 console.log("individual amount" + individualAmount);
                 let relation = null;
                 if (expense.creator === userId) {
@@ -85,22 +85,31 @@ const recalculateRelations = function (userId) {
     }))
         .catch(err => console.log(err));
 };
-// ON CREATE EXPENSE
+/* // ON CREATE EXPENSE
 exports.addExpense = functions.firestore.document('expenses/{expenseId}').onCreate(event => {
-    let expenseCreator = event.data.data().creator;
+    let expenseCreator = event.data.data().creator
     let expenseId = event.params.expenseId;
     //add to creator as creator expenses
     return db.collection(`users`).doc(expenseCreator).collection('expenses').doc(expenseId).set({});
-});
+})
+
 // ON DELETE EXPENSE
 exports.delExpense = functions.firestore.document('expenses/{expenseId}').onDelete(event => {
-    const expenseCreator = event.data.previous.data().creator;
+    const expenseCreator = event.data.previous.data().creator
     const expenseId = event.params.expenseId;
     //remove the expense from the creators list
-    return db.doc(`users/${expenseCreator}/expenses/${expenseId}`).delete();
-});
+    return db.doc(`users/${expenseCreator}/expenses/${expenseId}`).delete()
+})
+ 
+*/
 // ON CREATE USER FROM EXPENSE
 exports.addUserToExpense = functions.firestore.document('expenses/{expenseId}/users/{userId}').onCreate(event => {
+    const userId = event.params.userId;
+    const expenseId = event.params.expenseId;
+    return db.collection('users').doc(userId).collection('expenses').doc(expenseId).set({});
+});
+// ON CREATE USER FROM EXPENSE
+exports.updUserToExpense = functions.firestore.document('expenses/{expenseId}/users/{userId}').onUpdate(event => {
     const userId = event.params.userId;
     const expenseId = event.params.expenseId;
     return db.collection('users').doc(userId).collection('expenses').doc(expenseId).set({});

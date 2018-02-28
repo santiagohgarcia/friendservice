@@ -41,10 +41,10 @@ const recalculateRelations = function (userId: string) {
                     relationsProm = db.collection(`expenses/${expense.id}/users`).get()
                         .then(query => {
 
-                            let users = query.docs.map(d => d.id)
+                            let users = query.docs.map(d => d.id).filter(id => id != expense.creator)
                             console.log(users)
 
-                            let individualAmount = (expense.totalAmount / (users.length + 1))
+                            let individualAmount = expense.totalAmount /  ( users.length + 1 )
                             console.log("individual amount" + individualAmount)
 
                             let relation: Relation = null;
@@ -95,7 +95,7 @@ const recalculateRelations = function (userId: string) {
         .catch(err => console.log(err))
 }
 
-// ON CREATE EXPENSE
+/* // ON CREATE EXPENSE
 exports.addExpense = functions.firestore.document('expenses/{expenseId}').onCreate(event => {
     let expenseCreator = event.data.data().creator
     let expenseId = event.params.expenseId;
@@ -110,7 +110,8 @@ exports.delExpense = functions.firestore.document('expenses/{expenseId}').onDele
     //remove the expense from the creators list
     return db.doc(`users/${expenseCreator}/expenses/${expenseId}`).delete()
 })
-
+ 
+*/
 
 // ON CREATE USER FROM EXPENSE
 exports.addUserToExpense = functions.firestore.document('expenses/{expenseId}/users/{userId}').onCreate(event => {

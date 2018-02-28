@@ -40,14 +40,15 @@
 
       <mat-form-field class="full-width">
         <mat-chip-list #chipList class="full-width">
-          <mat-chip value="{{creator.uid}}">
+  <!--         <mat-chip value="{{creator.uid}}">
             <img mat-card-avatar style="vertical-align:middle;" aria-hidden src="{{creator.photoURL}}" height="20" />{{creator.displayName}}(ARS {{expense.totalAmount/(expenseUsers.length+1) | number:'1.2-2'}})
-          </mat-chip>
+          </mat-chip> -->
           <mat-chip *ngFor="let userId of expenseUsers" 
                             (removed)="removeFriend($event)"
+                            (removable)="userId != creator.uid"
                             value="{{userId}}">
-            <img mat-card-avatar style="vertical-align:middle;" aria-hidden src="{{this.getFbInfo(userId)?.picture}}" height="20" />{{this.getFbInfo(userId)?.name}}(ARS {{expense.totalAmount/(expenseUsers.length+1) | number:'1.2-2'}})
-            <mat-icon matChipRemove>cancel</mat-icon>
+            <img mat-card-avatar style="vertical-align:middle;" aria-hidden src="{{this.getFbInfo(userId)?.picture}}" height="20" />{{this.getFbInfo(userId)?.name}}(ARS {{ expense.totalAmount/ expenseUsers.length | number:'1.2-2'}})
+            <mat-icon *ngIf="userId != creator.uid" matChipRemove>cancel</mat-icon>
           </mat-chip>
         </mat-chip-list>
         <input matInput class="full-width" placeholder="Divide between" [matChipInputFor]="chipList" [matAutocomplete]="auto" [formControl]="friendsCtrl">

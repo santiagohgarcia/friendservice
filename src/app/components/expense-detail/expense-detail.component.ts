@@ -35,7 +35,7 @@ export class ExpenseDetailComponent {
   creator = this.afAuth.auth.currentUser.providerData[0];
 
   expense: Expense = InitialExpense(this.creator.uid);
-  expenseUsers: string[] = []
+  expenseUsers: string[] = [this.creator.uid]
 
   title = new FormControl('', [Validators.required]);
   date = new FormControl('', [Validators.required]);
@@ -141,7 +141,15 @@ export class ExpenseDetailComponent {
   }
 
   getFbInfo(id: string): FacebookUser {
-    return this.friends.find( f => f.id === id );
+    if(id === this.creator.uid){
+      return {
+        id: this.creator.uid,
+        name: this.creator.displayName,
+        picture: this.creator.photoURL
+      } as FacebookUser
+    }else{
+      return this.friends.find( f => f.id === id );
+    }
   }
 }
 
