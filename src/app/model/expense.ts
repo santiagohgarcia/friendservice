@@ -1,6 +1,3 @@
-import FacebookUser from "./facebook-user"; 
-import { Reference } from "./reference";
-
 export interface Expense {
     id: string;
     title: string;

@@ -15,7 +15,6 @@ import { FacebookService } from '../../services/facebook.service'
 import { MessagesService } from '../../services/messages.service'
 import 'rxjs/add/operator/first';
 import { UserInfo } from 'firebase/app';
-import { Reference } from '../../model/reference';
 
 @Component({
   selector: 'app-expense-detail',

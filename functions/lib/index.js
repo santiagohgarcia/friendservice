@@ -24,6 +24,11 @@ const recalculateRelations = function (userId) {
         const expenses = yield db.collection(`users/${userId}/expenses`).get()
             .then(query => query.docs.map(doc => doc.id))
             .then(ids => Promise.all(ids.map(id => db.collection(`expenses`).doc(id).get())))
+            .then(snaps => snaps.map(snap => {
+            let expense = snap.data();
+            expense.id = snap.id;
+            return expense;
+        }))
             .catch(err => {
             console.log(err);
             return null;
@@ -31,23 +36,23 @@ const recalculateRelations = function (userId) {
         console.log(expenses);
         let relations = [];
         let relationsProm;
-        expenses.forEach(e => {
-            let expense = e.data();
-            expense.id = e.id;
-            relationsProm = db.collection(`expenses/${expense.id}/users`).get()
+        relationsProm = Promise.all(expenses.map(e => {
+            return db.collection(`expenses/${e.id}/users`).get()
                 .then(query => {
-                let users = query.docs.map(d => d.id).filter(id => id != expense.creator);
+                let users = query.docs.map(d => {
+                    let expenseUser = d.data();
+                    expenseUser.id = d.id;
+                    return expenseUser;
+                });
                 console.log(users);
-                let individualAmount = expense.totalAmount / (users.length + 1);
-                console.log("individual amount" + individualAmount);
                 let relation = null;
-                if (expense.creator === userId) {
-                    users.forEach(debtor => {
+                users.forEach(debtor => {
+                    if (e.creator === debtor.id) {
                         console.log("debtor " + debtor);
-                        relation = relations.find(r => r.userId === debtor);
+                        relation = relations.find(r => r.userId === debtor.id);
                         if (!relation) {
                             relation = {
-                                userId: debtor,
+                                userId: debtor.id,
                                 owesMe: 0,
                                 iOwe: 0,
                                 expenses: []
@@ -56,28 +61,28 @@ const recalculateRelations = function (userId) {
                             console.log("relation recien creada");
                             console.log(relations);
                         }
-                        relation.owesMe = relation.owesMe + individualAmount;
-                    });
-                }
-                else {
-                    relation = relations.find(r => r.userId === expense.creator);
-                    if (!relation) {
-                        relation = {
-                            userId: expense.creator,
-                            owesMe: 0,
-                            iOwe: 0,
-                            expenses: []
-                        };
-                        relations.push(relation);
-                        console.log("relation recien creada");
-                        console.log(relations);
+                        relation.owesMe = relation.owesMe + debtor.individualAmount;
                     }
-                    relation.iOwe = relation.iOwe + individualAmount;
-                }
-                relation.expenses.push(e.id);
-                console.log(relations);
+                    else {
+                        relation = relations.find(r => r.userId === e.creator);
+                        if (!relation) {
+                            relation = {
+                                userId: e.creator,
+                                owesMe: 0,
+                                iOwe: 0,
+                                expenses: []
+                            };
+                            relations.push(relation);
+                            console.log("relation recien creada");
+                            console.log(relations);
+                        }
+                        relation.iOwe = relation.iOwe + debtor.individualAmount;
+                    }
+                    relation.expenses.push(e.id);
+                    console.log(relations);
+                });
             }).catch(err => console.log(err));
-        });
+        }));
         yield relationsProm;
         console.log("relations");
         console.log(relations);
@@ -108,11 +113,10 @@ exports.addUserToExpense = functions.firestore.document('expenses/{expenseId}/us
     const expenseId = event.params.expenseId;
     return db.collection('users').doc(userId).collection('expenses').doc(expenseId).set({});
 });
-// ON CREATE USER FROM EXPENSE
-exports.updUserToExpense = functions.firestore.document('expenses/{expenseId}/users/{userId}').onUpdate(event => {
+// ON MODIFICATION USER FROM EXPENSE
+exports.modifyExpenseUser = functions.firestore.document('expenses/{expenseId}/users/{userId}').onUpdate(event => {
     const userId = event.params.userId;
-    const expenseId = event.params.expenseId;
-    return db.collection('users').doc(userId).collection('expenses').doc(expenseId).set({});
+    return recalculateRelations(userId);
 });
 // ON DELETE USER FROM EXPENSE
 exports.deleteUserToExpense = functions.firestore.document('expenses/{expenseId}/users/{userId}').onDelete(event => {

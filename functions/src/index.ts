@@ -5,6 +5,7 @@ import { Expense } from './model/expense';
 import User from './model/user';
 import { user } from 'firebase-functions/lib/providers/auth';
 import { Relation } from './model/relation';
+import { ExpenseUser } from './model/expense-user';
 
 admin.initializeApp(functions.config().firebase);
 
@@ -24,53 +25,46 @@ const recalculateRelations = function (userId: string) {
         .then(async _ => {
             console.log("ya se borraron los registrs")
 
-            const expenses: FirebaseFirestore.DocumentSnapshot[] = await db.collection(`users/${userId}/expenses`).get()
+            const expenses: Expense[] = await db.collection(`users/${userId}/expenses`).get()
                 .then(query => query.docs.map(doc => doc.id))
-                .then(ids => Promise.all( ids.map(id =>  db.collection(`expenses`).doc(id).get() ) ) )
-                .catch(err => { console.log(err); 
-                                return null } )
+                .then(ids => Promise.all(ids.map(id => db.collection(`expenses`).doc(id).get())))
+                .then(snaps => snaps.map(snap => {
+                    let expense = snap.data() as Expense
+                    expense.id = snap.id
+                    return expense
+                }))
+                .catch(err => {
+                    console.log(err);
+                    return null
+                })
 
             console.log(expenses)
             let relations: Relation[] = [];
             let relationsProm: Promise<any>;
- 
-            expenses.forEach(e => { 
-                    let expense = e.data() as Expense
-                    expense.id = e.id
 
-                    relationsProm = db.collection(`expenses/${expense.id}/users`).get()
-                        .then(query => {
+            relationsProm = Promise.all(
+                
+                expenses.map(e => {
 
-                            let users = query.docs.map(d => d.id).filter(id => id != expense.creator)
-                            console.log(users)
+                return db.collection(`expenses/${e.id}/users`).get()
+                    .then(query => {
 
-                            let individualAmount = expense.totalAmount /  ( users.length + 1 )
-                            console.log("individual amount" + individualAmount)
+                        let users = query.docs.map(d => {
+                            let expenseUser = d.data() as ExpenseUser
+                            expenseUser.id = d.id
+                            return expenseUser
+                        })
+                        console.log(users)
 
-                            let relation: Relation = null;
+                        let relation: Relation = null;
+                        users.forEach(debtor => {
 
-                            if (expense.creator === userId) {
-                                users.forEach(debtor => {
-                                    console.log("debtor " + debtor)
-                                    relation = relations.find(r => r.userId === debtor)
-                                    if (!relation) {
-                                        relation = {
-                                            userId: debtor,
-                                            owesMe: 0,
-                                            iOwe: 0,
-                                            expenses: []
-                                        } as Relation
-                                        relations.push(relation);
-                                        console.log("relation recien creada")
-                                        console.log(relations)
-                                    }
-                                    relation.owesMe = relation.owesMe + individualAmount;
-                                })
-                            } else {
-                                relation = relations.find(r => r.userId === expense.creator)
+                            if (e.creator === debtor.id) {
+                                console.log("debtor " + debtor)
+                                relation = relations.find(r => r.userId === debtor.id)
                                 if (!relation) {
                                     relation = {
-                                        userId: expense.creator,
+                                        userId: debtor.id,
                                         owesMe: 0,
                                         iOwe: 0,
                                         expenses: []
@@ -79,19 +73,35 @@ const recalculateRelations = function (userId: string) {
                                     console.log("relation recien creada")
                                     console.log(relations)
                                 }
-                                relation.iOwe = relation.iOwe + individualAmount;
+                                relation.owesMe = relation.owesMe + debtor.individualAmount;
+
+                            } else {
+                                relation = relations.find(r => r.userId === e.creator)
+                                if (!relation) {
+                                    relation = {
+                                        userId: e.creator,
+                                        owesMe: 0,
+                                        iOwe: 0,
+                                        expenses: []
+                                    } as Relation
+                                    relations.push(relation);
+                                    console.log("relation recien creada")
+                                    console.log(relations)
+                                }
+                                relation.iOwe = relation.iOwe + debtor.individualAmount;
                             }
                             relation.expenses.push(e.id);
                             console.log(relations)
-                        }).catch(err => console.log(err))
-                })
+                        })
+                    }).catch(err => console.log(err))
+            }))
 
-                await relationsProm;
-                console.log("relations")
-                console.log(relations)
+            await relationsProm;
+            console.log("relations")
+            console.log(relations)
 
-                return Promise.all(relations.map(rel => db.collection(`users/${userId}/relations`).doc(rel.userId).set(rel)))
-            })
+            return Promise.all(relations.map(rel => db.collection(`users/${userId}/relations`).doc(rel.userId).set(rel)))
+        })
         .catch(err => console.log(err))
 }
 
@@ -120,10 +130,16 @@ exports.addUserToExpense = functions.firestore.document('expenses/{expenseId}/us
     return db.collection('users').doc(userId).collection('expenses').doc(expenseId).set({})
 })
 
+// ON MODIFICATION USER FROM EXPENSE
+exports.modifyExpenseUser = functions.firestore.document('expenses/{expenseId}/users/{userId}').onUpdate(event => {
+    const userId = event.params.userId;
+    return recalculateRelations(userId);
+})
+
 // ON DELETE USER FROM EXPENSE
 exports.deleteUserToExpense = functions.firestore.document('expenses/{expenseId}/users/{userId}').onDelete(event => {
     const userId = event.params.userId;
-    const expenseId = event.params.expenseId
+    const expenseId = event.params.expenseId;
     return db.collection('users').doc(userId).collection('expenses').doc(expenseId).delete()
 })
 
@@ -132,3 +148,5 @@ exports.recalculateRelationsOnWrite = functions.firestore.document('users/{userI
     const userId = event.params.userId;
     return recalculateRelations(userId);
 })
+
+

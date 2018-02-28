@@ -3,7 +3,7 @@ import { Observable } from 'rxjs/Observable';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { Expense } from '../model/expense';
 import { DocumentSnapshot } from '@firebase/firestore-types';
-import { Reference } from '../model/reference';
+import { ExpenseUser } from '../model/expense-user';
 
 @Injectable()
 export class ExpenseService {
@@ -41,13 +41,17 @@ export class ExpenseService {
 
   updateExpense(expense: Expense, expenseUsers: string[]): Promise<any> {
     let expenseRef = this.db.doc(`expenses/${expense.id}`);
-    let expenseUsersRef = this.db.collection(`expenses/${expense.id}/users`).ref;
+    let expenseUsersRef = this.db.collection(`expenses/${expense.id}/users`);
     return expenseRef.update(expense)
-      .then(_ => expenseUsersRef.get()
-        .then(query => query.docs.forEach(doc => {
-          if (!expenseUsers.find(eu => eu === doc.id)) { doc.ref.delete() }
-        })))
-        .then(_ => expenseUsers.map(user => expenseUsersRef.doc(user).set({})))
+      .then(_ => expenseUsersRef.ref.get() )
+      .then(query => Promise.all(
+                            query.docs.map(doc => { if (!expenseUsers.find(eu => eu === doc.id)) { doc.ref.delete() }
+                          })))
+      .then(_ => expenseUsers.map(user => 
+          expenseUsersRef.doc(user).set({ 
+          id: user,
+          individualAmount: expense.totalAmount / expenseUsers.length
+        } as ExpenseUser)))
       }
 
   deleteExpense(expenseId: string) {
