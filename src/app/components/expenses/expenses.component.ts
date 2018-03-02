@@ -22,8 +22,7 @@ export class ExpensesComponent implements OnInit {
   }
 
   ngOnInit() {
-
-    this.expenses = this.expenseService.getExpenses(this.afAuth.auth.currentUser.providerData[0].uid)
+    this.expenses = this.expenseService.getExpenses()
                     .catch(e => { this.messagesService.error(e.message);
                                   return []; });
   }
