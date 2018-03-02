@@ -1,0 +1,61 @@
+[debug] [2018-03-02T14:45:50.282Z] ----------------------------------------------------------------------
+[debug] [2018-03-02T14:45:50.285Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\sgarc10\AppData\Roaming\npm\node_modules\firebase-tools\bin\firebase deploy --only functions
+[debug] [2018-03-02T14:45:50.285Z] CLI Version:   3.17.4
+[debug] [2018-03-02T14:45:50.285Z] Platform:      win32
+[debug] [2018-03-02T14:45:50.285Z] Node Version:  v8.9.4
+[debug] [2018-03-02T14:45:50.287Z] Time:          Fri Mar 02 2018 11:45:50 GMT-0300 (SA Eastern Standard Time)
+[debug] [2018-03-02T14:45:50.287Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2018-03-02T14:45:50.330Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2018-03-02T14:45:50.333Z] > authorizing via signed-in user
+[debug] [2018-03-02T14:45:50.336Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2018-03-02T14:45:50.336Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ { refresh_token: '1/NHyMLE1MGURRu-f9CzUuxxEV5uQ7lV2pD-BqO26LXIE',
+  client_id: '563584335869-fgrhgmd47bqnekij5i8b5pr03ho849e6.apps.googleusercontent.com',
+  client_secret: 'j9iVZfS8kkCEFUPaAeJV0sAi',
+  grant_type: 'refresh_token',
+  scope: 'email https://www.googleapis.com/auth/cloud-platform https://www.googleapis.com/auth/cloudplatformprojects.readonly https://www.googleapis.com/auth/firebase openid' } 
+ Fri Mar 02 2018 11:45:50 GMT-0300 (SA Eastern Standard Time)
+[debug] [2018-03-02T14:45:51.304Z] <<< HTTP RESPONSE 200
+[debug] [2018-03-02T14:45:51.357Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/friend-service-15f6e  
+  
+ Fri Mar 02 2018 11:45:51 GMT-0300 (SA Eastern Standard Time)
+[debug] [2018-03-02T14:45:53.544Z] <<< HTTP RESPONSE 200
+[debug] [2018-03-02T14:45:53.546Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/friend-service-15f6e/tokens  
+  
+ Fri Mar 02 2018 11:45:53 GMT-0300 (SA Eastern Standard Time)
+[debug] [2018-03-02T14:46:54.104Z] <<< HTTP RESPONSE 200
+[debug] [2018-03-02T14:46:54.459Z] Error: Firebase.authWithCustomToken failed: First argument must be a valid credential (a string).
+    at ng (C:\Users\sgarc10\AppData\Roaming\npm\node_modules\firebase-tools\node_modules\firebase\lib\firebase-node.js:129:313)
+    at X.gg (C:\Users\sgarc10\AppData\Roaming\npm\node_modules\firebase-tools\node_modules\firebase\lib\firebase-node.js:266:131)
+    at C:\Users\sgarc10\AppData\Roaming\npm\node_modules\firebase-tools\lib\acquireRefs.js:19:19
+    at initializePromise (C:\Users\sgarc10\AppData\Roaming\npm\node_modules\firebase-tools\node_modules\rsvp\dist\rsvp.js:567:5)
+    at new Promise (C:\Users\sgarc10\AppData\Roaming\npm\node_modules\firebase-tools\node_modules\rsvp\dist\rsvp.js:1039:33)
+    at C:\Users\sgarc10\AppData\Roaming\npm\node_modules\firebase-tools\lib\acquireRefs.js:12:12
+    at tryCatch (C:\Users\sgarc10\AppData\Roaming\npm\node_modules\firebase-tools\node_modules\rsvp\dist\rsvp.js:525:12)
+    at invokeCallback (C:\Users\sgarc10\AppData\Roaming\npm\node_modules\firebase-tools\node_modules\rsvp\dist\rsvp.js:538:13)
+    at publish (C:\Users\sgarc10\AppData\Roaming\npm\node_modules\firebase-tools\node_modules\rsvp\dist\rsvp.js:508:7)
+    at flush (C:\Users\sgarc10\AppData\Roaming\npm\node_modules\firebase-tools\node_modules\rsvp\dist\rsvp.js:2415:5)
+[error] 
+[error] Error: An unexpected error has occurred.
+[debug] [2018-03-02T15:23:40.651Z] ----------------------------------------------------------------------
+[debug] [2018-03-02T15:23:40.666Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\sgarc10\AppData\Roaming\npm\node_modules\firebase-tools\bin\firebase deploy --only functions
+[debug] [2018-03-02T15:23:40.666Z] CLI Version:   3.17.4
+[debug] [2018-03-02T15:23:40.666Z] Platform:      win32
+[debug] [2018-03-02T15:23:40.666Z] Node Version:  v8.9.4
+[debug] [2018-03-02T15:23:40.666Z] Time:          Fri Mar 02 2018 12:23:40 GMT-0300 (SA Eastern Standard Time)
+[debug] [2018-03-02T15:23:40.666Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2018-03-02T15:23:40.713Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2018-03-02T15:23:40.713Z] > authorizing via signed-in user
+[debug] [2018-03-02T15:23:40.713Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/friend-service-15f6e  
+  
+ Fri Mar 02 2018 12:23:40 GMT-0300 (SA Eastern Standard Time)
+[debug] [2018-03-02T15:23:43.282Z] Error: unable to get local issuer certificate
+    at TLSSocket.<anonymous> (_tls_wrap.js:1103:38)
+    at emitNone (events.js:106:13)
+    at TLSSocket.emit (events.js:208:7)
+    at TLSSocket._finishInit (_tls_wrap.js:637:8)
+    at TLSWrap.ssl.onhandshakedone (_tls_wrap.js:467:38)
+[error] 
+[error] Error: Server Error. unable to get local issuer certificate
