@@ -67,13 +67,14 @@ export class ExpenseDetailComponent {
 
   async getExpense() {
     const id = this.route.snapshot.paramMap.get('id');
+    const expType = this.route.snapshot.paramMap.get('expType');
     if (id) {
-      this.expense = await this.expenseService.getExpense(id).first().toPromise()
+      this.expense = await this.expenseService.getExpense(id,expType).first().toPromise()
         .catch(e => {
           this.messageService.error(e.message);
           return InitialExpense(this.creator.uid);
         });
-      this.expenseUsers = await this.expenseService.getExpenseUsers(id).first().toPromise()
+      this.expenseUsers = await this.expenseService.getExpenseUsers(id,expType).first().toPromise()
         .catch(e => {
           this.messageService.error(e.message);
           return [];

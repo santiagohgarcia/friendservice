@@ -13,7 +13,7 @@ const routes: Routes = [
   { path: 'persons', component: HomeComponent },
   { path: 'groups', component: HomeComponent },
   { path: 'expenses/new', component: ExpenseDetailComponent, pathMatch: 'full'},
-  { path: 'expenses/:id', component: ExpenseDetailComponent },
+  { path: 'expenses/:expType/:id', component: ExpenseDetailComponent }
 ];
 
 @NgModule({

@@ -23,7 +23,7 @@ export class ExpenseService {
     
   }
 
-  getExpenses() {
+  getOwnExpenses() {
     return this.db.collection(`users/${this.user}/expenses`).snapshotChanges()
       .map(actions =>
         actions.map(a => {
@@ -33,8 +33,18 @@ export class ExpenseService {
         }))
   }
 
-  getExpense(id: string): Observable<Expense> {
-    return this.db.doc(`users/${this.user}/expenses/${id}`).snapshotChanges()
+  getOtherExpenses() {
+    return this.db.collection(`users/${this.user}/otherExpenses`).snapshotChanges()
+      .map(actions =>
+        actions.map(a => {
+          let expense = a.payload.doc.data() as Expense
+          expense.id = a.payload.doc.id
+          return expense
+        }))
+  }
+
+  getExpense(id: string,type:string): Observable<Expense> {
+    return this.db.doc(`users/${this.user}/${type}/${id}`).snapshotChanges()
       .map(doc => {
         var expense = doc.payload.data() as Expense
         expense.id = doc.payload.id;
@@ -42,13 +52,13 @@ export class ExpenseService {
       });
   }
 
-  getExpenseUsers(id: string): Observable<string[]> {
-    return this.db.collection(`users/${this.user}/expenses/${id}/users`).snapshotChanges()
+  getExpenseUsers(id: string,type:string): Observable<string[]> {
+    return this.db.collection(`users/${this.user}/${type}/${id}/users`).snapshotChanges()
       .map(action => action.map(a => a.payload.doc.id));
   }
 
   addExpense(expense: Expense, expenseUsers: string[]): Promise<any> {
-    return this.db.collection(`users/${this.user}/expenses`).add(expense)
+    return this.db.collection(`users/${expense.creator}/expenses`).add(expense)
       .then(doc => expenseUsers.forEach(user => doc.collection('users').doc(user).set({
         id: user,
         individualAmount: expense.totalAmount / expenseUsers.length

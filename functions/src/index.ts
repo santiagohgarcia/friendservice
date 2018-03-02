@@ -4,7 +4,6 @@ import * as admin from 'firebase-admin'
 import { Expense } from './model/expense';
 import { Relation } from './model/relation';
 import { ExpenseUser } from './model/expense-user';
-import { DocumentReference } from '@firebase/firestore-types';
 
 admin.initializeApp(functions.config().firebase);
 
@@ -13,7 +12,7 @@ const db: FirebaseFirestore.Firestore = admin.firestore();
 const recalculateRelations = function (userId: string) {
 
     // Delete old relations
-    let relations = db.collection(`users/${userId}/relations`).get();
+    const relations = db.collection(`users/${userId}/relations`).get();
 
     return relations
         // Delete old relations
@@ -22,7 +21,7 @@ const recalculateRelations = function (userId: string) {
         .then(async _ => {
 
             // get own expenses
-            const expenses: DocumentReference[] = await db.collection(`users/${userId}/expenses`).get()
+            const expenses = await db.collection(`users/${userId}/expenses`).get()
                 .then(query => query.docs.map(doc => doc.ref))
                 .catch(err => {
                     console.log(err);
@@ -30,7 +29,7 @@ const recalculateRelations = function (userId: string) {
                 })
 
             // get other expenses
-            const otherExpenses: DocumentReference[] = await db.collection(`users/${userId}/otherExpenses`).get()
+            const otherExpenses = await db.collection(`users/${userId}/otherExpenses`).get()
                 .then(query => query.docs.map(doc => doc.ref))
                 .catch(err => {
                     console.log(err);
@@ -38,17 +37,16 @@ const recalculateRelations = function (userId: string) {
                 })
 
 
-            let relations: Relation[] = [];
-            let relationsProm: Promise<any>;
+            let newRelations: Relation[] = [];
 
             let expensesProm = expenses.map(eRef => eRef.get().then(eDoc => {
                 let expense = eDoc.data() as Expense
                 return eDoc.ref.collection('users').get().then(usersRef => {
                     return usersRef.docs
-                        .filter(userRef => userRef.id != expense.creator)
+                        .filter(userRef => userRef.id !== expense.creator)
                         .map(userRef => {
                             let user = userRef.data() as ExpenseUser;
-                            let relation = relations.find(r => r.userId === user.id)
+                            let relation = newRelations.find(r => r.userId === user.id)
                             if (!relation) {
                                 relation = {
                                     userId: user.id,
@@ -56,7 +54,7 @@ const recalculateRelations = function (userId: string) {
                                     iOwe: 0,
                                     expenses: []
                                 } as Relation
-                                relations.push(relation);
+                                newRelations.push(relation);
                                 console.log("relation recien creada")
                                 console.log(relations)
                             }
@@ -70,7 +68,7 @@ const recalculateRelations = function (userId: string) {
                 let expense = eDoc.data() as Expense
                 return eDoc.ref.collection('users').doc(userId).get().then(userRef => {
                     let user = userRef.data() as ExpenseUser
-                    let relation = relations.find(r => user.id === expense.creator)
+                    let relation = newRelations.find(r => user.id === expense.creator)
                     if (!relation) {
                         relation = {
                             userId: expense.creator,
@@ -78,7 +76,7 @@ const recalculateRelations = function (userId: string) {
                             iOwe: 0,
                             expenses: []
                         } as Relation
-                        relations.push(relation);
+                        newRelations.push(relation);
                         console.log("relation recien creada")
                         console.log(relations)
                     }
@@ -91,7 +89,7 @@ const recalculateRelations = function (userId: string) {
             console.log("relations")
             console.log(relations)
 
-            return Promise.all(relations.map(rel => db.collection(`users/${userId}/relations`).doc(rel.userId).set(rel)))
+            return Promise.all(newRelations.map(rel => db.collection(`users/${userId}/relations`).doc(rel.userId).set(rel)))
         }).catch(err => console.log(err))
 
 }
@@ -104,28 +102,14 @@ const replicateExpense = function (event) {
     let expense = event.data.data() as Expense
     expense.id = expenseId;
 
-    let expenseUsers = db.collection(`users/${userId}/expenses/${expenseId}/users`).get()
+    const expenseUsers = db.collection(`users/${userId}/expenses/${expenseId}/users`).get()
 
     return expenseUsers.then(query => Promise.all(query.docs
-        .filter(doc => doc.id != userId)
+        .filter(doc => doc.id !== userId)
         .map(doc => {
             let expenseUser = doc.data() as ExpenseUser
             return db.collection(`users/${expenseUser.id}/otherExpenses/`).doc(expenseId).set(expense)
         })))
-}
-
-const deleteExpense = function (event) {
-    const userId = event.params.userId;
-    const expenseId = event.params.expenseId;
-
-    let expense = event.data.data() as Expense
-    expense.id = expenseId;
-
-    let expenseUsers = db.collection(`users/${userId}/expenses/${expenseId}/users`).get()
-
-    return expenseUsers.then(query => Promise.all(query.docs
-        .filter(doc => doc.id != userId)
-        .map(doc => db.collection(`users/${doc.id}/otherExpenses/`).doc(expenseId).delete())))
 }
 
 const replicateExpenseUser = function (event) {
@@ -133,17 +117,19 @@ const replicateExpenseUser = function (event) {
     const expenseId = event.params.expenseId;
     const expenseUserId = event.params.expenseUserId
 
-    let expenseUser = event.data.data() as ExpenseUser
+    const expenseUser = event.data.data() as ExpenseUser
 
     return db.collection(`users/${expenseUserId}/otherExpenses/${expenseId}/users`).doc(expenseUserId).set(expenseUser)
 }
 
-const deleteExpenseUser = function (event) {
+const deleteOtherExpense = function (event) {
     const userId = event.params.userId;
     const expenseId = event.params.expenseId;
     const expenseUserId = event.params.expenseUserId
 
-    return db.collection(`users/${expenseUserId}/otherExpenses/${expenseId}/users`).doc(expenseUserId).delete()
+    return db.collection(`users/${expenseUserId}/otherExpenses/${expenseId}/users`).get()
+        .then( query => Promise.all(query.docs.map( doc => doc.ref.delete() )) )
+        .then(_ => db.doc(`users/${expenseUserId}/otherExpenses/${expenseId}`))
 }
 
 //------------------------------------------------------------------------------------------------------------------//
@@ -157,24 +143,20 @@ exports.createExpense = functions.firestore.document('users/{userId}/expenses/{e
 exports.updateExpense = functions.firestore.document('users/{userId}/expenses/{expenseId}')
     .onUpdate(event => replicateExpense(event))
 
-//ON DELETE EXPENSE -> delete expense in all the other users
-exports.deleteExpense = functions.firestore.document('users/{userId}/expenses/{expenseId}')
-    .onDelete(event => deleteExpense(event))
-
 //------------------------------------------------------------------------------------------------------------------//
 //  EXPENSE USER REPLICATION
 //------------------------------------------------------------------------------------------------------------------//
 //ON CREATE EXPENSE USER -> update expense in all the other users
-exports.createExpenseUser = functions.firestore.document('users/{userId}/expenses/{expenseId}/users/{expenseUser}')
-    .onCreate(event => replicateExpenseUser(event))
+exports.createExpenseUser = functions.firestore.document('users/{userId}/expenses/{expenseId}/users/{expenseUserId}')
+    .onCreate(event => replicateExpense(event))
 
-//ON UPDATE EXPENSE -> update expense in all the other users
-exports.updateExpenseUser = functions.firestore.document('users/{userId}/expenses/{expenseId}/users/{expenseUser}')
-    .onUpdate(event => replicateExpenseUser(event))
+//ON UPDATE EXPENSE USER -> update expense in all the other users
+exports.updateExpenseUser = functions.firestore.document('users/{userId}/expenses/{expenseId}/users/{expenseUserId}')
+    .onUpdate(event => replicateExpense(event))
 
-//ON DELETE EXPENSE -> delete expense in all the other users
-exports.deleteExpense = functions.firestore.document('users/{userId}/expenses/{expenseId}/users/{expenseUser}')
-    .onDelete(event => deleteExpenseUser(event))
+//ON DELETE EXPENSE USER -> delete expense in all the other users
+exports.deleteExpenseUser = functions.firestore.document('users/{userId}/expenses/{expenseId}/users/{expenseUserId}')
+    .onDelete(event => deleteOtherExpense(event))
 
 //------------------------------------------------------------------------------------------------------------------//
 //  RELATIONS RECALCULATION

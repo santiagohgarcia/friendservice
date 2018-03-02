@@ -14,7 +14,8 @@ import { AngularFireAuth } from 'angularfire2/auth';
 })
 export class ExpensesComponent implements OnInit {
   
-  expenses: Observable<Expense[]>;
+  ownExpenses: Observable<Expense[]>;
+  otherEexpenses: Observable<Expense[]>;
 
   constructor(private expenseService: ExpenseService,
               private messagesService: MessagesService,
@@ -22,7 +23,7 @@ export class ExpensesComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.expenses = this.expenseService.getExpenses()
+    this.ownExpenses = this.expenseService.getOwnExpenses()
                     .catch(e => { this.messagesService.error(e.message);
                                   return []; });
   }

@@ -1,8 +1,8 @@
-<div *ngIf="!(expenses | async)">
+<div *ngIf="!(ownExpenses | async)">
     <mat-progress-bar mode="indeterminate" color="accent"></mat-progress-bar>
 </div>
 <mat-list>
-    <div *ngFor="let expense of expenses | async; let i = index;">
+    <div *ngFor="let expense of ownExpenses | async; let i = index;">
         <mat-divider *ngIf="i != 0"></mat-divider>
         <mat-list-item>
             <mat-icon mat-list-icon>monetization_on</mat-icon>
@@ -17,7 +17,7 @@
                     <mat-icon>attach_money</mat-icon>
                     <span>Pay Off</span>
                 </button>
-                <a mat-menu-item routerLink="/expenses/{{expense.id}}">
+                <a mat-menu-item routerLink="/expenses/expenses/{{expense.id}}">
                     <mat-icon>mode_edit</mat-icon>
                     <span>Edit</span>
                 </a>
