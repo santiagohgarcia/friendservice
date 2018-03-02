@@ -1,24 +1,24 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { map, mergeAll,flatMap } from 'rxjs/operators';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { Expense } from '../model/expense';
 import { DocumentSnapshot } from '@firebase/firestore-types';
 import { ExpenseUser } from '../model/expense-user';
+
 
 @Injectable()
 export class ExpenseService {
 
   constructor(private db: AngularFirestore) { }
 
-  getExpenses(): Observable<Expense[]> {
-    return this.db.collection('expenses').snapshotChanges()
-      .map(actions => actions.map(a => {
-        var expense = a.payload.doc.data() as Expense
-        expense.id = a.payload.doc.id;
-        return expense;
-      }))
+  getExpenses(userId: string) {
+    return this.db.collection(`users/${userId}/expenses`).snapshotChanges()
+                .switchMap( actions => {
+                     return actions.map(a => this.getExpense(a.payload.doc.id) )
+                } )
   }
-
+ 
   getExpense(id: string): Observable<Expense> {
     return this.db.doc(`expenses/${id}`).snapshotChanges()
       .map(doc => {

@@ -46,8 +46,9 @@ const recalculateRelations = function (userId) {
                 });
                 console.log(users);
                 let relation = null;
-                users.forEach(debtor => {
-                    if (e.creator === debtor.id) {
+                if (e.creator === userId) {
+                    users.filter(u => u.id != e.creator)
+                        .forEach(debtor => {
                         console.log("debtor " + debtor);
                         relation = relations.find(r => r.userId === debtor.id);
                         if (!relation) {
@@ -62,25 +63,26 @@ const recalculateRelations = function (userId) {
                             console.log(relations);
                         }
                         relation.owesMe = relation.owesMe + debtor.individualAmount;
+                    });
+                }
+                else {
+                    let debtor = users.find(u => u.id === userId);
+                    relation = relations.find(r => r.userId === e.creator);
+                    if (!relation) {
+                        relation = {
+                            userId: e.creator,
+                            owesMe: 0,
+                            iOwe: 0,
+                            expenses: []
+                        };
+                        relations.push(relation);
+                        console.log("relation recien creada");
+                        console.log(relations);
                     }
-                    else {
-                        relation = relations.find(r => r.userId === e.creator);
-                        if (!relation) {
-                            relation = {
-                                userId: e.creator,
-                                owesMe: 0,
-                                iOwe: 0,
-                                expenses: []
-                            };
-                            relations.push(relation);
-                            console.log("relation recien creada");
-                            console.log(relations);
-                        }
-                        relation.iOwe = relation.iOwe + debtor.individualAmount;
-                    }
-                    relation.expenses.push(e.id);
-                    console.log(relations);
-                });
+                    relation.iOwe = relation.iOwe + debtor.individualAmount;
+                }
+                relation.expenses.push(e.id);
+                console.log(relations);
             }).catch(err => console.log(err));
         }));
         yield relationsProm;
