@@ -111,7 +111,7 @@ const replicateExpense = function (userId: string, expenseId: string, expenseUse
     }
 
     let expense = db.doc(`users/${userId}/expenses/${expenseId}`).get();
-    let deleteOldExpenseUsers = db.collection(`users/${expenseUserId}/expenses/${expenseId}/users`).get()
+    let deleteOldExpenseUsers = db.collection(`users/${expenseUserId}/otherExpenses/${expenseId}/users`).get()
         .then(query => Promise.all(query.docs.map(doc => doc.ref.delete())))
     let expenseUsers = db.collection(`users/${userId}/expenses/${expenseId}/users`).get();
 
@@ -172,13 +172,26 @@ exports.deleteUserToExpense = functions.firestore.document('users/{userId}/expen
     return replicateExpenseDeletion(userId, expenseId, expenseUserId);
 })
 
-// ON UPDATE USER FROM EXPENSE -> update expense in the other user
+/* // ON UPDATE USER FROM EXPENSE -> update expense in the other user
 exports.updateUserToExpense = functions.firestore.document('users/{userId}/expenses/{expenseId}/users/{expenseUserId}').onUpdate(async event => {
     const userId = event.params.userId;
     const expenseId = event.params.expenseId;
     const expenseUserId = event.params.expenseUserId;
 
     return replicateExpense(userId, expenseId, expenseUserId);
+})
+ */
+
+//ON UPDATE EXPENSE -> update expense in all the other users
+exports.updateExpense = functions.firestore.document('users/{userId}/expenses/{expenseId}').onUpdate(async event => {
+    const userId = event.params.userId;
+    const expenseId = event.params.expenseId;
+    let expenseUsers = db.collection(`users/${userId}/expenses/${expenseId}/users`).get();
+
+    return expenseUsers.then(query =>
+        query.docs
+        .filter(eu => eu.id != userId)
+        .map(eu =>replicateExpense(userId, expenseId, eu.id)))
 })
 
 
