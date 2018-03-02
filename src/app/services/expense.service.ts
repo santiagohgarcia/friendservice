@@ -1,26 +1,40 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { map, mergeAll, flatMap } from 'rxjs/operators';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { Expense } from '../model/expense';
 import { DocumentSnapshot } from '@firebase/firestore-types';
 import { ExpenseUser } from '../model/expense-user';
+import { AngularFireAuth } from 'angularfire2/auth';
+import { UserInfo } from '@firebase/auth-types';
+
 
 @Injectable()
 export class ExpenseService {
 
-  constructor(private db: AngularFirestore) { }
+  user: string
 
-  getExpenses(): Observable<Expense[]> {
-    return this.db.collection('expenses').snapshotChanges()
-      .map(actions => actions.map(a => {
-        var expense = a.payload.doc.data() as Expense
-        expense.id = a.payload.doc.id;
-        return expense;
-      }))
+  constructor(private db: AngularFirestore,
+    private afAuth: AngularFireAuth) {
+      this.afAuth.authState.subscribe(user => this.user = user.providerData[0].uid) 
+    }
+
+  ngOnInit() {
+    
+  }
+
+  getExpenses() {
+    return this.db.collection(`users/${this.user}/expenses`).snapshotChanges()
+      .map(actions =>
+        actions.map(a => {
+          let expense = a.payload.doc.data() as Expense
+          expense.id = a.payload.doc.id
+          return expense
+        }))
   }
 
   getExpense(id: string): Observable<Expense> {
-    return this.db.doc(`expenses/${id}`).snapshotChanges()
+    return this.db.doc(`users/${this.user}/expenses/${id}`).snapshotChanges()
       .map(doc => {
         var expense = doc.payload.data() as Expense
         expense.id = doc.payload.id;
@@ -29,38 +43,42 @@ export class ExpenseService {
   }
 
   getExpenseUsers(id: string): Observable<string[]> {
-    return this.db.collection(`expenses/${id}/users`).snapshotChanges()
+    return this.db.collection(`users/${this.user}/expenses/${id}/users`).snapshotChanges()
       .map(action => action.map(a => a.payload.doc.id));
   }
 
   addExpense(expense: Expense, expenseUsers: string[]): Promise<any> {
-    return this.db.collection('expenses').add(expense)
-      .then(doc => expenseUsers.forEach(user => doc.collection('users').doc(user).set({}))
+    return this.db.collection(`users/${this.user}/expenses`).add(expense)
+      .then(doc => expenseUsers.forEach(user => doc.collection('users').doc(user).set({
+        id: user,
+        individualAmount: expense.totalAmount / expenseUsers.length
+      } as ExpenseUser))
       )
   }
 
   updateExpense(expense: Expense, expenseUsers: string[]): Promise<any> {
-    let expenseRef = this.db.doc(`expenses/${expense.id}`);
-    let expenseUsersRef = this.db.collection(`expenses/${expense.id}/users`);
+    let expenseRef = this.db.doc(`users/${this.user}/expenses/${expense.id}`);
+    let expenseUsersRef = this.db.collection(`users/${this.user}/expenses/${expense.id}/users`);
     return expenseRef.update(expense)
-      .then(_ => expenseUsersRef.ref.get() )
+      .then(_ => expenseUsersRef.ref.get())
       .then(query => Promise.all(
-                            query.docs.map(doc => { if (!expenseUsers.find(eu => eu === doc.id)) { doc.ref.delete() }
-                          })))
-      .then(_ => expenseUsers.map(user => 
-          expenseUsersRef.doc(user).set({ 
+        query.docs.map(doc => {
+          if (!expenseUsers.find(eu => eu === doc.id)) { doc.ref.delete() }
+        })))
+      .then(_ => expenseUsers.map(user =>
+        expenseUsersRef.doc(user).set({
           id: user,
           individualAmount: expense.totalAmount / expenseUsers.length
         } as ExpenseUser)))
-      }
+  }
 
   deleteExpense(expenseId: string) {
     return this.deleteExpenseUsers(expenseId).then(_ =>
-      this.db.doc(`expenses/${expenseId}`).delete())
+      this.db.doc(`users/${this.user}/expenses/${expenseId}`).delete())
   }
 
   deleteExpenseUsers(expenseId: string): Promise<any> { // TODO: hacerlo por cloud functions
-    return this.db.collection(`expenses/${expenseId}/users`).ref.get()
+    return this.db.collection(`users/${this.user}/expenses/${expenseId}/users`).ref.get()
       .then(query => query.docs.map(doc => doc.ref.delete()))
   }
 
