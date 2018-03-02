@@ -33,7 +33,6 @@ const recalculateRelations = function (userId) {
             return null;
         });
         let newRelations = [];
-        let relationsProm;
         let expensesProm = expenses.map(eRef => eRef.get().then(eDoc => {
             let expense = eDoc.data();
             return eDoc.ref.collection('users').get().then(usersRef => {
@@ -124,10 +123,10 @@ exports.updateExpense = functions.firestore.document('users/{userId}/expenses/{e
 //------------------------------------------------------------------------------------------------------------------//
 //ON CREATE EXPENSE USER -> update expense in all the other users
 exports.createExpenseUser = functions.firestore.document('users/{userId}/expenses/{expenseId}/users/{expenseUserId}')
-    .onCreate(event => replicateExpenseUser(event));
+    .onCreate(event => replicateExpense(event));
 //ON UPDATE EXPENSE USER -> update expense in all the other users
 exports.updateExpenseUser = functions.firestore.document('users/{userId}/expenses/{expenseId}/users/{expenseUserId}')
-    .onUpdate(event => replicateExpenseUser(event));
+    .onUpdate(event => replicateExpense(event));
 //ON DELETE EXPENSE USER -> delete expense in all the other users
 exports.deleteExpenseUser = functions.firestore.document('users/{userId}/expenses/{expenseId}/users/{expenseUserId}')
     .onDelete(event => deleteOtherExpense(event));

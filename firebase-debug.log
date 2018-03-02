@@ -1,187 +1,17 @@
-[debug] [2018-03-02T17:33:15.631Z] ----------------------------------------------------------------------
-[debug] [2018-03-02T17:33:15.634Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\sgarc10\AppData\Roaming\npm\node_modules\firebase-tools\bin\firebase deploy --only functions
-[debug] [2018-03-02T17:33:15.634Z] CLI Version:   3.17.4
-[debug] [2018-03-02T17:33:15.634Z] Platform:      win32
-[debug] [2018-03-02T17:33:15.634Z] Node Version:  v8.9.4
-[debug] [2018-03-02T17:33:15.637Z] Time:          Fri Mar 02 2018 14:33:15 GMT-0300 (SA Eastern Standard Time)
-[debug] [2018-03-02T17:33:15.637Z] ----------------------------------------------------------------------
+[debug] [2018-03-02T18:40:49.523Z] ----------------------------------------------------------------------
+[debug] [2018-03-02T18:40:49.525Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\sgarc10\AppData\Roaming\npm\node_modules\firebase-tools\bin\firebase deploy --only functions
+[debug] [2018-03-02T18:40:49.525Z] CLI Version:   3.17.4
+[debug] [2018-03-02T18:40:49.525Z] Platform:      win32
+[debug] [2018-03-02T18:40:49.525Z] Node Version:  v8.9.4
+[debug] [2018-03-02T18:40:49.527Z] Time:          Fri Mar 02 2018 15:40:49 GMT-0300 (SA Eastern Standard Time)
+[debug] [2018-03-02T18:40:49.527Z] ----------------------------------------------------------------------
 [debug] 
-[debug] [2018-03-02T17:33:15.692Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
-[debug] [2018-03-02T17:33:15.694Z] > authorizing via signed-in user
-[debug] [2018-03-02T17:33:15.697Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
-[debug] [2018-03-02T17:33:15.697Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
- { refresh_token: '1/NHyMLE1MGURRu-f9CzUuxxEV5uQ7lV2pD-BqO26LXIE',
-  client_id: '563584335869-fgrhgmd47bqnekij5i8b5pr03ho849e6.apps.googleusercontent.com',
-  client_secret: 'j9iVZfS8kkCEFUPaAeJV0sAi',
-  grant_type: 'refresh_token',
-  scope: 'email https://www.googleapis.com/auth/cloud-platform https://www.googleapis.com/auth/cloudplatformprojects.readonly https://www.googleapis.com/auth/firebase openid' } 
- Fri Mar 02 2018 14:33:15 GMT-0300 (SA Eastern Standard Time)
-[debug] [2018-03-02T17:33:16.658Z] <<< HTTP RESPONSE 200
-[debug] [2018-03-02T17:33:16.690Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/friend-service-15f6e  
+[debug] [2018-03-02T18:40:49.566Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2018-03-02T18:40:49.568Z] > authorizing via signed-in user
+[debug] [2018-03-02T18:40:49.571Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/friend-service-15f6e  
   
- Fri Mar 02 2018 14:33:16 GMT-0300 (SA Eastern Standard Time)
-[debug] [2018-03-02T17:33:21.480Z] <<< HTTP RESPONSE 200
-[debug] [2018-03-02T17:33:21.480Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/friend-service-15f6e/tokens  
-  
- Fri Mar 02 2018 14:33:21 GMT-0300 (SA Eastern Standard Time)
-[debug] [2018-03-02T17:34:22.025Z] <<< HTTP RESPONSE 200
-[debug] [2018-03-02T17:34:22.284Z] Error: Firebase.authWithCustomToken failed: First argument must be a valid credential (a string).
-    at ng (C:\Users\sgarc10\AppData\Roaming\npm\node_modules\firebase-tools\node_modules\firebase\lib\firebase-node.js:129:313)
-    at X.gg (C:\Users\sgarc10\AppData\Roaming\npm\node_modules\firebase-tools\node_modules\firebase\lib\firebase-node.js:266:131)
-    at C:\Users\sgarc10\AppData\Roaming\npm\node_modules\firebase-tools\lib\acquireRefs.js:19:19
-    at initializePromise (C:\Users\sgarc10\AppData\Roaming\npm\node_modules\firebase-tools\node_modules\rsvp\dist\rsvp.js:567:5)
-    at new Promise (C:\Users\sgarc10\AppData\Roaming\npm\node_modules\firebase-tools\node_modules\rsvp\dist\rsvp.js:1039:33)
-    at C:\Users\sgarc10\AppData\Roaming\npm\node_modules\firebase-tools\lib\acquireRefs.js:12:12
-    at tryCatch (C:\Users\sgarc10\AppData\Roaming\npm\node_modules\firebase-tools\node_modules\rsvp\dist\rsvp.js:525:12)
-    at invokeCallback (C:\Users\sgarc10\AppData\Roaming\npm\node_modules\firebase-tools\node_modules\rsvp\dist\rsvp.js:538:13)
-    at publish (C:\Users\sgarc10\AppData\Roaming\npm\node_modules\firebase-tools\node_modules\rsvp\dist\rsvp.js:508:7)
-    at flush (C:\Users\sgarc10\AppData\Roaming\npm\node_modules\firebase-tools\node_modules\rsvp\dist\rsvp.js:2415:5)
-[error] 
-[error] Error: An unexpected error has occurred.
-[debug] [2018-03-02T17:34:28.770Z] ----------------------------------------------------------------------
-[debug] [2018-03-02T17:34:28.774Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\sgarc10\AppData\Roaming\npm\node_modules\firebase-tools\bin\firebase deploy --only functions
-[debug] [2018-03-02T17:34:28.774Z] CLI Version:   3.17.4
-[debug] [2018-03-02T17:34:28.774Z] Platform:      win32
-[debug] [2018-03-02T17:34:28.774Z] Node Version:  v8.9.4
-[debug] [2018-03-02T17:34:28.776Z] Time:          Fri Mar 02 2018 14:34:28 GMT-0300 (SA Eastern Standard Time)
-[debug] [2018-03-02T17:34:28.776Z] ----------------------------------------------------------------------
-[debug] 
-[debug] [2018-03-02T17:34:28.804Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
-[debug] [2018-03-02T17:34:28.806Z] > authorizing via signed-in user
-[debug] [2018-03-02T17:34:28.809Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/friend-service-15f6e  
-  
- Fri Mar 02 2018 14:34:28 GMT-0300 (SA Eastern Standard Time)
-[debug] [2018-03-02T17:34:30.341Z] <<< HTTP RESPONSE 200
-[error] 
-[error] Error: Server Error: Unexpected Response. Please try again
-[debug] [2018-03-02T17:34:30.678Z] Error Context: {
-  "status": 200,
-  "response": {
-    "statusCode": 200,
-    "body": {
-      "error": {
-        "code": "SERVICE_UNAVAILABLE",
-        "message": "This service is currently unavailable. Please try again in a few moments."
-      }
-    },
-    "headers": {
-      "server": "nginx",
-      "date": "Fri, 02 Mar 2018 17:34:30 GMT",
-      "content-type": "application/json",
-      "content-length": "147",
-      "last-modified": "Wed, 09 Sep 2015 22:17:34 GMT",
-      "connection": "close",
-      "etag": "\"55f0affe-93\"",
-      "access-control-allow-origin": "*",
-      "access-control-allow-methods": "GET, PUT, POST, DELETE, OPTIONS",
-      "access-control-allow-headers": "*",
-      "strict-transport-security": "max-age=31536000; includeSubdomains",
-      "cache-control": "no-cache, no-store",
-      "accept-ranges": "bytes"
-    },
-    "request": {
-      "uri": {
-        "protocol": "https:",
-        "slashes": true,
-        "auth": null,
-        "host": "admin.firebase.com",
-        "port": 443,
-        "hostname": "admin.firebase.com",
-        "hash": null,
-        "search": null,
-        "query": null,
-        "pathname": "/v1/projects/friend-service-15f6e",
-        "path": "/v1/projects/friend-service-15f6e",
-        "href": "https://admin.firebase.com/v1/projects/friend-service-15f6e"
-      },
-      "method": "GET",
-      "headers": {
-        "User-Agent": "FirebaseCLI/3.17.4",
-        "X-Client-Version": "FirebaseCLI/3.17.4",
-        "authorization": "Bearer ya29.GltyBdzgPkipln-iZw1en6K49JNgEH0EDfw_FeSM_fnvgVDKIELtrf12wYVeDoJQjmrJFo48SMsITtxnXD-WWrtxUzWcNvm4H5uS56MbNg3qfBJbaYoSTvGEAgaY",
-        "accept": "application/json"
-      }
-    }
-  },
-  "body": {
-    "error": {
-      "code": "SERVICE_UNAVAILABLE",
-      "message": "This service is currently unavailable. Please try again in a few moments."
-    }
-  }
-}
-[debug] [2018-03-02T17:34:35.897Z] ----------------------------------------------------------------------
-[debug] [2018-03-02T17:34:35.899Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\sgarc10\AppData\Roaming\npm\node_modules\firebase-tools\bin\firebase deploy --only functions
-[debug] [2018-03-02T17:34:35.900Z] CLI Version:   3.17.4
-[debug] [2018-03-02T17:34:35.900Z] Platform:      win32
-[debug] [2018-03-02T17:34:35.900Z] Node Version:  v8.9.4
-[debug] [2018-03-02T17:34:35.902Z] Time:          Fri Mar 02 2018 14:34:35 GMT-0300 (SA Eastern Standard Time)
-[debug] [2018-03-02T17:34:35.902Z] ----------------------------------------------------------------------
-[debug] 
-[debug] [2018-03-02T17:34:35.931Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
-[debug] [2018-03-02T17:34:35.933Z] > authorizing via signed-in user
-[debug] [2018-03-02T17:34:35.938Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/friend-service-15f6e  
-  
- Fri Mar 02 2018 14:34:35 GMT-0300 (SA Eastern Standard Time)
-[debug] [2018-03-02T17:34:38.263Z] <<< HTTP RESPONSE 200
-[debug] [2018-03-02T17:34:38.264Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/friend-service-15f6e/tokens  
-  
- Fri Mar 02 2018 14:34:38 GMT-0300 (SA Eastern Standard Time)
-[debug] [2018-03-02T17:35:38.948Z] <<< HTTP RESPONSE 200
-[debug] [2018-03-02T17:35:39.284Z] Error: Firebase.authWithCustomToken failed: First argument must be a valid credential (a string).
-    at ng (C:\Users\sgarc10\AppData\Roaming\npm\node_modules\firebase-tools\node_modules\firebase\lib\firebase-node.js:129:313)
-    at X.gg (C:\Users\sgarc10\AppData\Roaming\npm\node_modules\firebase-tools\node_modules\firebase\lib\firebase-node.js:266:131)
-    at C:\Users\sgarc10\AppData\Roaming\npm\node_modules\firebase-tools\lib\acquireRefs.js:19:19
-    at initializePromise (C:\Users\sgarc10\AppData\Roaming\npm\node_modules\firebase-tools\node_modules\rsvp\dist\rsvp.js:567:5)
-    at new Promise (C:\Users\sgarc10\AppData\Roaming\npm\node_modules\firebase-tools\node_modules\rsvp\dist\rsvp.js:1039:33)
-    at C:\Users\sgarc10\AppData\Roaming\npm\node_modules\firebase-tools\lib\acquireRefs.js:12:12
-    at tryCatch (C:\Users\sgarc10\AppData\Roaming\npm\node_modules\firebase-tools\node_modules\rsvp\dist\rsvp.js:525:12)
-    at invokeCallback (C:\Users\sgarc10\AppData\Roaming\npm\node_modules\firebase-tools\node_modules\rsvp\dist\rsvp.js:538:13)
-    at publish (C:\Users\sgarc10\AppData\Roaming\npm\node_modules\firebase-tools\node_modules\rsvp\dist\rsvp.js:508:7)
-    at flush (C:\Users\sgarc10\AppData\Roaming\npm\node_modules\firebase-tools\node_modules\rsvp\dist\rsvp.js:2415:5)
-[error] 
-[error] Error: An unexpected error has occurred.
-[debug] [2018-03-02T17:36:03.822Z] ----------------------------------------------------------------------
-[debug] [2018-03-02T17:36:03.825Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\sgarc10\AppData\Roaming\npm\node_modules\firebase-tools\bin\firebase deploy --only functions
-[debug] [2018-03-02T17:36:03.826Z] CLI Version:   3.17.4
-[debug] [2018-03-02T17:36:03.826Z] Platform:      win32
-[debug] [2018-03-02T17:36:03.826Z] Node Version:  v8.9.4
-[debug] [2018-03-02T17:36:03.828Z] Time:          Fri Mar 02 2018 14:36:03 GMT-0300 (SA Eastern Standard Time)
-[debug] [2018-03-02T17:36:03.828Z] ----------------------------------------------------------------------
-[debug] 
-[debug] [2018-03-02T17:36:03.881Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
-[debug] [2018-03-02T17:36:03.883Z] > authorizing via signed-in user
-[debug] [2018-03-02T17:36:03.889Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/friend-service-15f6e  
-  
- Fri Mar 02 2018 14:36:03 GMT-0300 (SA Eastern Standard Time)
-[debug] [2018-03-02T17:36:06.711Z] <<< HTTP RESPONSE 200
-[debug] [2018-03-02T17:36:06.712Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/friend-service-15f6e/tokens  
-  
- Fri Mar 02 2018 14:36:06 GMT-0300 (SA Eastern Standard Time)
-[debug] [2018-03-02T17:36:49.176Z] Error: socket hang up
-    at createHangUpError (_http_client.js:331:15)
-    at TLSSocket.socketOnEnd (_http_client.js:423:23)
-    at emitNone (events.js:111:20)
-    at TLSSocket.emit (events.js:208:7)
-    at endReadableNT (_stream_readable.js:1055:12)
-    at _combinedTickCallback (internal/process/next_tick.js:138:11)
-    at process._tickDomainCallback (internal/process/next_tick.js:218:9)
-[error] 
-[error] Error: Server Error. socket hang up
-[debug] [2018-03-02T17:37:19.055Z] ----------------------------------------------------------------------
-[debug] [2018-03-02T17:37:19.057Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\sgarc10\AppData\Roaming\npm\node_modules\firebase-tools\bin\firebase deploy --only functions
-[debug] [2018-03-02T17:37:19.057Z] CLI Version:   3.17.4
-[debug] [2018-03-02T17:37:19.057Z] Platform:      win32
-[debug] [2018-03-02T17:37:19.057Z] Node Version:  v8.9.4
-[debug] [2018-03-02T17:37:19.059Z] Time:          Fri Mar 02 2018 14:37:19 GMT-0300 (SA Eastern Standard Time)
-[debug] [2018-03-02T17:37:19.059Z] ----------------------------------------------------------------------
-[debug] 
-[debug] [2018-03-02T17:37:19.104Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
-[debug] [2018-03-02T17:37:19.106Z] > authorizing via signed-in user
-[debug] [2018-03-02T17:37:19.109Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/friend-service-15f6e  
-  
- Fri Mar 02 2018 14:37:19 GMT-0300 (SA Eastern Standard Time)
-[debug] [2018-03-02T17:37:20.275Z] Error: unable to verify the first certificate
+ Fri Mar 02 2018 15:40:49 GMT-0300 (SA Eastern Standard Time)
+[debug] [2018-03-02T18:40:50.878Z] Error: unable to verify the first certificate
     at TLSSocket.<anonymous> (_tls_wrap.js:1103:38)
     at emitNone (events.js:106:13)
     at TLSSocket.emit (events.js:208:7)
@@ -189,129 +19,29 @@
     at TLSWrap.ssl.onhandshakedone (_tls_wrap.js:467:38)
 [error] 
 [error] Error: Server Error. unable to verify the first certificate
-[debug] [2018-03-02T17:37:28.016Z] ----------------------------------------------------------------------
-[debug] [2018-03-02T17:37:28.018Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\sgarc10\AppData\Roaming\npm\node_modules\firebase-tools\bin\firebase deploy --only functions
-[debug] [2018-03-02T17:37:28.019Z] CLI Version:   3.17.4
-[debug] [2018-03-02T17:37:28.019Z] Platform:      win32
-[debug] [2018-03-02T17:37:28.019Z] Node Version:  v8.9.4
-[debug] [2018-03-02T17:37:28.020Z] Time:          Fri Mar 02 2018 14:37:28 GMT-0300 (SA Eastern Standard Time)
-[debug] [2018-03-02T17:37:28.020Z] ----------------------------------------------------------------------
+[debug] [2018-03-02T18:40:56.644Z] ----------------------------------------------------------------------
+[debug] [2018-03-02T18:40:56.646Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\sgarc10\AppData\Roaming\npm\node_modules\firebase-tools\bin\firebase login --reauth
+[debug] [2018-03-02T18:40:56.647Z] CLI Version:   3.17.4
+[debug] [2018-03-02T18:40:56.647Z] Platform:      win32
+[debug] [2018-03-02T18:40:56.647Z] Node Version:  v8.9.4
+[debug] [2018-03-02T18:40:56.649Z] Time:          Fri Mar 02 2018 15:40:56 GMT-0300 (SA Eastern Standard Time)
+[debug] [2018-03-02T18:40:56.649Z] ----------------------------------------------------------------------
 [debug] 
-[debug] [2018-03-02T17:37:28.044Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
-[debug] [2018-03-02T17:37:28.046Z] > authorizing via signed-in user
-[debug] [2018-03-02T17:37:28.049Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/friend-service-15f6e  
-  
- Fri Mar 02 2018 14:37:28 GMT-0300 (SA Eastern Standard Time)
-[debug] [2018-03-02T17:37:29.065Z] Error: unable to verify the first certificate
-    at TLSSocket.<anonymous> (_tls_wrap.js:1103:38)
-    at emitNone (events.js:106:13)
-    at TLSSocket.emit (events.js:208:7)
-    at TLSSocket._finishInit (_tls_wrap.js:637:8)
-    at TLSWrap.ssl.onhandshakedone (_tls_wrap.js:467:38)
-[error] 
-[error] Error: Server Error. unable to verify the first certificate
-[debug] [2018-03-02T17:37:38.287Z] ----------------------------------------------------------------------
-[debug] [2018-03-02T17:37:38.290Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\sgarc10\AppData\Roaming\npm\node_modules\firebase-tools\bin\firebase deploy --only functions
-[debug] [2018-03-02T17:37:38.290Z] CLI Version:   3.17.4
-[debug] [2018-03-02T17:37:38.290Z] Platform:      win32
-[debug] [2018-03-02T17:37:38.290Z] Node Version:  v8.9.4
-[debug] [2018-03-02T17:37:38.292Z] Time:          Fri Mar 02 2018 14:37:38 GMT-0300 (SA Eastern Standard Time)
-[debug] [2018-03-02T17:37:38.292Z] ----------------------------------------------------------------------
+[info] 
+[info] Visit this URL on any device to log in:
+[info] https://accounts.google.com/o/oauth2/auth?client_id=563584335869-fgrhgmd47bqnekij5i8b5pr03ho849e6.apps.googleusercontent.com&scope=email%20openid%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcloudplatformprojects.readonly%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Ffirebase%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcloud-platform&response_type=code&state=9697344&redirect_uri=http%3A%2F%2Flocalhost%3A9005
+[info] 
+[info] Waiting for authentication...
+[debug] [2018-03-02T18:41:17.202Z] ----------------------------------------------------------------------
+[debug] [2018-03-02T18:41:17.205Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\sgarc10\AppData\Roaming\npm\node_modules\firebase-tools\bin\firebase login --reauth
+[debug] [2018-03-02T18:41:17.205Z] CLI Version:   3.17.4
+[debug] [2018-03-02T18:41:17.205Z] Platform:      win32
+[debug] [2018-03-02T18:41:17.205Z] Node Version:  v8.9.4
+[debug] [2018-03-02T18:41:17.207Z] Time:          Fri Mar 02 2018 15:41:17 GMT-0300 (SA Eastern Standard Time)
+[debug] [2018-03-02T18:41:17.207Z] ----------------------------------------------------------------------
 [debug] 
-[debug] [2018-03-02T17:37:38.312Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
-[debug] [2018-03-02T17:37:38.314Z] > authorizing via signed-in user
-[debug] [2018-03-02T17:37:38.317Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/friend-service-15f6e  
-  
- Fri Mar 02 2018 14:37:38 GMT-0300 (SA Eastern Standard Time)
-[debug] [2018-03-02T17:37:39.362Z] Error: unable to verify the first certificate
-    at TLSSocket.<anonymous> (_tls_wrap.js:1103:38)
-    at emitNone (events.js:106:13)
-    at TLSSocket.emit (events.js:208:7)
-    at TLSSocket._finishInit (_tls_wrap.js:637:8)
-    at TLSWrap.ssl.onhandshakedone (_tls_wrap.js:467:38)
-[error] 
-[error] Error: Server Error. unable to verify the first certificate
-[debug] [2018-03-02T17:37:53.831Z] ----------------------------------------------------------------------
-[debug] [2018-03-02T17:37:53.833Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\sgarc10\AppData\Roaming\npm\node_modules\firebase-tools\bin\firebase deploy --only functions
-[debug] [2018-03-02T17:37:53.834Z] CLI Version:   3.17.4
-[debug] [2018-03-02T17:37:53.834Z] Platform:      win32
-[debug] [2018-03-02T17:37:53.834Z] Node Version:  v8.9.4
-[debug] [2018-03-02T17:37:53.836Z] Time:          Fri Mar 02 2018 14:37:53 GMT-0300 (SA Eastern Standard Time)
-[debug] [2018-03-02T17:37:53.837Z] ----------------------------------------------------------------------
-[debug] 
-[debug] [2018-03-02T17:37:53.892Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
-[debug] [2018-03-02T17:37:53.895Z] > authorizing via signed-in user
-[debug] [2018-03-02T17:37:53.901Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/friend-service-15f6e  
-  
- Fri Mar 02 2018 14:37:53 GMT-0300 (SA Eastern Standard Time)
-[debug] [2018-03-02T17:37:55.305Z] Error: unable to verify the first certificate
-    at TLSSocket.<anonymous> (_tls_wrap.js:1103:38)
-    at emitNone (events.js:106:13)
-    at TLSSocket.emit (events.js:208:7)
-    at TLSSocket._finishInit (_tls_wrap.js:637:8)
-    at TLSWrap.ssl.onhandshakedone (_tls_wrap.js:467:38)
-[error] 
-[error] Error: Server Error. unable to verify the first certificate
-[debug] [2018-03-02T17:38:27.404Z] ----------------------------------------------------------------------
-[debug] [2018-03-02T17:38:27.408Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\sgarc10\AppData\Roaming\npm\node_modules\firebase-tools\bin\firebase deploy --only functions
-[debug] [2018-03-02T17:38:27.408Z] CLI Version:   3.17.4
-[debug] [2018-03-02T17:38:27.408Z] Platform:      win32
-[debug] [2018-03-02T17:38:27.408Z] Node Version:  v8.9.4
-[debug] [2018-03-02T17:38:27.411Z] Time:          Fri Mar 02 2018 14:38:27 GMT-0300 (SA Eastern Standard Time)
-[debug] [2018-03-02T17:38:27.411Z] ----------------------------------------------------------------------
-[debug] 
-[debug] [2018-03-02T17:38:27.444Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
-[debug] [2018-03-02T17:38:27.446Z] > authorizing via signed-in user
-[debug] [2018-03-02T17:38:27.451Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/friend-service-15f6e  
-  
- Fri Mar 02 2018 14:38:27 GMT-0300 (SA Eastern Standard Time)
-[debug] [2018-03-02T17:38:30.105Z] <<< HTTP RESPONSE 200
-[debug] [2018-03-02T17:38:30.107Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/friend-service-15f6e/tokens  
-  
- Fri Mar 02 2018 14:38:30 GMT-0300 (SA Eastern Standard Time)
-[debug] [2018-03-02T17:39:30.815Z] <<< HTTP RESPONSE 504
-[debug] [2018-03-02T17:39:30.815Z] <<< HTTP RESPONSE BODY <html>
-<head><title>504 Gateway Time-out</title></head>
-<body bgcolor="white">
-<center><h1>504 Gateway Time-out</h1></center>
-<hr><center>nginx</center>
-</body>
-</html>
-
-[debug] [2018-03-02T17:39:30.817Z] TypeError: Cannot create property 'error' on string '<html>
-<head><title>504 Gateway Time-out</title></head>
-<body bgcolor="white">
-<center><h1>504 Gateway Time-out</h1></center>
-<hr><center>nginx</center>
-</body>
-</html>
-'
-    at module.exports (C:\Users\sgarc10\AppData\Roaming\npm\node_modules\firebase-tools\lib\responseToError.js:11:16)
-    at Request._callback (C:\Users\sgarc10\AppData\Roaming\npm\node_modules\firebase-tools\lib\api.js:45:25)
-    at Request.self.callback (C:\Users\sgarc10\AppData\Roaming\npm\node_modules\firebase-tools\node_modules\request\request.js:186:22)
-    at emitTwo (events.js:126:13)
-    at Request.emit (events.js:214:7)
-    at Request.<anonymous> (C:\Users\sgarc10\AppData\Roaming\npm\node_modules\firebase-tools\node_modules\request\request.js:1163:10)
-    at emitOne (events.js:116:13)
-    at Request.emit (events.js:211:7)
-    at IncomingMessage.<anonymous> (C:\Users\sgarc10\AppData\Roaming\npm\node_modules\firebase-tools\node_modules\request\request.js:1085:12)
-    at Object.onceWrapper (events.js:313:30)
-[error] 
-[error] Error: An unexpected error has occurred.
-[debug] [2018-03-02T17:39:44.620Z] ----------------------------------------------------------------------
-[debug] [2018-03-02T17:39:44.623Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\sgarc10\AppData\Roaming\npm\node_modules\firebase-tools\bin\firebase deploy --only functions
-[debug] [2018-03-02T17:39:44.623Z] CLI Version:   3.17.4
-[debug] [2018-03-02T17:39:44.623Z] Platform:      win32
-[debug] [2018-03-02T17:39:44.623Z] Node Version:  v8.9.4
-[debug] [2018-03-02T17:39:44.625Z] Time:          Fri Mar 02 2018 14:39:44 GMT-0300 (SA Eastern Standard Time)
-[debug] [2018-03-02T17:39:44.625Z] ----------------------------------------------------------------------
-[debug] 
-[debug] [2018-03-02T17:39:44.648Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
-[debug] [2018-03-02T17:39:44.650Z] > authorizing via signed-in user
-[debug] [2018-03-02T17:39:44.653Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/friend-service-15f6e  
-  
- Fri Mar 02 2018 14:39:44 GMT-0300 (SA Eastern Standard Time)
-[debug] [2018-03-02T17:39:47.008Z] <<< HTTP RESPONSE 200
-[debug] [2018-03-02T17:39:47.009Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/friend-service-15f6e/tokens  
-  
- Fri Mar 02 2018 14:39:47 GMT-0300 (SA Eastern Standard Time)
+[info] 
+[info] Visit this URL on any device to log in:
+[info] https://accounts.google.com/o/oauth2/auth?client_id=563584335869-fgrhgmd47bqnekij5i8b5pr03ho849e6.apps.googleusercontent.com&scope=email%20openid%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcloudplatformprojects.readonly%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Ffirebase%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcloud-platform&response_type=code&state=413277066&redirect_uri=http%3A%2F%2Flocalhost%3A9005
+[info] 
+[info] Waiting for authentication...

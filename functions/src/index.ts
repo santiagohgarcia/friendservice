@@ -104,22 +104,23 @@ const replicateExpense = function (event) {
 
     const expenseUsers = db.collection(`users/${userId}/expenses/${expenseId}/users`).get()
 
-    return expenseUsers.then(query => Promise.all(query.docs
-        .filter(doc => doc.id !== userId)
-        .map(doc => {
-            let expenseUser = doc.data() as ExpenseUser
-            return db.collection(`users/${expenseUser.id}/otherExpenses/`).doc(expenseId).set(expense)
-        })))
-}
+    return expenseUsers.then(query => Promise.all(
+        query.docs.filter(doc => doc.id !== userId)
+            .map(doc => {
 
-const replicateExpenseUser = function (event) {
-    const userId = event.params.userId;
-    const expenseId = event.params.expenseId;
-    const expenseUserId = event.params.expenseUserId
+                const expensePromise = db.collection(`users/${doc.id}/otherExpenses/`).doc(expenseId).set(expense)
 
-    const expenseUser = event.data.data() as ExpenseUser
+                const expenseUsersPromise = Promise.all(
+                    query.docs.map(userDoc => {
+                        const expenseUser = userDoc.data() as ExpenseUser;
+                        return db.collection(`users/${doc.id}/otherExpenses/${expenseId}/users`).doc(userDoc.id).set(expenseUser)
+                    }))
 
-    return db.collection(`users/${expenseUserId}/otherExpenses/${expenseId}/users`).doc(expenseUserId).set(expenseUser)
+                return Promise.all([expensePromise, expenseUsersPromise]);
+
+            })
+    ))
+
 }
 
 const deleteOtherExpense = function (event) {
@@ -128,7 +129,7 @@ const deleteOtherExpense = function (event) {
     const expenseUserId = event.params.expenseUserId
 
     return db.collection(`users/${expenseUserId}/otherExpenses/${expenseId}/users`).get()
-        .then( query => Promise.all(query.docs.map( doc => doc.ref.delete() )) )
+        .then(query => Promise.all(query.docs.map(doc => doc.ref.delete())))
         .then(_ => db.doc(`users/${expenseUserId}/otherExpenses/${expenseId}`))
 }
 
