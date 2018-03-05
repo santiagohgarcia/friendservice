@@ -1,7 +1,7 @@
 <div *ngIf="!(ownExpenses | async)">
     <mat-progress-bar mode="indeterminate" color="accent"></mat-progress-bar>
 </div>
-<mat-list>
+<!-- <mat-list>
     <div *ngFor="let expense of ownExpenses | async; let i = index;">
         <mat-divider *ngIf="i != 0"></mat-divider>
         <mat-list-item>
@@ -24,10 +24,37 @@
             </mat-menu>
         </mat-list-item>
     </div>
-</mat-list>
+</mat-list> -->
 
+<mat-card *ngFor="let expense of ownExpenses | async" class="card">
+    <div class="header-container"> 
+        <mat-card-title-group>
+            <mat-card-title>{{expense.title | titlecase}}</mat-card-title>
+            <mat-card-subtitle>Date: {{expense.date | date}}</mat-card-subtitle>
+            <mat-card-subtitle>Creator: {{expense.creator}}</mat-card-subtitle>
+        </mat-card-title-group>
+        <mat-card-title-group class="amount-container">
+            <h1>ARS{{expense.totalAmount}}</h1>
+            <h4>Total Amount: {{expense.totalAmount}}</h4>
+        </mat-card-title-group>
+    </div>
+    <mat-divider></mat-divider>
+    <mat-card-content>
 
-
+        <!-- <mat-list>
+            <mat-list-item *ngFor="let user of expense.users">
+                <img matListAvatar src="{{(getFbInfo(user.id) | async)?.picture}}">
+                <h3 matLine> {{(getFbInfo(user.id) | async)?.name}} </h3>
+            </mat-list-item>
+        </mat-list> -->
+    </mat-card-content>
+    <mat-divider></mat-divider>
+    <mat-card-actions align="start">
+        <a mat-button routerLink="/expenses/expenses/{{expense.id}}">EDIT</a>
+        <button mat-button>PAY</button>
+        <button mat-button>DELETE</button>
+    </mat-card-actions>
+</mat-card>
 
 
 <a mat-fab color="primary" routerLink="/expenses/new" class="fab">

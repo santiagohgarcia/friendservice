@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { ExpenseService } from '../../services/expense.service'
 import { MessagesService } from '../../services/messages.service'
 import { AngularFireAuth } from 'angularfire2/auth';
+import { FacebookService } from '../../services/facebook.service';
 
 @Component({
   selector: 'app-expenses',
@@ -19,13 +20,18 @@ export class ExpensesComponent implements OnInit {
 
   constructor(private expenseService: ExpenseService,
               private messagesService: MessagesService,
-              private afAuth: AngularFireAuth) {
+              private afAuth: AngularFireAuth,
+              private facebookService: FacebookService) {
   }
 
   ngOnInit() {
     this.ownExpenses = this.expenseService.getOwnExpenses()
                     .catch(e => { this.messagesService.error(e.message);
                                   return []; });
+  }
+
+  getFbInfo(id:string){
+    return this.facebookService.getFbInfo(id);
   }
 
 }

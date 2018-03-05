@@ -6,7 +6,12 @@ function InitialExpense(creatorId) {
         title: "",
         date: null,
         creator: creatorId,
-        totalAmount: 0
+        totalAmount: 0,
+        users: [
+            {
+                id: creatorId
+            }
+        ]
     };
 }
 exports.InitialExpense = InitialExpense;
