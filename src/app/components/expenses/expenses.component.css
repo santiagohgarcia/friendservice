@@ -6,7 +6,7 @@
   }
 
 .card {
-  max-width: 400px;
+  max-width: 900px;
   margin-left: auto;
   margin-right: auto;
   margin-top: 10px;
@@ -21,5 +21,20 @@
 .amount-container{
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: baseline;
+}
+.amount{
+    -webkit-margin-before: 0px;
+    -webkit-margin-after: 0px;
+    -webkit-margin-start: 0px;
+    -webkit-margin-end: 0px;
+    align-self: center
+  }
+
+.individual-amount{
+  font-weight: normal
+}
+
+.list{
+  padding: unset
 }

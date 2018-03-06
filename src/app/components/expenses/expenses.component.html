@@ -27,26 +27,36 @@
 </mat-list> -->
 
 <mat-card *ngFor="let expense of ownExpenses | async" class="card">
-    <div class="header-container"> 
+    <div class="header-container">
         <mat-card-title-group>
             <mat-card-title>{{expense.title | titlecase}}</mat-card-title>
-            <mat-card-subtitle>Date: {{expense.date | date}}</mat-card-subtitle>
-            <mat-card-subtitle>Creator: {{expense.creator}}</mat-card-subtitle>
+            <mat-card-subtitle>{{expense.date | date}}</mat-card-subtitle>
         </mat-card-title-group>
         <mat-card-title-group class="amount-container">
-            <h1>ARS{{expense.totalAmount}}</h1>
-            <h4>Total Amount: {{expense.totalAmount}}</h4>
+            <mat-card-title>ARS {{expense.totalAmount | number:'1.2-2'}}</mat-card-title>
+            <mat-card-subtitle>Total ARS {{expense.totalAmount | number:'1.2-2'}}</mat-card-subtitle>
         </mat-card-title-group>
     </div>
     <mat-divider></mat-divider>
     <mat-card-content>
-
-        <!-- <mat-list>
-            <mat-list-item *ngFor="let user of expense.users">
-                <img matListAvatar src="{{(getFbInfo(user.id) | async)?.picture}}">
-                <h3 matLine> {{(getFbInfo(user.id) | async)?.name}} </h3>
+        <mat-list class="list">
+            <h5 mat-subheader class="list">Creator</h5>
+            <mat-list-item class="list">
+                <img matListAvatar src="{{this.getFbInfo(expense.creator)?.picture}}">
+                <h3 matLine> {{this.getFbInfo(expense.creator)?.name}} </h3>
+                <h3 class="individual-amount">ARS {{this.getCreatorUser(expense).individualAmount | number:'1.2-2'}}</h3>
+                <h5 matLine> Payed </h5>
             </mat-list-item>
-        </mat-list> -->
+            <h5 mat-subheader class="list">Participants</h5>
+            <div *ngFor="let user of expense.users" class="list">
+                <mat-list-item *ngIf="user.id !== expense.creator">
+                    <img matListAvatar src="{{this.getFbInfo(user.id)?.picture}}">
+                    <h3 matLine>{{this.getFbInfo(user.id)?.name}} </h3>
+                    <h5 matLine> Payed </h5>
+                    <h3 class="individual-amount">ARS {{user.individualAmount | number:'1.2-2'}}</h3>
+                </mat-list-item>
+            </div>
+        </mat-list>
     </mat-card-content>
     <mat-divider></mat-divider>
     <mat-card-actions align="start">

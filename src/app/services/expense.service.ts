@@ -12,46 +12,47 @@ import { UserInfo } from '@firebase/auth-types';
 @Injectable()
 export class ExpenseService {
 
-  user: UserInfo
+  user: Promise<UserInfo>
 
   constructor(private db: AngularFirestore,
     private afAuth: AngularFireAuth) {
-
-      this.afAuth.authState.subscribe(user => {
-        if (user) {
-           this.user = user.providerData[0]
-        }
-      });
-
+    this.user = this.afAuth.authState.first().toPromise().then( user => {
+      if (user) {
+        return this.user = Promise.resolve(user.providerData[0])
+      }
+    });
   }
 
   getOwnExpenses() {
-    return this.db.collection(`users/${this.user.uid}/expenses`).snapshotChanges()
-      .map(actions =>
-        actions.map(a => {
-          let expense = a.payload.doc.data() as Expense
-          expense.id = a.payload.doc.id
-          return expense
-        }))
+    return Observable.fromPromise(this.user).switchMap(u =>
+      this.db.collection(`users/${u.uid}/expenses`).snapshotChanges()
+        .map(actions =>
+          actions.map(a => {
+            let expense = a.payload.doc.data() as Expense
+            expense.id = a.payload.doc.id
+            return expense
+          })))
   }
 
   getOtherExpenses() {
-    return this.db.collection(`users/${this.user.uid}/otherExpenses`).snapshotChanges()
-      .map(actions =>
-        actions.map(a => {
-          let expense = a.payload.doc.data() as Expense
-          expense.id = a.payload.doc.id
-          return expense
-        }))
+    return Observable.fromPromise(this.user).switchMap(u =>
+      this.db.collection(`users/${u.uid}/otherExpenses`).snapshotChanges()
+        .map(actions =>
+          actions.map(a => {
+            let expense = a.payload.doc.data() as Expense
+            expense.id = a.payload.doc.id
+            return expense
+          })))
   }
 
   getExpense(id: string, type: string): Observable<Expense> {
-    return this.db.doc(`users/${this.user.uid}/${type}/${id}`).snapshotChanges()
-      .map(doc => {
-        var expense = doc.payload.data() as Expense
-        expense.id = doc.payload.id;
-        return expense;
-      });
+    return Observable.fromPromise(this.user).switchMap(u =>
+      this.db.doc(`users/${u.uid}/${type}/${id}`).snapshotChanges()
+        .map(doc => {
+          var expense = doc.payload.data() as Expense
+          expense.id = doc.payload.id;
+          return expense;
+        }))
   }
 
   addExpense(expense: Expense, expenseUsers: string[]): Promise<any> {
@@ -59,11 +60,11 @@ export class ExpenseService {
   }
 
   updateExpense(expense: Expense): Promise<any> {
-    return this.db.doc(`users/${this.user.uid}/expenses/${expense.id}`).set(expense)
+    return this.db.doc(`users/${expense.creator}/expenses/${expense.id}`).set(expense)
   }
 
-  deleteExpense(expenseId: string) {
-    return this.db.doc(`users/${this.user.uid}/expenses/${expenseId}`).delete()
+  deleteExpense(expense: Expense) {
+    return this.db.doc(`users/${expense.creator}/expenses/${expense.id}`).delete()
   }
 
 

@@ -10,14 +10,14 @@ import { AngularFirestore } from 'angularfire2/firestore';
 @Injectable()
 export class FacebookService {
 
-  user: UserInfo
+  user: Promise<UserInfo>
 
   constructor(private afAuth: AngularFireAuth,
     private http: HttpClient) {
 
-    this.afAuth.authState.subscribe(user => {
+    this.user = this.afAuth.authState.first().toPromise().then(user => {
       if (user) {
-        this.user = user.providerData[0]
+        return this.user = Promise.resolve(user.providerData[0])
       }
     });
 
@@ -25,7 +25,8 @@ export class FacebookService {
 
 
   async getFriends(): Promise<any> {
-    return this.http.get('https://graph.facebook.com/v2.12/' + this.user.uid +
+    const user = await this.user;
+    return this.http.get('https://graph.facebook.com/v2.12/' + user.uid +
       '/friends?access_token=' +
       localStorage.getItem('facebookToken') +
       '&fields=cover,name&limit=10')
@@ -38,12 +39,13 @@ export class FacebookService {
     return { id: id, name: name, picture: picture } as FacebookUser
   }
 
-  getFbInfo(id: string): Promise<FacebookUser> {
-    if (id === this.user.uid) {
+  async getFbInfo(id: string): Promise<FacebookUser> {
+    const user = await this.user;
+    if (id === user.uid) {
       return Promise.resolve({
-        id: this.user.uid,
-        name: this.user.displayName,
-        picture: this.user.photoURL
+        id: user.uid,
+        name: user.displayName,
+        picture: user.photoURL
       } as FacebookUser)
     } else {
       return this.http.get('https://graph.facebook.com/v2.12/' + id +

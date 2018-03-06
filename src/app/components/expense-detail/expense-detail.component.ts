@@ -110,7 +110,7 @@ export class ExpenseDetailComponent {
   }
 
   delete() {
-    this.expenseService.deleteExpense(this.expense.id)
+    this.expenseService.deleteExpense(this.expense)
       .then(res => this.goBack())
       .catch(e => this.messageService.error(e.message));
   }
