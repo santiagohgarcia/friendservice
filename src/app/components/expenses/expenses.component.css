@@ -28,13 +28,34 @@
     -webkit-margin-after: 0px;
     -webkit-margin-start: 0px;
     -webkit-margin-end: 0px;
-    align-self: center
+    align-self: center;
+    min-width: 140px;
+    text-align-last: end;
   }
 
-.individual-amount{
-  font-weight: normal
+.total-amount {
+  text-align-last: end;
 }
 
-.list{
-  padding: unset
+.individual-amount{
+  font-weight: normal;
+  min-width: 100px;
+  text-align-last: end;
+}
+
+.list {
+  padding: 0px;
+}
+
+.mat-card-title{
+  font-size: 22px;
+}
+
+.user-amount{
+    min-width: 140px;
+    text-align-last: end;
+  }
+
+  .mat-list-item-content{
+  padding: 0px;
 }

@@ -33,7 +33,6 @@ export class ExpensesComponent implements OnInit {
 
   ngOnInit() {
     this.ownExpenses = this.expenseService.getOwnExpenses()
-      //.map(expenses => expenses.map(e => e.users = e.users.filter(u => u.id != this.user.uid )))
       .catch(e => {
         this.messagesService.error(e.message);
         return [];

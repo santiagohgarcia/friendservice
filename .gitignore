@@ -47,3 +47,9 @@ Temporary Items
 .apdisk
 node_modules
 *.log
+dist/polyfills.bundle.js.map
+dist/polyfills.bundle.js
+dist/styles.bundle.js
+dist/styles.bundle.js.map
+dist/vendor.bundle.js
+dist/vendor.bundle.js.map

@@ -128,7 +128,8 @@ export class ExpenseDetailComponent {
 
   friendSelection(event: MatAutocompleteSelectedEvent) {
     if(!this.expense.users.find(user => user.id ===  event.option.value)){
-      this.expense.users.push({ id: event.option.value } as ExpenseUser );
+      this.expense.users.push({ id: event.option.value,
+                                payed: false } as ExpenseUser );
     }
   }
 

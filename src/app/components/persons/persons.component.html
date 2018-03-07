@@ -1,3 +1,24 @@
-<p>
-  persons works!
-</p>
+<div *ngIf="!(relations | async)">
+    <mat-progress-bar mode="indeterminate" color="accent"></mat-progress-bar>
+</div>
+
+<mat-card *ngFor="let relation of relations | async" class="card">
+    <div class="header-container">
+<mat-card-header>
+        <img mat-card-avatar src="{{this.getFbInfo(relation.userId)?.picture}}">
+        <mat-card-title class="name">{{this.getFbInfo(relation.userId)?.name}}</mat-card-title>
+</mat-card-header>
+<mat-card-header>
+    <mat-card-title *ngIf="relation.owesMe > relation.iOwe" class="name">Owes Me ARS {{ (relation.owesMe - relation.iOwe ) | number:'1.2-2'}}</mat-card-title>
+    <mat-card-title *ngIf="relation.owesMe < relation.iOwe" class="name">I Owe ARS {{ ( relation.iOwe - relation.owesMe ) | number:'1.2-2'}}</mat-card-title>
+    <mat-card-title *ngIf="relation.owesMe === relation.iOwe" class="name">Even</mat-card-title>
+</mat-card-header>
+</div>
+<mat-divider></mat-divider>
+    <mat-card-content>
+
+    </mat-card-content>
+    <mat-card-actions>
+        <button mat-button>PAY</button>
+    </mat-card-actions>
+</mat-card>

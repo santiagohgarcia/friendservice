@@ -1,40 +1,15 @@
 <div *ngIf="!(ownExpenses | async)">
     <mat-progress-bar mode="indeterminate" color="accent"></mat-progress-bar>
 </div>
-<!-- <mat-list>
-    <div *ngFor="let expense of ownExpenses | async; let i = index;">
-        <mat-divider *ngIf="i != 0"></mat-divider>
-        <mat-list-item>
-            <mat-icon mat-list-icon>monetization_on</mat-icon>
-            <h3 mat-line>{{expense.title | titlecase}}</h3>
-            <h5 mat-line>Total Amount: {{expense.totalAmount | number:'1.2-2'}}</h5>
-            <h5 mat-line>Date: {{expense.date | date}} </h5>
-            <button mat-icon-button [matMenuTriggerFor]="menu" [matMenuTriggerData]="expense">
-                <mat-icon mat-list-icon>more_vert</mat-icon>
-            </button>
-            <mat-menu #menu="matMenu">
-                <button mat-menu-item disabled>
-                    <mat-icon>attach_money</mat-icon>
-                    <span>Pay Off</span>
-                </button>
-                <a mat-menu-item routerLink="/expenses/expenses/{{expense.id}}">
-                    <mat-icon>mode_edit</mat-icon>
-                    <span>Edit</span>
-                </a>
-            </mat-menu>
-        </mat-list-item>
-    </div>
-</mat-list> -->
-
 <mat-card *ngFor="let expense of ownExpenses | async" class="card">
     <div class="header-container">
         <mat-card-title-group>
             <mat-card-title>{{expense.title | titlecase}}</mat-card-title>
             <mat-card-subtitle>{{expense.date | date}}</mat-card-subtitle>
         </mat-card-title-group>
-        <mat-card-title-group class="amount-container">
-            <mat-card-title>ARS {{expense.totalAmount | number:'1.2-2'}}</mat-card-title>
-            <mat-card-subtitle>Total ARS {{expense.totalAmount | number:'1.2-2'}}</mat-card-subtitle>
+        <mat-card-title-group>
+            <mat-card-title class="user-amount">ARS {{expense.totalAmount | number:'1.2-2'}}</mat-card-title>
+            <mat-card-subtitle class="total-amount">Total ARS {{expense.totalAmount | number:'1.2-2'}}</mat-card-subtitle>
         </mat-card-title-group>
     </div>
     <mat-divider></mat-divider>
@@ -42,10 +17,10 @@
         <mat-list class="list">
             <h5 mat-subheader class="list">Creator</h5>
             <mat-list-item class="list">
-                <img matListAvatar src="{{this.getFbInfo(expense.creator)?.picture}}">
-                <h3 matLine> {{this.getFbInfo(expense.creator)?.name}} </h3>
-                <h3 class="individual-amount">ARS {{this.getCreatorUser(expense).individualAmount | number:'1.2-2'}}</h3>
-                <h5 matLine> Payed </h5>
+                    <img matListAvatar src="{{this.getFbInfo(expense.creator)?.picture}}">
+                    <h3 matLine> {{this.getFbInfo(expense.creator)?.name}} </h3>
+                    <h3 class="individual-amount">ARS {{this.getCreatorUser(expense).individualAmount | number:'1.2-2'}}</h3>
+                    <h5 matLine> Payed </h5>
             </mat-list-item>
             <h5 mat-subheader class="list">Participants</h5>
             <div *ngFor="let user of expense.users" class="list">
