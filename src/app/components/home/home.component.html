@@ -6,8 +6,8 @@
       <mat-icon>highlight_off</mat-icon>
     </button>
   </mat-toolbar>
-
-  <mat-tab-group class="demo-tab-group">
+  
+  <mat-tab-group class="tab-group" (selectedTabChange)="navTo($event)">
     <mat-tab class="tab" label="Expenses">
         <ng-template mat-tab-label>
             <mat-icon>assignment</mat-icon>
@@ -15,7 +15,7 @@
         </ng-template>
         <app-expenses></app-expenses>
     </mat-tab>
-    <mat-tab class="tab" label="Persons">
+    <mat-tab class="tab" label="Persons" route="persons">
         <ng-template mat-tab-label>
             <mat-icon>person</mat-icon>
             Persons

@@ -16,6 +16,7 @@ export class HomeComponent implements OnInit {
               private afAuth: AngularFireAuth) { }
 
   ngOnInit() {
+    
   }
 
   close() {
@@ -26,5 +27,12 @@ export class HomeComponent implements OnInit {
     this.afAuth.auth.signOut();
   }
 
+  navTo(event){
+    switch(event.index) { 
+      case 0: { this.router.navigate(['/expenses']) }
+      case 1: { this.router.navigate(['/persons']) }
+      case 2: { this.router.navigate(['/groups']) }
+    }
+  }
 }
 
