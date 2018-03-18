@@ -12,26 +12,24 @@
             <mat-card-subtitle class="total-amount">Total ARS {{expense.totalAmount | number:'1.2-2'}}</mat-card-subtitle>
         </mat-card-title-group>
     </div>
-    <mat-divider></mat-divider>
     <mat-card-content>
-        <mat-list class="list">
-            <h5 mat-subheader class="list">Creator</h5>
-            <mat-list-item class="list">
-                    <img matListAvatar src="{{this.getFbInfo(expense.creator)?.picture}}">
-                    <h3 matLine> {{this.getFbInfo(expense.creator)?.name}} </h3>
-                    <h3 class="individual-amount">ARS {{this.getCreatorUser(expense).individualAmount | number:'1.2-2'}}</h3>
-                    <h5 matLine> Payed </h5>
-            </mat-list-item>
-            <h5 mat-subheader class="list">Participants</h5>
-            <div *ngFor="let user of expense.users" class="list">
-                <mat-list-item *ngIf="user.id !== expense.creator">
-                    <img matListAvatar src="{{this.getFbInfo(user.id)?.picture}}">
-                    <h3 matLine>{{this.getFbInfo(user.id)?.name}} </h3>
-                    <h5 matLine> Payed </h5>
-                    <h3 class="individual-amount">ARS {{user.individualAmount | number:'1.2-2'}}</h3>
-                </mat-list-item>
-            </div>
-        </mat-list>
+        <mat-expansion-panel class="exp-panel-expenses">
+            <mat-expansion-panel-header class="exp-panel-header">
+                <mat-panel-title>
+                    Participants
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-list class="list">
+                <div *ngFor="let user of expense.users" class="list">
+                    <mat-list-item >
+                        <img matListAvatar src="{{this.getFbInfo(user.id)?.picture}}">
+                        <h3 matLine>{{this.getFbInfo(user.id)?.name}} {{user.id === expense.creator ? '(Creator)' : ''}}</h3>
+                        <h5 matLine> Payed </h5>
+                        <h3 class="individual-amount">ARS {{user.individualAmount | number:'1.2-2'}}</h3>
+                    </mat-list-item>
+                </div>
+            </mat-list>
+        </mat-expansion-panel>
     </mat-card-content>
     <mat-divider></mat-divider>
     <mat-card-actions align="start">

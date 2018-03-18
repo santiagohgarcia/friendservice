@@ -59,3 +59,11 @@
   .mat-list-item-content{
   padding: 0px;
 }
+
+.exp-panel-expenses{
+  box-shadow: none !important;
+}
+
+.exp-panel-header{
+  padding: 0;
+}

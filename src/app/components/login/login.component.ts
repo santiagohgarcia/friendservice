@@ -43,7 +43,7 @@ export class LoginComponent implements OnInit {
 
   withFacebook() {
     this.afAuth.auth.setPersistence(this.persistance)
-      .then(_ => this.afAuth.auth.signInWithRedirect(this.provider))
+      .then(_ => this.afAuth.auth.signInWithPopup(this.provider))
       .catch(e => this.openSnackBar(e.message))
   }
 
