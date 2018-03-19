@@ -6,6 +6,7 @@ import { Observable } from 'rxjs/Observable';
 import FacebookUser from '../../model/facebook-user';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { FacebookService } from '../../services/facebook.service';
+import { Expense } from '../../model/expense';
 
 @Component({
   selector: 'app-persons',
@@ -44,6 +45,10 @@ export class PersonsComponent implements OnInit {
     } else {
       return this.friends.find(f => f.id === id);
     }
+  }
+
+  getExpense(expenseId: string): Observable<Expense>{
+    return this.expenseService.getExpense(expenseId,"expenses")
   }
 
 }

@@ -3,30 +3,38 @@
 </div>
 
 <mat-card *ngFor="let relation of relations | async" class="card">
-    <div class="header-container">
-        <mat-card-header>
-            <img mat-card-avatar src="{{this.getFbInfo(relation.userId)?.picture}}">
-            <mat-card-title class="name">{{this.getFbInfo(relation.userId)?.name}}</mat-card-title>
-            <mat-card-subtitle *ngIf="relation.owesMe > relation.iOwe">Owes Me ARS {{ (relation.owesMe - relation.iOwe ) | number:'1.2-2'}}</mat-card-subtitle>
-        </mat-card-header>
-    </div>
-    <mat-divider></mat-divider>
+
+    <mat-card-header>
+        <img mat-card-avatar src="{{this.getFbInfo(relation.userId)?.picture}}" />
+        <mat-card-title class="header-title">{{this.getFbInfo(relation.userId)?.name | titlecase}}</mat-card-title>
+        <mat-card-subtitle>
+            <div *ngIf="relation.owesMe > relation.iOwe">
+                <label class="win content-label">Owes me:</label>
+                <span class="content-value win">ARS{{(relation.owesMe - relation.iOwe) | number:'1.2-2'}}</span>
+            </div>
+            <div *ngIf="relation.owesMe < relation.iOwe">
+                <label class="lose content-label">I owe:</label>
+                <span class="lose content-value">ARS{{(relation.iOwe - relation.owesMe) | number:'1.2-2'}}</span>
+            </div>
+        </mat-card-subtitle>
+    </mat-card-header>
+
     <mat-card-content>
-        <mat-expansion-panel class="exp-panel-expenses">
-            <mat-expansion-panel-header>
-                <mat-panel-title>
-                    Expenses
-                </mat-panel-title>
-            </mat-expansion-panel-header>
-
-            <mat-form-field>
-                <input matInput placeholder="First name">
-            </mat-form-field>
-
-            <mat-form-field>
-                <input matInput placeholder="Age">
-            </mat-form-field>
-        </mat-expansion-panel>
+        <mat-accordion class="example-headers-align">
+            <mat-expansion-panel class="exp-panel-expenses">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>Expenses</mat-panel-title>
+                </mat-expansion-panel-header>
+                <mat-list class="list">
+                    <div *ngFor="let expenseId of relation.expenses" class="list">
+                        <mat-list-item class="expense-user-item">
+                            <mat-icon mat-list-icon>assignment</mat-icon>
+                          <!--<h4 mat-line>ARS{{this.getExpense(expenseId) | async | number:'1.2-2'}}</h4>-->
+                        </mat-list-item>
+                    </div>
+                </mat-list>
+            </mat-expansion-panel>
+        </mat-accordion>
     </mat-card-content>
     <mat-card-actions>
         <button mat-button>PAY</button>

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Expense } from '../../model/expense';
 import 'rxjs/add/operator/catch';
@@ -55,8 +55,23 @@ export class ExpensesComponent implements OnInit {
     }
   }
 
-  getCreatorUser(expense: Expense): ExpenseUser{
-    return expense.users.find( u => u.id === expense.creator)
+  getCreatorUser(expense: Expense): ExpenseUser {
+    return expense.users.find(u => u.id === expense.creator)
+  }
+
+  isMyExpense(expense: Expense): boolean {
+    return expense.creator === this.user.uid
+  }
+
+  delete(expense: Expense) {
+    this.expenseService.deleteExpense(expense)
+  }
+
+  getParticipantsName(expense: Expense){
+    return expense.users
+            .filter( u => u.id !== expense.creator )  
+            .map( u => this.getFbInfo(u.id).name )
+            .join(", ")
   }
 
 }
