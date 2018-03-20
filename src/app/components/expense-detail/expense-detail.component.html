@@ -40,10 +40,7 @@
 
       <mat-form-field class="full-width">
         <mat-chip-list #chipList class="full-width">
-          <mat-chip *ngFor="let user of expense.users" 
-                            (removed)="removeFriend($event)"
-                            (removable)="user.id != creator.uid"
-                            value="{{user.id}}">
+          <mat-chip *ngFor="let user of expense.users" (removed)="removeFriend($event)" (removable)="user.id != creator.uid" value="{{user.id}}">
             <img mat-card-avatar style="vertical-align:middle;" aria-hidden src="{{this.getFbInfo(user.id)?.picture}}" height="20" />{{this.getFbInfo(user.id)?.name}}(ARS {{ expense.totalAmount/ expense.users.length | number:'1.2-2'}})
             <mat-icon *ngIf="user.id != creator.uid" matChipRemove>cancel</mat-icon>
           </mat-chip>
@@ -59,10 +56,7 @@
         </mat-autocomplete>
         <mat-icon matSuffix>search</mat-icon>
       </mat-form-field>
-
     </form>
-
-
 
     <div class="button-row">
       <button mat-fab color="primary" class="fab" (click)="save()">

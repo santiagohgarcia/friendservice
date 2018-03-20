@@ -1,0 +1,50 @@
+.card {
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    height: auto;
+  }
+  
+  .header-title {
+    font-size: 16px;
+    font-weight: 500;
+  }
+  
+  .example-headers-align .mat-expansion-panel-header-title, 
+  .example-headers-align .mat-expansion-panel-header-description {
+    flex-basis: 0;
+  }
+  
+  .example-headers-align .mat-expansion-panel-header-description {
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .exp-panel-expenses{
+    box-shadow: none !important;
+  }
+  
+  .participants-text {
+    margin-right: 16px;
+  }
+  
+  .list {
+    padding: 0px;
+  }
+  
+  .group-user-item {
+    padding: 0;
+  }
+  
+  .action-button{
+    margin-left: 16px;
+  }
+
+  .fab {
+    position: fixed;
+    right: 20px;
+    bottom: 15px;
+    margin-left: -28px;
+  }

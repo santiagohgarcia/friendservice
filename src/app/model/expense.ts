@@ -18,7 +18,8 @@ export function InitialExpense(creatorId: string): Expense {
         totalAmount: 0,
         users: [
             {
-             id: creatorId
+             id: creatorId,
+             payed: true
             } as ExpenseUser
         ]
     } as Expense

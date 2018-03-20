@@ -96,10 +96,6 @@
   padding: 0;
 }
 
-.bottom-spacer{
-  height: 80px;
-}
-
 .expense-user-item {
   padding: 0;
 }
@@ -112,4 +108,24 @@
 .example-headers-align .mat-expansion-panel-header-description {
   justify-content: space-between;
   align-items: center;
+}
+
+.mat-expansion-panel-header {
+  padding: 0;
+}
+
+.mat-card-actions {
+  padding: 0;
+}
+
+.mat-card-content {
+  margin-bottom: 0;
+}
+
+.participants-text {
+  margin-right: 16px;
+}
+
+.label-container {
+  margin-top: 4px;
 }

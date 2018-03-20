@@ -8,25 +8,25 @@
         <mat-card-subtitle>
             <div *ngIf="this.isMyExpense(expense)">
                 <label class="win content-label">Participants owes me:</label>
-                <span class="content-value win">ARS{{expense.totalAmount | number:'1.2-2'}}</span>
+                <span class="content-value win">ARS {{expense.totalAmount | number:'1.2-2'}}</span>
             </div>
             <div *ngIf="!this.isMyExpense(expense)">
                 <label class="lose content-label">I owe {{this.getFbInfo(expense.creator)?.name}}:</label>
-                <span class="lose content-value">ARS{{expense.totalAmount | number:'1.2-2'}}</span>
+                <span class="lose content-value">ARS {{expense.totalAmount | number:'1.2-2'}}</span>
             </div>
         </mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
         <div class="content-container">
-            <div>
+            <div class="label-container">
                 <label class="content-label">Creator:</label>
                 <span class="content-value">{{this.getFbInfo(expense.creator)?.name}}</span>
             </div>
-            <div>
+            <div class="label-container">
                 <label class="content-label">Total:</label>
-                <span class="content-value">ARS{{expense.totalAmount | number:'1.2-2'}}</span>
+                <span class="content-value">ARS {{expense.totalAmount | number:'1.2-2'}}</span>
             </div>
-            <div>
+            <div class="label-container">
                 <label class="content-label">Date:</label>
                 <span class="content-value">{{expense.date | date}}</span>
             </div>
@@ -34,8 +34,8 @@
         <mat-accordion class="example-headers-align">
             <mat-expansion-panel class="exp-panel-expenses">
                 <mat-expansion-panel-header>
-                    <div>
-                        <label class="content-value">Participants:  </label>
+                    <div class="participants-text">
+                        <label class="content-value">{{expense.users.length}} Participants:  </label>
                         <span class="content-label">{{this.getParticipantsName(expense)}}</span>
                     </div>
                 </mat-expansion-panel-header>
@@ -45,6 +45,8 @@
                             <img matListAvatar src="{{this.getFbInfo(user.id)?.picture}}">
                             <h3 matLine>{{this.getFbInfo(user.id)?.name}} {{user.id === expense.creator ? '(Creator)' : ''}}</h3>
                             <h5 matLine>ARS {{user.individualAmount | number:'1.2-2'}}</h5>
+                            <mat-icon *ngIf="!user.payed" class="lose">clear</mat-icon> 
+                            <mat-icon *ngIf="user.payed" class="win">done</mat-icon>
                         </mat-list-item>
                     </div>
                 </mat-list>
@@ -63,8 +65,6 @@
         </button>
     </mat-card-actions>
 </mat-card>
-
-<div class="bottom-spacer"></div>
 
 <a mat-fab color="primary" routerLink="/expenses/new" class="fab">
     <mat-icon>add</mat-icon>

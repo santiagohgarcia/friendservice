@@ -24,6 +24,8 @@ import { DecimalPipe } from '@angular/common';
 import { ExpenseService } from './services/expense.service'
 import { MessagesService } from './services/messages.service';
 import { FacebookService } from './services/facebook.service';
+import { GroupDetailComponent } from './components/group-detail/group-detail.component';
+import { GroupsService } from './services/groups.service';
 
 import {
   MatAutocompleteModule,
@@ -59,7 +61,6 @@ import {
   MatStepperModule,
   MAT_DATE_LOCALE,
 } from '@angular/material';
-
 
 @NgModule({
   exports: [
@@ -110,7 +111,8 @@ export class MaterialModule { }
     ExpensesComponent,
     PersonsComponent,
     GroupsComponent,
-    ExpenseDetailComponent
+    ExpenseDetailComponent,
+    GroupDetailComponent
   ],
   imports: [
     BrowserModule,
@@ -130,7 +132,8 @@ export class MaterialModule { }
     DecimalPipe,
     ExpenseService,
     FacebookService,
-    MessagesService],
+    MessagesService,
+    GroupsService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -4,6 +4,7 @@ import { HomeComponent } from './components/home/home.component';
 import { LoginComponent } from './components/login/login.component';
 import { AppComponent } from './app.component';
 import { ExpenseDetailComponent } from './components/expense-detail/expense-detail.component';
+import { GroupDetailComponent } from './components/group-detail/group-detail.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -13,7 +14,8 @@ const routes: Routes = [
   { path: 'persons', component: HomeComponent },
   { path: 'groups', component: HomeComponent },
   { path: 'expenses/new', component: ExpenseDetailComponent, pathMatch: 'full'},
-  { path: 'expenses/:expType/:id', component: ExpenseDetailComponent }
+  { path: 'expenses/:expType/:id', component: ExpenseDetailComponent },
+  { path: 'groups/new', component: GroupDetailComponent, pathMatch: 'full'}
 ];
 
 @NgModule({

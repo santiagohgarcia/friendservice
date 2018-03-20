@@ -1,0 +1,52 @@
+<mat-toolbar color="primary">
+  <button mat-icon-button routerLink="/groups">
+    <mat-icon>arrow_back</mat-icon>
+  </button>
+  <h1>{{ saveFunction == 'addGroup' && group.id === null ? 'Create Group' : 'Update Group' }}</h1>
+  <span class="spacer"></span>
+  <button *ngIf="group.id" mat-icon-button color="warn" (click)="delete()">
+    <mat-icon>delete</mat-icon>
+  </button>
+</mat-toolbar>
+
+<div *ngIf="loading">
+  <mat-progress-bar mode="indeterminate" color="accent"></mat-progress-bar>
+</div>
+
+<mat-card *ngIf="saveFunction == 'addGroup' || ( group.id != null )" class="card">
+  <h3 class="subheading-2">Group</h3>
+  <div class="example-container">
+    <form [formGroup]="groupForm" class="form">
+
+      <mat-form-field class="full-width">
+        <input matInput placeholder="Name" [formControl]="name" [(ngModel)]="group.name" [(value)]="group.name" [disabled]="loading">
+        <mat-error *ngIf="name.invalid">Required field</mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="full-width">
+        <mat-chip-list #chipList class="full-width">
+          <mat-chip *ngFor="let user of group.users" (removed)="removeFriend($event)" (removable)="user != creator.uid" value="{{user}}">
+            <img mat-card-avatar style="vertical-align:middle;" aria-hidden src="{{this.getFbInfo(user)?.picture}}" height="20" />{{this.getFbInfo(user)?.name}}
+            <mat-icon *ngIf="user != creator.uid" matChipRemove>cancel</mat-icon>
+          </mat-chip>
+        </mat-chip-list>
+        <input matInput class="full-width" placeholder="Divide between" [matChipInputFor]="chipList" [matAutocomplete]="auto" [formControl]="friendsCtrl">
+        <mat-autocomplete #auto="matAutocomplete" class="full-width" (optionSelected)="friendSelection($event)">
+          <mat-optgroup label="Friends">
+            <mat-option *ngFor="let friend of filteredFriends | async" [value]="friend.id">
+              <img mat-card-avatar style="vertical-align:middle;" aria-hidden src="{{friend.picture}}" height="25" />
+              <span>{{ friend.name }}</span>
+            </mat-option>
+          </mat-optgroup>
+        </mat-autocomplete>
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+    </form>
+
+    <div class="button-row">
+      <button mat-fab color="primary" class="fab" (click)="save()">
+        <mat-icon>done</mat-icon>
+      </button>
+    </div>
+  </div>
+</mat-card>

@@ -69,7 +69,7 @@ export class ExpensesComponent implements OnInit {
 
   getParticipantsName(expense: Expense){
     return expense.users
-            .filter( u => u.id !== expense.creator )  
+            //.filter( u => u.id !== expense.creator )  
             .map( u => this.getFbInfo(u.id).name )
             .join(", ")
   }

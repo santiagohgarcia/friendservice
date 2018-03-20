@@ -10,11 +10,11 @@
         <mat-card-subtitle>
             <div *ngIf="relation.owesMe > relation.iOwe">
                 <label class="win content-label">Owes me:</label>
-                <span class="content-value win">ARS{{(relation.owesMe - relation.iOwe) | number:'1.2-2'}}</span>
+                <span class="content-value win">ARS {{(relation.owesMe - relation.iOwe) | number:'1.2-2'}}</span>
             </div>
             <div *ngIf="relation.owesMe < relation.iOwe">
                 <label class="lose content-label">I owe:</label>
-                <span class="lose content-value">ARS{{(relation.iOwe - relation.owesMe) | number:'1.2-2'}}</span>
+                <span class="lose content-value">ARS {{(relation.iOwe - relation.owesMe) | number:'1.2-2'}}</span>
             </div>
         </mat-card-subtitle>
     </mat-card-header>
@@ -23,7 +23,7 @@
         <mat-accordion class="example-headers-align">
             <mat-expansion-panel class="exp-panel-expenses">
                 <mat-expansion-panel-header>
-                    <mat-panel-title>Expenses</mat-panel-title>
+                    <mat-panel-title class="content-value">{{relation.expenses.length}} Expenses</mat-panel-title>
                 </mat-expansion-panel-header>
                 <mat-list class="list">
                     <div *ngFor="let expenseId of relation.expenses" class="list">
@@ -36,7 +36,10 @@
             </mat-expansion-panel>
         </mat-accordion>
     </mat-card-content>
-    <mat-card-actions>
-        <button mat-button>PAY</button>
+    <mat-card-actions align="end">
+        <button mat-icon-button class="action-button pay-button">
+            <mat-icon>attach_money</mat-icon>
+        </button>
     </mat-card-actions>
 </mat-card>
+
