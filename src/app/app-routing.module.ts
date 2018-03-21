@@ -15,7 +15,8 @@ const routes: Routes = [
   { path: 'groups', component: HomeComponent },
   { path: 'expenses/new', component: ExpenseDetailComponent, pathMatch: 'full'},
   { path: 'expenses/:expType/:id', component: ExpenseDetailComponent },
-  { path: 'groups/new', component: GroupDetailComponent, pathMatch: 'full'}
+  { path: 'groups/new', component: GroupDetailComponent, pathMatch: 'full'},
+  { path: 'groups/:id', component: GroupDetailComponent },
 ];
 
 @NgModule({

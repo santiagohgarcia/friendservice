@@ -44,12 +44,12 @@ export class GroupsService {
     return this.db.collection(`users/${group.creator}/groups`).add(group)
   }
 
-  updateExpense(group: Group): Promise<any> {
-    return this.db.doc(`users/${group.creator}/expenses/${group.id}`).set(group)
+  updateGroup(group: Group): Promise<any> {
+    return this.db.doc(`users/${group.creator}/groups/${group.id}`).set(group)
   }
 
-  deleteExpense(group: Group) {
-    return this.db.doc(`users/${group.creator}/expenses/${group.id}`).delete()
+  deleteGroup(group: Group) {
+    return this.db.doc(`users/${group.creator}/groups/${group.id}`).delete()
   }
 
 }

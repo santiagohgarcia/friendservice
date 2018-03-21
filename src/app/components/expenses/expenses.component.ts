@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs/Rx'
 import { Expense } from '../../model/expense';
 import 'rxjs/add/operator/catch';
 import { Router } from '@angular/router';
@@ -17,9 +17,9 @@ import { ExpenseUser } from '../../model/expense-user';
   styleUrls: ['./expenses.component.css']
 })
 export class ExpensesComponent implements OnInit {
-
+  expenses: Observable<Expense[]>;
   ownExpenses: Observable<Expense[]>;
-  otherEexpenses: Observable<Expense[]>;
+  otherExpenses: Observable<Expense[]>;
   friends: FacebookUser[] = [];
   user = this.afAuth.auth.currentUser.providerData[0];
 
@@ -32,7 +32,11 @@ export class ExpensesComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.ownExpenses = this.expenseService.getOwnExpenses()
+
+    this.expenses = Observable
+      .combineLatest(this.expenseService.getOtherExpenses(),this.expenseService.getOwnExpenses())
+      .map(([own, other]) => [...own, ...other]
+                             .sort((e1, e2) =>  e2.date.getMilliseconds() - e1.date.getMilliseconds()))
       .catch(e => {
         this.messagesService.error(e.message);
         return [];
@@ -67,11 +71,14 @@ export class ExpensesComponent implements OnInit {
     this.expenseService.deleteExpense(expense)
   }
 
-  getParticipantsName(expense: Expense){
+  getParticipantsName(expense: Expense): string {
     return expense.users
-            //.filter( u => u.id !== expense.creator )  
-            .map( u => this.getFbInfo(u.id).name )
-            .join(", ")
+      .map(u => this.getFbInfo(u.id).name)
+      .join(", ")
+  }
+
+  getMyDebt(expense: Expense): number {
+    return expense.users.find(u => u.id === this.user.uid).individualAmount
   }
 
 }

@@ -26,10 +26,11 @@
                     <mat-panel-title class="content-value">{{relation.expenses.length}} Expenses</mat-panel-title>
                 </mat-expansion-panel-header>
                 <mat-list class="list">
-                    <div *ngFor="let expenseId of relation.expenses" class="list">
+                    <div *ngFor="let expense of relation.expenses" class="list">
                         <mat-list-item class="expense-user-item">
                             <mat-icon mat-list-icon>assignment</mat-icon>
-                          <!--<h4 mat-line>ARS{{this.getExpense(expenseId) | async | number:'1.2-2'}}</h4>-->
+      <!--                       <h4 mat-line>{{(expense | async)?.title}}</h4>
+                            <h4 mat-line>ARS{{(expense | async)?.totalAmount | number:'1.2-2'}}</h4> -->
                         </mat-list-item>
                     </div>
                 </mat-list>

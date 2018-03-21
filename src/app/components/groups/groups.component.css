@@ -5,11 +5,16 @@
     margin-top: 10px;
     margin-bottom: 10px;
     height: auto;
+    padding-top: 16px;
+    padding-right: 16px;
+    padding-bottom: 16px;
+    padding-left: 16px;
   }
   
   .header-title {
     font-size: 16px;
     font-weight: 500;
+    margin-top: 9px;
   }
   
   .example-headers-align .mat-expansion-panel-header-title, 
@@ -26,7 +31,7 @@
     box-shadow: none !important;
   }
   
-  .participants-text {
+  .users-text {
     margin-right: 16px;
   }
   
@@ -48,3 +53,33 @@
     bottom: 15px;
     margin-left: -28px;
   }
+
+  .mat-list-item-content{
+    padding: 0;
+  }
+  
+  .mat-expansion-panel-header {
+    padding: 0;
+  }
+  
+  .content-label {
+    margin-top: 4px;
+    color: #757575;
+    font-size: 14px;
+    font-weight: 400;
+  }
+  
+  .content-value {
+    margin-top: 4px;
+    color: #212121;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  
+.mat-card-content {
+  margin-bottom: 0;
+}
+
+.group-icon {
+  font-size: 35px;
+}

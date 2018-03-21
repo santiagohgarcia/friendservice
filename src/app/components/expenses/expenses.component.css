@@ -3,7 +3,7 @@
     right: 20px;
     bottom: 15px;
     margin-left: -28px;
-  }
+}
 
 .card {
   max-width: 900px;
@@ -12,6 +12,7 @@
   margin-top: 10px;
   margin-bottom: 10px;
 }
+
 
 .content-container{
   display: flex;

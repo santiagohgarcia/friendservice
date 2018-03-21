@@ -30,6 +30,7 @@ export class PersonsComponent implements OnInit {
         this.messagesService.error(e.message);
         return []
       })
+    
     this.facebookService.getFriends()
       .then(friends => this.friends = friends)
       .catch(e => this.messagesService.error(e.message));
@@ -47,8 +48,8 @@ export class PersonsComponent implements OnInit {
     }
   }
 
-  getExpense(expenseId: string): Observable<Expense>{
-    return this.expenseService.getExpense(expenseId,"expenses")
+  getExpenses(expensesIds: string[]): Observable<Expense>[]{
+    return expensesIds.map(eId => this.expenseService.getExpense(eId,"expenses") )
   }
 
 }

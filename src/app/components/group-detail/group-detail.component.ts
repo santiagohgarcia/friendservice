@@ -85,7 +85,7 @@ export class GroupDetailComponent {
   }
 
   goBack(): void {
-    this.router.navigate(['/expenses']);
+    this.router.navigate(['/groups']);
   }
 
   save(): void {
@@ -97,7 +97,7 @@ export class GroupDetailComponent {
   }
 
   delete() {
-    this.groupService.deleteExpense(this.group)
+    this.groupService.deleteGroup(this.group)
       .then(res => this.goBack())
       .catch(e => this.messageService.error(e.message));
   }
