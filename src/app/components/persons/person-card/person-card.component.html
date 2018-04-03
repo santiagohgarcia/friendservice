@@ -4,15 +4,15 @@
         <mat-card-title class="header-title">{{this.getFbInfo(relation.userId)?.name | titlecase}}</mat-card-title>
         <mat-card-subtitle class="subtitle">
             <div *ngIf="relation.owesMe > relation.iOwe">
-                <label class="win content-label">Owes me:</label>
-                <span class="content-value win">ARS {{(relation.owesMe - relation.iOwe) | number:'1.2-2'}}</span>
+                <label class="lose content-label">Owes me </label>
+                <span class="content-value lose">ARS {{(relation.owesMe - relation.iOwe) | number:'1.2-2'}}</span>
             </div>
             <div *ngIf="relation.owesMe < relation.iOwe">
-                <label class="lose content-label">I owe:</label>
+                <label class="lose content-label">I owe </label>
                 <span class="lose content-value">ARS {{(relation.iOwe - relation.owesMe) | number:'1.2-2'}}</span>
             </div>
             <div *ngIf="relation.owesMe === relation.iOwe">
-            <span class="content-label">You are even</span>
+                <span class="content-label">You are even</span>
             </div>
         </mat-card-subtitle>
         <button mat-icon-button class="pay-button" *ngIf="relation.iOwe > relation.owesMe">
@@ -26,29 +26,38 @@
                 <mat-expansion-panel-header class="exp-panel-header">
                     <mat-panel-title class="content-value">{{relation.pendingExpenses.length}} Pending Expenses</mat-panel-title>
                 </mat-expansion-panel-header>
-                <mat-list class="list">
-                    <div *ngFor="let expense of relation.pendingExpenses" class="list">
-                        <mat-list-item class="expense-user-item">
-                            <mat-icon mat-list-icon>assignment</mat-icon>
-                            <h4 mat-line>{{expense.title}}</h4>
-                            <h4 mat-line>ARS {{expense.totalAmount | number:'1.2-2'}}</h4>
-                        </mat-list-item>
-                    </div>
-                </mat-list>
+
+                <div class="exp-card-container">
+                    <mat-card *ngFor="let expense of relation.pendingExpenses" class="exp-card">
+                        <mat-card-header>
+                            <img mat-card-avatar src="{{this.getFbInfo(expense.creator)?.picture}}">
+                            <mat-card-title class="exp-card-title">{{expense.title | titlecase}}</mat-card-title>
+                            <mat-card-subtitle *ngIf="user.uid === expense.creator" class="lose subtitle">{{this.getFbInfo(relation.userId)?.name}} owes you ARS {{getUserDebt(expense,relation.userId).individualAmount
+                                | number:'1.2-2'}}</mat-card-subtitle>
+                            <mat-card-subtitle *ngIf="user.uid !== expense.creator" class="lose subtitle">You owe ARS {{getUserDebt(expense,user.uid).individualAmount | number:'1.2-2'}} to {{this.getFbInfo(relation.userId)?.name}}</mat-card-subtitle>
+                        </mat-card-header>
+                    </mat-card>
+                </div>
+
             </mat-expansion-panel>
             <mat-expansion-panel class="exp-panel-expenses" *ngIf="relation.payedExpenses.length > 0">
                 <mat-expansion-panel-header class="exp-panel-header">
                     <mat-panel-title class="content-value">{{relation.payedExpenses.length}} Payed Expenses</mat-panel-title>
                 </mat-expansion-panel-header>
-                <mat-list class="list">
-                    <div *ngFor="let expense of relation.payedExpenses" class="list">
-                        <mat-list-item class="expense-user-item">
-                            <mat-icon mat-list-icon>assignment</mat-icon>
-                            <h4 mat-line>{{expense.title}}</h4>
-                            <h4 mat-line>ARS {{expense.totalAmount | number:'1.2-2'}}</h4>
-                        </mat-list-item>
-                    </div>
-                </mat-list>
+
+
+                <div class="exp-card-container">
+                    <mat-card *ngFor="let expense of relation.payedExpenses" class="exp-card">
+                        <mat-card-header>
+                            <img mat-card-avatar src="{{this.getFbInfo(expense.creator)?.picture}}">
+                            <mat-card-title class="exp-card-title">{{expense.title | titlecase}}</mat-card-title>
+                            <mat-card-subtitle *ngIf="user.uid === expense.creator" class="win subtitle">{{this.getFbInfo(relation.userId)?.name}} payed you ARS {{getUserDebt(expense,relation.userId).individualAmount
+                                | number:'1.2-2'}}</mat-card-subtitle>
+                            <mat-card-subtitle *ngIf="user.uid !== expense.creator" class="win subtitle">You payed ARS {{getUserDebt(expense,user.uid).individualAmount | number:'1.2-2'}} to {{this.getFbInfo(relation.userId)?.name}}</mat-card-subtitle>
+                        </mat-card-header>
+                    </mat-card>
+                </div>
+
             </mat-expansion-panel>
         </mat-accordion>
     </mat-card-content>

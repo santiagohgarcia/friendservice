@@ -34,6 +34,7 @@
 
 .label-container {
   margin-top: 4px;
+  min-width: 200px;
 }
 
   .example-headers-align .mat-expansion-panel-header-title, 
@@ -115,6 +116,7 @@
 .subtitle {
   font-size: 12px;
   line-height: 13px;
+  margin-bottom: 8px;
 }
 
 .mat-card-avatar {

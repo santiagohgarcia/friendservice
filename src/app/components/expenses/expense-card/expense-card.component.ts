@@ -3,6 +3,9 @@ import { Expense } from '../../../model/expense';
 import FacebookUser from '../../../../../functions/src/model/facebook-user';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { ExpenseService } from '../../../services/expense.service';
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
+import { ConfirmDeleteDialogComponent } from '../../confirm-delete-dialog/confirm-delete-dialog.component';
+import { nullSafeIsEquivalent } from '@angular/compiler/src/output/output_ast';
 
 @Component({
   selector: 'app-expense-card',
@@ -17,7 +20,8 @@ export class ExpenseCardComponent implements OnInit {
   user = this.afAuth.auth.currentUser.providerData[0];
 
   constructor(private expenseService: ExpenseService,
-    private afAuth: AngularFireAuth) { }
+    private afAuth: AngularFireAuth,
+    public dialog: MatDialog) { }
 
   ngOnInit() {
   }
@@ -53,7 +57,25 @@ export class ExpenseCardComponent implements OnInit {
   }
 
   delete(expense: Expense) {
-    this.expenseService.deleteExpense(expense)
+    let dialogRef = this.dialog.open(ConfirmDeleteDialogComponent, {
+      width: '250px',
+      data: { title: 'Delete expense?', subtitle: 'Are you sure you want to delete the expense?' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => result ? this.expenseService.deleteExpense(expense) : null );
+    
   }
 
+  get participantsDebt() {
+    return this.expense.users.filter( u => u.id !== this.user.uid && !u.payed )
+                             .map( u => u.individualAmount )
+                             .reduce((a, b) => a + b, 0);
+  }
+
+  get participantsPayment() {
+    return this.expense.users.filter( u => u.id !== this.user.uid && u.payed )
+                             .map( u => u.individualAmount )
+                             .reduce((a, b) => a + b, 0);
+  }
 }
+

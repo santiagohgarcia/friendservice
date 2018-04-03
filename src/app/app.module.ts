@@ -28,6 +28,7 @@ import { GroupDetailComponent } from './components/group-detail/group-detail.com
 import { GroupsService } from './services/groups.service';
 import { ExpenseCardComponent } from './components/expenses/expense-card/expense-card.component';
 import { PersonCardComponent } from './components/persons/person-card/person-card.component';
+import { ConfirmDeleteDialogComponent } from './components/confirm-delete-dialog/confirm-delete-dialog.component';
 
 import {
   MatAutocompleteModule,
@@ -117,7 +118,11 @@ export class MaterialModule { }
     ExpenseDetailComponent,
     GroupDetailComponent,
     ExpenseCardComponent,
-    PersonCardComponent
+    PersonCardComponent,
+    ConfirmDeleteDialogComponent
+  ],
+  entryComponents: [
+    ConfirmDeleteDialogComponent
   ],
   imports: [
     BrowserModule,

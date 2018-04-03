@@ -5,6 +5,7 @@ import { MessagesService } from '../../../services/messages.service';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { Observable } from 'rxjs/Observable';
 import { Expense } from '../../../model/expense';
+import { ExpenseUser } from '../../../model/expense-user';
 
 @Component({
   selector: 'app-person-card',
@@ -32,6 +33,10 @@ export class PersonCardComponent implements OnInit {
     } else {
       return this.friends.find(f => f.id === id);
     }
+  }
+
+  getUserDebt(expense: Expense,userId: string): ExpenseUser{
+    return expense.users.find( u => u.id === userId )
   }
 
 }

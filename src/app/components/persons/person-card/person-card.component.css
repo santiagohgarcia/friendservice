@@ -93,6 +93,34 @@
     height: 38px;
 }
 
-.subtitle{
-    margin-bottom: 0px;
-}
+
+.exp-card {
+    padding: 0px;
+    box-shadow: 0 0 0 0 !important;
+    max-width: 50%;
+  }
+  
+  .exp-card-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+  
+  ::ng-deep .mat-expansion-panel-body {
+    padding: 0px !important;
+  }
+  
+  .exp-card-title {
+    margin-bottom: 7px;
+  }
+  
+  .subtitle {
+    font-size: 12px;
+    line-height: 13px;
+  }
+  
+  .mat-card-avatar {
+    height: 45px;
+    width: 45px;
+  }

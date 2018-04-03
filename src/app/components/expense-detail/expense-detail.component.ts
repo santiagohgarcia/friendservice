@@ -18,6 +18,8 @@ import { UserInfo } from 'firebase/app';
 import { ExpenseUser } from '../../model/expense-user';
 import { GroupsService } from '../../services/groups.service';
 import { Group } from '../../model/group';
+import { ConfirmDeleteDialogComponent } from '../confirm-delete-dialog/confirm-delete-dialog.component';
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 
 @Component({
   selector: 'app-expense-detail',
@@ -62,7 +64,8 @@ export class ExpenseDetailComponent {
     private expenseService: ExpenseService,
     private facebookService: FacebookService,
     private groupService: GroupsService,
-    private messageService: MessagesService) {
+    private messageService: MessagesService,
+    public dialog: MatDialog) {
 
   }
 
@@ -125,9 +128,15 @@ export class ExpenseDetailComponent {
   }
 
   delete() {
-    this.expenseService.deleteExpense(this.expense)
+    let dialogRef = this.dialog.open(ConfirmDeleteDialogComponent, {
+      width: '250px',
+      data: { title: 'Delete expense?', subtitle: 'Are you sure you want to delete the expense?' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => result ? 
+      this.expenseService.deleteExpense(this.expense)
       .then(res => this.goBack())
-      .catch(e => this.messageService.error(e.message));
+      .catch(e => this.messageService.error(e.message)) : null );
   }
 
   transformAmount(element) {
