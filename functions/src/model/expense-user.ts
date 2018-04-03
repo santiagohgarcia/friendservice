@@ -1,5 +1,5 @@
 export interface ExpenseUser {
     id: string,
-    individualAmount: number; 
-    payed: boolean;
+    individualAmount: number;
+    payed: boolean
 }

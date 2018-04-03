@@ -36,20 +36,6 @@ export class PersonsComponent implements OnInit {
       .catch(e => this.messagesService.error(e.message));
   }
 
-  getFbInfo(id: string): FacebookUser {
-    if (id === this.user.uid) {
-      return {
-        id: this.user.uid,
-        name: this.user.displayName,
-        picture: this.user.photoURL
-      } as FacebookUser
-    } else {
-      return this.friends.find(f => f.id === id);
-    }
-  }
-
-  getExpenses(expensesIds: string[]): Observable<Expense>[]{
-    return expensesIds.map(eId => this.expenseService.getExpense(eId,"expenses") )
-  }
+ 
 
 }

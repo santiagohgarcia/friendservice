@@ -26,6 +26,8 @@ import { MessagesService } from './services/messages.service';
 import { FacebookService } from './services/facebook.service';
 import { GroupDetailComponent } from './components/group-detail/group-detail.component';
 import { GroupsService } from './services/groups.service';
+import { ExpenseCardComponent } from './components/expenses/expense-card/expense-card.component';
+import { PersonCardComponent } from './components/persons/person-card/person-card.component';
 
 import {
   MatAutocompleteModule,
@@ -61,6 +63,7 @@ import {
   MatStepperModule,
   MAT_DATE_LOCALE,
 } from '@angular/material';
+
 
 @NgModule({
   exports: [
@@ -112,7 +115,9 @@ export class MaterialModule { }
     PersonsComponent,
     GroupsComponent,
     ExpenseDetailComponent,
-    GroupDetailComponent
+    GroupDetailComponent,
+    ExpenseCardComponent,
+    PersonCardComponent
   ],
   imports: [
     BrowserModule,

@@ -15,7 +15,9 @@ import { FacebookService } from '../../services/facebook.service'
 import { MessagesService } from '../../services/messages.service'
 import 'rxjs/add/operator/first';
 import { UserInfo } from 'firebase/app';
-import { ExpenseUser } from '../../../../functions/src/model/expense-user';
+import { ExpenseUser } from '../../model/expense-user';
+import { GroupsService } from '../../services/groups.service';
+import { Group } from '../../model/group';
 
 @Component({
   selector: 'app-expense-detail',
@@ -28,7 +30,9 @@ export class ExpenseDetailComponent {
 
   loading: boolean = true;
   friends: FacebookUser[] = [];
-  filteredFriends: Observable<FacebookUser[]>;
+  filteredFriends: FacebookUser[];
+  groups: Group[];
+  filteredGroups: Group[];
   formattedAmount: String = '';
   saveFunction;
 
@@ -40,6 +44,7 @@ export class ExpenseDetailComponent {
   date = new FormControl('', [Validators.required]);
   totalAmount = new FormControl({ disabled: true }, [Validators.required])
   friendsCtrl = new FormControl('');
+
   expenseForm: FormGroup = new FormGroup({
     expense: this.title,
     date: this.date,
@@ -56,20 +61,22 @@ export class ExpenseDetailComponent {
     private afAuth: AngularFireAuth,
     private expenseService: ExpenseService,
     private facebookService: FacebookService,
+    private groupService: GroupsService,
     private messageService: MessagesService) {
-      
-     }
+
+  }
 
   ngAfterViewInit(): void {
     this.getExpense();
     this.getFriends();
+    this.getGroups();
   }
 
   async getExpense() {
     const id = this.route.snapshot.paramMap.get('id');
     const expType = this.route.snapshot.paramMap.get('expType');
     if (id) {
-      this.expense = await this.expenseService.getExpense(id,expType).first().toPromise()
+      this.expense = await this.expenseService.getExpense(id, expType).first().toPromise()
         .catch(e => {
           this.messageService.error(e.message);
           return InitialExpense(this.creator.uid);
@@ -83,17 +90,25 @@ export class ExpenseDetailComponent {
   }
 
   async getFriends() {
-    this.filteredFriends = this.friendsCtrl.valueChanges
-      .pipe(
-      startWith(''),
-      map(val => this.filter(val)));
-      this.friends = await this.facebookService.getFriends().catch(e => this.messageService.error(e.message));
+    this.friendsCtrl.valueChanges.subscribe(val => this.filterFriends(val))
+    this.filteredFriends = this.friends = await this.facebookService.getFriends().catch(e => this.messageService.error(e.message));
   }
 
-  filter(val: string): FacebookUser[] {
-    return this.friends.filter(f =>
+  getGroups() {
+    this.friendsCtrl.valueChanges.subscribe(val => this.filterGroups(val))
+    this.groupService.getGroups().subscribe(groups => { 
+      this.groups = groups
+      this.filteredGroups = groups });
+  }
+
+  filterFriends(val: string) {
+    this.filteredFriends = this.friends.filter(f =>
       !this.expense.users.find(userRef => userRef.id === f.id) &&
       f.name.toLowerCase().includes(val.toLowerCase()));
+  }
+
+  filterGroups(val: string): void {
+    this.filteredGroups = this.groups.filter(g => g.name.toLowerCase().includes(val.toLowerCase()))
   }
 
   goBack(): void {
@@ -126,34 +141,55 @@ export class ExpenseDetailComponent {
     }
   }
 
-  friendSelection(event: MatAutocompleteSelectedEvent) {
-    if(!this.expense.users.find(user => user.id ===  event.option.value)){
-      this.expense.users.push({ id: event.option.value,
-                                payed: false } as ExpenseUser );
+  friendOrGroupSelection(event: MatAutocompleteSelectedEvent) {
+    switch (event.option.group.label) {
+      case 'Groups': {
+        this.groups.find(g => g.id === event.option.value)
+          .users.forEach(u => this.addFriend(u))
+        break;
+      }
+      case 'Friends': {
+        this.addFriend(event.option.value)
+        break;
+      }
     }
+    this.friendsCtrl.setValue('');
   }
 
-  removeFriend(event: MatChipEvent) {
-    this.expense.users = this.expense.users.filter(user => user.id != event.chip.value)
+  addFriend(friendId: string) {
+    if (!this.expense.users.find(user => user.id === friendId)) {
+      this.expense.users.push({
+        id: friendId,
+        payed: false
+      } as ExpenseUser);
+    }
+  }
+  removeFriend(userToRemove: ExpenseUser) {
+    this.expense.users = this.expense.users.filter(user => user.id != userToRemove.id)
   }
 
   getFbInfo(id: string): FacebookUser {
-    if(id === this.creator.uid){
+    if (id === this.creator.uid) {
       return {
         id: this.creator.uid,
         name: this.creator.displayName,
         picture: this.creator.photoURL
       } as FacebookUser
-    }else{
-      return this.friends.find( f => f.id === id );
+    } else {
+      return this.friends.find(f => f.id === id);
     }
   }
 
   updateIndividualAmounts() {
-    this.expense.users.forEach( u => 
+    this.expense.users.forEach(u =>
       u.individualAmount = this.expense.totalAmount / this.expense.users.length
     )
   }
+
+  getUsersName(group: Group) {
+    return group.users
+      .map(u => this.getFbInfo(u).name)
+      .join(", ")
+  }
 }
 
- 

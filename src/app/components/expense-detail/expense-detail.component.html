@@ -39,23 +39,37 @@
       </mat-form-field>
 
       <mat-form-field class="full-width">
-        <mat-chip-list #chipList class="full-width">
-          <mat-chip *ngFor="let user of expense.users" (removed)="removeFriend($event)" (removable)="user.id != creator.uid" value="{{user.id}}">
-            <img mat-card-avatar style="vertical-align:middle;" aria-hidden src="{{this.getFbInfo(user.id)?.picture}}" height="20" />{{this.getFbInfo(user.id)?.name}}(ARS {{ expense.totalAmount/ expense.users.length | number:'1.2-2'}})
-            <mat-icon *ngIf="user.id != creator.uid" matChipRemove>cancel</mat-icon>
-          </mat-chip>
-        </mat-chip-list>
-        <input matInput class="full-width" placeholder="Divide between" [matChipInputFor]="chipList" [matAutocomplete]="auto" [formControl]="friendsCtrl">
-        <mat-autocomplete #auto="matAutocomplete" class="full-width" (optionSelected)="friendSelection($event)">
+        <input matInput class="full-width" placeholder="Divide between" [matAutocomplete]="auto" [formControl]="friendsCtrl">
+        <mat-autocomplete #auto="matAutocomplete" class="full-width" (optionSelected)="friendOrGroupSelection($event)">
           <mat-optgroup label="Friends">
-            <mat-option *ngFor="let friend of filteredFriends | async" [value]="friend.id">
+            <mat-option *ngFor="let friend of filteredFriends" [value]="friend.id">
               <img mat-card-avatar style="vertical-align:middle;" aria-hidden src="{{friend.picture}}" height="25" />
-              <span>{{ friend.name }}</span>
+              <span>{{friend.name}}</span>
+            </mat-option>
+          </mat-optgroup>
+          <mat-optgroup label="Groups">
+            <mat-option *ngFor="let group of filteredGroups" [value]="group.id">
+              <mat-icon mat-card-avatar style="vertical-align:middle;" aria-hidden height="25">group</mat-icon>
+                <span>{{group.name}}</span>
+                <small>{{this.getUsersName(group)}}</small>
             </mat-option>
           </mat-optgroup>
         </mat-autocomplete>
         <mat-icon matSuffix>search</mat-icon>
       </mat-form-field>
+      <mat-list class="list">
+        <div *ngFor="let user of expense.users" class="list">
+          <mat-list-item class="expense-user-item">
+            <img matListAvatar src="{{this.getFbInfo(user.id)?.picture}}">
+            <h3 matLine>{{this.getFbInfo(user.id)?.name}} {{user.id === expense.creator ? '(Creator)' : ''}}</h3>
+            <h5 matLine *ngIf="expense.totalAmount > 0">ARS {{expense.totalAmount / expense.users.length | number:'1.2-2'}}</h5>
+            <button mat-icon-button (click)="removeFriend(user)" color="warn" *ngIf="user.id !== expense.creator">
+              <mat-icon>clear</mat-icon>
+            </button>
+          </mat-list-item>
+        </div>
+      </mat-list>
+
     </form>
 
     <div class="button-row">

@@ -83,3 +83,16 @@
 .group-icon {
   font-size: 35px;
 }
+
+.lose {
+  color: red;
+}
+
+.menu-button{
+  position: absolute;
+  right: 10px; 
+}
+
+.menu-icon{
+  font-size: 33px;
+}

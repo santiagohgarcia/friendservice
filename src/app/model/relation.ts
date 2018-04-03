@@ -1,6 +1,9 @@
+import { Expense } from "./expense";
+
 export interface Relation {
     userId: string;
     owesMe: number;
     iOwe: number;
-    expenses: string[]
+    payedExpenses: Expense[];
+    pendingExpenses: Expense[]
 }

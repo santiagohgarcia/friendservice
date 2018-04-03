@@ -1,0 +1,123 @@
+.card {
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+}
+
+.header-title {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.content-label {
+  margin-top: 4px;
+  color: #757575;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.content-value {
+  margin-top: 4px;
+  color: #212121;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.content-container{
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.label-container {
+  margin-top: 4px;
+}
+
+  .example-headers-align .mat-expansion-panel-header-title, 
+.example-headers-align .mat-expansion-panel-header-description {
+  flex-basis: 0;
+}
+
+.example-headers-align .mat-expansion-panel-header-description {
+  justify-content: space-between;
+  align-items: center;
+}
+
+.exp-panel-expenses{
+    box-shadow: none !important;
+}
+
+.participants-text {
+    margin-right: 16px;
+}
+
+.list {
+    padding: 0px;
+}
+
+.expense-user-item {
+    padding: 0;
+}
+
+.win {
+  color: green;
+}
+  
+.lose {
+  color: darkred;
+}
+
+.mat-expansion-panel-header {
+  padding: 0;
+}
+
+.pay-button {
+  color: green !important;
+}
+  
+.menu-button{
+  position: absolute;
+  right: 10px; 
+}
+
+.menu-icon{
+  font-size: 33px;
+}
+
+.mat-menu-item .mat-icon:not([class]), .mat-menu-item-submenu-trigger::after {
+  color: rgba(0,0,0,.54);
+}
+
+.user-card {
+  padding: 0px;
+  box-shadow: 0 0 0 0 !important;
+  max-width: 50%;
+}
+
+.user-card-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+::ng-deep .mat-expansion-panel-body {
+  padding: 0px !important;
+}
+
+.user-card-title {
+  margin-bottom: 7px;
+}
+
+.subtitle {
+  font-size: 12px;
+  line-height: 13px;
+}
+
+.mat-card-avatar {
+  height: 45px;
+  width: 45px;
+}

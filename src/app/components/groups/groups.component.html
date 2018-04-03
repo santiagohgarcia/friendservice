@@ -6,6 +6,29 @@
   <mat-card-header>
     <mat-icon mat-card-avatar class="group-icon">group</mat-icon>
     <mat-card-title class="header-title">{{ group.name | titlecase}}</mat-card-title>
+
+
+    <button mat-icon-button [matMenuTriggerFor]="menu" class="menu-button">
+        <mat-icon class="menu-icon">more_vert</mat-icon>
+      </button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item (click)="delete(group)">
+          <mat-icon color="warn">delete</mat-icon>
+          <span class="lose">Delete</span>
+        </button>
+        <button mat-menu-item routerLink="/groups/{{group.id}}">
+          <mat-icon>mode_edit</mat-icon>
+          <span>Edit</span>
+        </button>
+      </mat-menu>
+
+
+<!--     <button mat-icon-button class="action-button" color="warn" (click)="delete(group)">
+      <mat-icon>delete</mat-icon>
+    </button>
+    <button mat-icon-button routerLink="/groups/{{group.id}}" class="action-button">
+      <mat-icon>mode_edit</mat-icon>
+    </button> -->
   </mat-card-header>
 
   <mat-card-content>
@@ -29,12 +52,7 @@
     </mat-accordion>
   </mat-card-content>
   <mat-card-actions align="end">
-    <button mat-icon-button class="action-button" color="warn" (click)="delete(group)">
-      <mat-icon>delete</mat-icon>
-    </button>
-    <button mat-icon-button routerLink="/groups/{{group.id}}" class="action-button">
-      <mat-icon>mode_edit</mat-icon>
-    </button>
+
   </mat-card-actions>
 </mat-card>
 

@@ -1,0 +1,74 @@
+<mat-card class="card">
+  <mat-card-header>
+    <img mat-card-avatar src="{{this.getFbInfo(expense.creator)?.picture}}" />
+    <mat-card-title class="header-title">{{expense.title | titlecase}}</mat-card-title>
+    <mat-card-subtitle>
+      <div *ngIf="this.isMyExpense(expense)">
+        <label class="win content-label">Participants owes me:</label>
+        <span class="content-value win">ARS {{expense.totalAmount - this.getMyDebt(expense) | number:'1.2-2'}}</span>
+      </div>
+      <div *ngIf="!this.isMyExpense(expense)">
+        <label class="lose content-label">I owe {{this.getFbInfo(expense.creator)?.name}}:</label>
+        <span class="lose content-value">ARS {{this.getMyDebt(expense) | number:'1.2-2'}}</span>
+      </div>
+    </mat-card-subtitle>
+
+    <button mat-icon-button [matMenuTriggerFor]="menu" class="menu-button">
+      <mat-icon class="menu-icon">more_vert</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <button class="pay-button" mat-menu-item *ngIf="!iPayed">
+        <mat-icon class="pay-button">attach_money</mat-icon>
+        <span>Pay</span>
+      </button>
+      <button mat-menu-item (click)="delete(expense)">
+        <mat-icon color="warn">delete</mat-icon>
+        <span class="lose">Delete</span>
+      </button>
+      <button mat-menu-item routerLink="/expenses/expenses/{{expense.id}}">
+        <mat-icon>mode_edit</mat-icon>
+        <span>Edit</span>
+      </button>
+    </mat-menu>
+
+  </mat-card-header>
+  <mat-card-content>
+    <div class="content-container">
+      <div class="label-container">
+        <label class="content-label">Creator:</label>
+        <span class="content-value">{{this.getFbInfo(expense.creator)?.name}}</span>
+      </div>
+      <div class="label-container">
+        <label class="content-label">Total:</label>
+        <span class="content-value">ARS {{expense.totalAmount | number:'1.2-2'}}</span>
+      </div>
+      <div class="label-container">
+        <label class="content-label">Date:</label>
+        <span class="content-value">{{expense.date | date}}</span>
+      </div>
+    </div>
+    <mat-accordion class="example-headers-align">
+      <mat-expansion-panel class="exp-panel-expenses">
+        <mat-expansion-panel-header>
+          <div class="participants-text">
+            <label class="content-value">{{expense.users.length}} Participants: </label>
+            <span class="content-label">{{this.getParticipantsName(expense)}}</span>
+          </div>
+        </mat-expansion-panel-header>
+
+           <div class="user-card-container">
+            <mat-card *ngFor="let user of expense.users" class="user-card">
+              <mat-card-header>
+                <img mat-card-avatar src="{{this.getFbInfo(user.id)?.picture}}">
+                <mat-card-title class="user-card-title">{{this.getFbInfo(user.id)?.name}}{{(user.id === expense.creator) ? ' (Creator)' : ''}}</mat-card-title>
+                <mat-card-subtitle *ngIf="user.id === expense.creator" class="win subtitle">Payed ARS {{user.individualAmount | number:'1.2-2'}}</mat-card-subtitle>
+                <mat-card-subtitle *ngIf="user.payed && user.id !== expense.creator" class="win subtitle">Payed ARS {{user.individualAmount | number:'1.2-2'}} to {{this.getFbInfo(expense.creator)?.name}}</mat-card-subtitle>
+                <mat-card-subtitle *ngIf="!user.payed && user.id !== expense.creator" class="lose subtitle">Owes ARS {{user.individualAmount | number:'1.2-2'}} to {{this.getFbInfo(expense.creator)?.name}}</mat-card-subtitle>
+              </mat-card-header>
+            </mat-card>
+          </div>
+
+      </mat-expansion-panel>
+    </mat-accordion>
+  </mat-card-content>
+</mat-card>

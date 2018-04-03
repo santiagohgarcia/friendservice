@@ -1,34 +1,47 @@
-<div class="container">
-    <mat-toolbar color="primary">
-        <mat-toolbar-row>
-            <h1>FS</h1>
-            <span class="example-spacer"></span>
-            <button mat-icon-button class="logout" (click)="logout()">
-                <mat-icon>highlight_off</mat-icon>
-            </button>
-        </mat-toolbar-row>
-    </mat-toolbar>
+<mat-sidenav-container class="example-container">
+    <mat-sidenav #sidenav class="sidenav">
 
-    <mat-tab-group class="demo-tab-group" #tabGroup (selectedTabChange)="navTo($event)">
-        <mat-tab class="tab" label="Expenses">
-            <ng-template mat-tab-label>
-                <mat-icon>assignment</mat-icon>
-            </ng-template>
-            <app-expenses></app-expenses>
-        </mat-tab>
-        <mat-tab class="tab" label="Persons">
-            <ng-template mat-tab-label>
-                <mat-icon>person</mat-icon>
-            </ng-template>
-            <app-persons></app-persons>
-        </mat-tab>
-        <mat-tab class="tab" label="Groups" >
-            <ng-template mat-tab-label>
-                <mat-icon>group</mat-icon>
-            </ng-template>
-            <app-groups></app-groups>
-        </mat-tab>
-    </mat-tab-group>
-</div>
+        <mat-toolbar color="primary">
+            <mat-toolbar-row>
+                <button mat-button class="user-button">
+                    <span>{{user.displayName}}</span>
+                    <img mat-card-avatar class="user-avatar" src="{{user.photoURL}}" />
+                </button>
+            </mat-toolbar-row>
+        </mat-toolbar>
 
-<div class="bottom-spacer"></div>
+        <mat-nav-list class="list">
+            <h3 mat-subheader>Navigate to</h3>
+            <mat-list-item>
+                <mat-icon matListIcon>assignment</mat-icon>
+                <a matLine (click)="navTo('/expenses')">Expenses</a>
+            </mat-list-item>
+            <mat-divider></mat-divider>
+            <mat-list-item>
+                <mat-icon matListIcon>person</mat-icon>
+                <a matLine (click)="navTo('/persons')">Persons</a>
+            </mat-list-item>
+            <mat-divider></mat-divider>
+            <mat-list-item>
+                <mat-icon matListIcon>group</mat-icon>
+                <a matLine (click)="navTo('/groups')">Groups</a>
+            </mat-list-item>
+        </mat-nav-list>
+
+    </mat-sidenav>
+
+    <mat-sidenav-content>
+        <mat-toolbar color="primary">
+            <mat-toolbar-row>
+                <button mat-icon-button class="sidenav-button" (click)="sidenav.toggle()">
+                    <mat-icon>menu</mat-icon>
+                </button>
+                <span class="example-spacer"></span>
+                <button mat-icon-button class="logout" (click)="logout()">
+                    <mat-icon>highlight_off</mat-icon>
+                </button>
+            </mat-toolbar-row>
+        </mat-toolbar>
+        <router-outlet class="cards-container"></router-outlet>
+    </mat-sidenav-content>
+</mat-sidenav-container>

@@ -9,7 +9,8 @@ function InitialExpense(creatorId) {
         totalAmount: 0,
         users: [
             {
-                id: creatorId
+                id: creatorId,
+                payed: true
             }
         ]
     };

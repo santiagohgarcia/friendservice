@@ -34,9 +34,9 @@ export class ExpensesComponent implements OnInit {
   ngOnInit() {
 
     this.expenses = Observable
-      .combineLatest(this.expenseService.getOtherExpenses(),this.expenseService.getOwnExpenses())
+      .combineLatest(this.expenseService.getOtherExpenses(), this.expenseService.getOwnExpenses())
       .map(([own, other]) => [...own, ...other]
-                             .sort((e1, e2) =>  e2.date.getMilliseconds() - e1.date.getMilliseconds()))
+        .sort((e1, e2) => e2.date.getMilliseconds() - e1.date.getMilliseconds()))
       .catch(e => {
         this.messagesService.error(e.message);
         return [];
@@ -47,38 +47,5 @@ export class ExpensesComponent implements OnInit {
       .catch(e => this.messageService.error(e.message));
   }
 
-  getFbInfo(id: string): FacebookUser {
-    if (id === this.user.uid) {
-      return {
-        id: this.user.uid,
-        name: this.user.displayName,
-        picture: this.user.photoURL
-      } as FacebookUser
-    } else {
-      return this.friends.find(f => f.id === id);
-    }
-  }
-
-  getCreatorUser(expense: Expense): ExpenseUser {
-    return expense.users.find(u => u.id === expense.creator)
-  }
-
-  isMyExpense(expense: Expense): boolean {
-    return expense.creator === this.user.uid
-  }
-
-  delete(expense: Expense) {
-    this.expenseService.deleteExpense(expense)
-  }
-
-  getParticipantsName(expense: Expense): string {
-    return expense.users
-      .map(u => this.getFbInfo(u.id).name)
-      .join(", ")
-  }
-
-  getMyDebt(expense: Expense): number {
-    return expense.users.find(u => u.id === this.user.uid).individualAmount
-  }
 
 }

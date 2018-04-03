@@ -19,7 +19,8 @@ const recalculateRelations = async function (userId: string) {
                 userId: relationUserId,
                 owesMe: 0,
                 iOwe: 0,
-                expenses: []
+                payedExpenses: [],
+                pendingExpenses: []
             } as Relation
             newRelations.push(relation);
         }
@@ -52,16 +53,28 @@ const recalculateRelations = async function (userId: string) {
         e.users.filter(eu => eu.id !== e.creator)
             .map(eu => {
                 const relation = getOrCreateRelation(eu.id)
-                relation.owesMe = relation.owesMe + eu.individualAmount;
-                relation.expenses.push(e.id)
+
+                if (eu.payed) {
+                    relation.payedExpenses.push(e)
+                } else {
+                    relation.owesMe = relation.owesMe + eu.individualAmount;
+                    relation.pendingExpenses.push(e)
+                }
+
             })
     )
 
     otherExpenses.map(e => {
         const expenseUser = e.users.find(eu => eu.id === userId)
         const relation = getOrCreateRelation(e.creator)
-        relation.iOwe = relation.iOwe + expenseUser.individualAmount;
-        relation.expenses.push(e.id)
+
+        if (expenseUser.payed) {
+            relation.payedExpenses.push(e)
+        } else {
+            relation.iOwe = relation.iOwe + expenseUser.individualAmount;
+            relation.pendingExpenses.push(e)
+        }
+
     })
 
     return oldRelations.then(_ =>
