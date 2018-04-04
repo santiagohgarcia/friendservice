@@ -29,8 +29,6 @@ export class LoginComponent implements OnInit {
 
     this.afAuth.authState.subscribe(user => {
       if (user) {
-        this.afAuth.auth.getRedirectResult()
-        .then( c => localStorage.setItem('facebookToken', c.credential.accessToken))
         this.router.navigateByUrl("/home");
       }
     });
@@ -43,7 +41,8 @@ export class LoginComponent implements OnInit {
 
   withFacebook() {
     this.afAuth.auth.setPersistence(this.persistance)
-      .then(_ => this.afAuth.auth.signInWithPopup(this.provider))
+      .then(_ => this.afAuth.auth.signInWithPopup(this.provider)
+                  .then(c => localStorage.setItem('facebookToken', c.credential.accessToken)))
       .catch(e => this.openSnackBar(e.message))
   }
 
