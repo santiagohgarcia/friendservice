@@ -1,7 +1,6 @@
-<div *ngIf="!(relations | async)">
+<div *ngIf="!relations">
     <mat-progress-bar mode="indeterminate" color="accent"></mat-progress-bar>
 </div>
 
-<app-person-card    *ngFor="let relation of relations | async" 
-                    [relation]="relation" 
-                    [friends]="friends" ></app-person-card>
+<app-person-card    *ngFor="let relation of relations" 
+                    [relation]="relation" ></app-person-card>

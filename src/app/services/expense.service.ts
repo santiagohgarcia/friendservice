@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs/Rx'
 import { map, mergeAll, flatMap } from 'rxjs/operators';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { Expense } from '../model/expense';
@@ -24,7 +24,7 @@ export class ExpenseService {
     });
   }
 
-  getOwnExpenses() {
+  getOwnExpenses(): Observable<Expense[]> {
     return Observable.fromPromise(this.user).switchMap(u =>
       this.db.collection(`users/${u.uid}/expenses`).snapshotChanges()
         .map(actions =>
@@ -35,7 +35,7 @@ export class ExpenseService {
           })))
   }
 
-  getOtherExpenses() {
+  getOtherExpenses(): Observable<Expense[]> {
     return Observable.fromPromise(this.user).switchMap(u =>
       this.db.collection(`users/${u.uid}/otherExpenses`).snapshotChanges()
         .map(actions =>
@@ -44,6 +44,11 @@ export class ExpenseService {
             expense.id = a.payload.doc.id
             return expense
           })))
+  }
+
+  getAllExpenses(): Observable<Expense[]> {
+    return Observable.combineLatest(this.getOtherExpenses(), this.getOwnExpenses())
+                  .map( ([own, other]) => [...own, ...other] )
   }
 
   getExpense(id: string, type: string): Observable<Expense> {
@@ -64,7 +69,7 @@ export class ExpenseService {
     return this.db.doc(`users/${expense.creator}/expenses/${expense.id}`).set(expense)
   }
 
-  deleteExpense(expense: Expense) {
+  deleteExpense(expense: Expense): Promise<any> {
     return this.db.doc(`users/${expense.creator}/expenses/${expense.id}`).delete()
   }
 

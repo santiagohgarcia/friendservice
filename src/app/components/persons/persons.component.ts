@@ -15,8 +15,7 @@ import { Expense } from '../../model/expense';
 })
 export class PersonsComponent implements OnInit {
 
-  relations: Observable<Relation[]>;
-  friends: FacebookUser[] = [];
+  relations: Relation[];
   user = this.afAuth.auth.currentUser.providerData[0];
 
   constructor(private expenseService: ExpenseService,
@@ -25,17 +24,9 @@ export class PersonsComponent implements OnInit {
     private facebookService: FacebookService) { }
 
   ngOnInit() {
-    this.relations = this.expenseService.getRelations()
-      .catch(e => {
-        this.messagesService.error(e.message);
-        return []
-      })
+    this.expenseService.getRelations().subscribe(relations => this.relations = relations,
+                                                 err => this.messagesService.error(err.message) )
     
-    this.facebookService.getFriends()
-      .then(friends => this.friends = friends)
-      .catch(e => this.messagesService.error(e.message));
   }
-
- 
 
 }

@@ -6,6 +6,10 @@ import { AngularFireAuth } from 'angularfire2/auth';
 import { Observable } from 'rxjs/Observable';
 import { Expense } from '../../../model/expense';
 import { ExpenseUser } from '../../../model/expense-user';
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
+import { SelectPaymentMethodDialogComponent } from '../../select-payment-method-dialog/select-payment-method-dialog.component';
+import { ExpenseService } from '../../../services/expense.service';
+import { FacebookService } from '../../../services/facebook.service';
 
 @Component({
   selector: 'app-person-card',
@@ -15,28 +19,30 @@ import { ExpenseUser } from '../../../model/expense-user';
 export class PersonCardComponent implements OnInit {
 
   @Input() relation : Relation
-  @Input() friends : FacebookUser[]
   user = this.afAuth.auth.currentUser.providerData[0];
 
-  constructor(private afAuth: AngularFireAuth) { }
+  constructor(private afAuth: AngularFireAuth,
+    private facebookService: FacebookService,
+    private messagesService: MessagesService,
+    private expenseService: ExpenseService,
+    public dialog: MatDialog) { }
 
   ngOnInit() { 
   }
 
-  getFbInfo(id: string): FacebookUser {
-    if (id === this.user.uid) {
-      return {
-        id: this.user.uid,
-        name: this.user.displayName,
-        picture: this.user.photoURL
-      } as FacebookUser
-    } else {
-      return this.friends.find(f => f.id === id);
-    }
+  getUserInfo(id: string): Observable<FacebookUser> {
+    return this.facebookService.getUserInfo(id);
   }
 
-  getUserDebt(expense: Expense,userId: string): ExpenseUser{
+  getUserDebt(expense: Expense,userId: string): ExpenseUser {
     return expense.users.find( u => u.id === userId )
+  }
+
+  pay(){
+    let dialogRef = this.dialog.open(SelectPaymentMethodDialogComponent, {
+      width: '300px',
+      data: { user: this.relation.userId, expenses: this.relation.pendingExpenses  }
+    });
   }
 
 }

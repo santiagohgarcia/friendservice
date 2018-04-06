@@ -29,6 +29,7 @@ import { GroupsService } from './services/groups.service';
 import { ExpenseCardComponent } from './components/expenses/expense-card/expense-card.component';
 import { PersonCardComponent } from './components/persons/person-card/person-card.component';
 import { ConfirmDeleteDialogComponent } from './components/confirm-delete-dialog/confirm-delete-dialog.component';
+import { SelectPaymentMethodDialogComponent } from './components/select-payment-method-dialog/select-payment-method-dialog.component';
 
 import {
   MatAutocompleteModule,
@@ -119,10 +120,12 @@ export class MaterialModule { }
     GroupDetailComponent,
     ExpenseCardComponent,
     PersonCardComponent,
-    ConfirmDeleteDialogComponent
+    ConfirmDeleteDialogComponent,
+    SelectPaymentMethodDialogComponent
   ],
   entryComponents: [
-    ConfirmDeleteDialogComponent
+    ConfirmDeleteDialogComponent,
+    SelectPaymentMethodDialogComponent
   ],
   imports: [
     BrowserModule,

@@ -47,8 +47,8 @@ export class GroupDetailComponent {
     private groupService: GroupsService,
     private facebookService: FacebookService,
     private messageService: MessagesService) {
-      
-     }
+
+  }
 
   ngAfterViewInit(): void {
     this.getGroup();
@@ -73,9 +73,10 @@ export class GroupDetailComponent {
   async getFriends() {
     this.filteredFriends = this.friendsCtrl.valueChanges
       .pipe(
-      startWith(''),
-      map(val => this.filter(val)));
-      this.friends = await this.facebookService.getFriends().catch(e => this.messageService.error(e.message));
+        startWith(''),
+        map(val => this.filter(val)));
+    this.facebookService.getFriends().subscribe(friends => this.friends = friends,
+      err => this.messageService.error(err.message));
   }
 
   filter(val: string): FacebookUser[] {
@@ -104,7 +105,7 @@ export class GroupDetailComponent {
 
 
   friendSelection(event: MatAutocompleteSelectedEvent) {
-    if(!this.group.users.find(user => user ===  event.option.value)){
+    if (!this.group.users.find(user => user === event.option.value)) {
       this.group.users.push(event.option.value);
     }
   }
@@ -114,14 +115,14 @@ export class GroupDetailComponent {
   }
 
   getFbInfo(id: string): FacebookUser {
-    if(id === this.creator.uid){
+    if (id === this.creator.uid) {
       return {
         id: this.creator.uid,
         name: this.creator.displayName,
         picture: this.creator.photoURL
       } as FacebookUser
-    }else{
-      return this.friends.find( f => f.id === id );
+    } else {
+      return this.friends.find(f => f.id === id);
     }
   }
 

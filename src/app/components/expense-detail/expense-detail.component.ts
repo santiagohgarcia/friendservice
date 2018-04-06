@@ -94,7 +94,8 @@ export class ExpenseDetailComponent {
 
   async getFriends() {
     this.friendsCtrl.valueChanges.subscribe(val => this.filterFriends(val))
-    this.filteredFriends = this.friends = await this.facebookService.getFriends().catch(e => this.messageService.error(e.message));
+    this.facebookService.getFriends().subscribe( friends => this.filteredFriends = this.friends = friends,
+                                                 err => this.messageService.error(err.message) )
   }
 
   getGroups() {

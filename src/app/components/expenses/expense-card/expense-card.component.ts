@@ -2,10 +2,13 @@ import { Component, OnInit, Input } from '@angular/core';
 import { Expense } from '../../../model/expense';
 import FacebookUser from '../../../../../functions/src/model/facebook-user';
 import { AngularFireAuth } from 'angularfire2/auth';
+import { Observable } from 'rxjs/Rx'
 import { ExpenseService } from '../../../services/expense.service';
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { ConfirmDeleteDialogComponent } from '../../confirm-delete-dialog/confirm-delete-dialog.component';
-import { nullSafeIsEquivalent } from '@angular/compiler/src/output/output_ast';
+import { SelectPaymentMethodDialogComponent } from '../../select-payment-method-dialog/select-payment-method-dialog.component';
+import { FacebookService } from '../../../services/facebook.service';
+import { MessagesService } from '../../../services/messages.service';
 
 @Component({
   selector: 'app-expense-card',
@@ -14,46 +17,69 @@ import { nullSafeIsEquivalent } from '@angular/compiler/src/output/output_ast';
 })
 export class ExpenseCardComponent implements OnInit {
 
-  @Input() expense : Expense;
-  @Input() friends : FacebookUser[];
-
+  @Input() expense: Expense;
   user = this.afAuth.auth.currentUser.providerData[0];
 
   constructor(private expenseService: ExpenseService,
+    private facebookService: FacebookService,
+    private messagesService: MessagesService,
     private afAuth: AngularFireAuth,
     public dialog: MatDialog) { }
 
   ngOnInit() {
   }
 
-  getFbInfo(id: string): FacebookUser {
-    if (id === this.user.uid) {
-      return {
-        id: this.user.uid,
-        name: this.user.displayName,
-        picture: this.user.photoURL
-      } as FacebookUser
-    } else {
-      return this.friends.find(f => f.id === id);
-    }
-  }
-  
-  isMyExpense(expense: Expense): boolean {
-    return expense.creator === this.user.uid
+  get isMyExpense(): boolean {
+    return this.expense.creator === this.user.uid
   }
 
-  getMyDebt(expense: Expense): number {
-    return expense.users.find(u => u.id === this.user.uid).individualAmount
+  get myDebt(): number {
+    return this.expense.users.find(u => u.id === this.user.uid).individualAmount
   }
 
-  get iPayed(): boolean{
-    return this.expense.users.find(u => u.id === this.user.uid ).payed
+  get iPayed(): boolean {
+    return this.expense.users.find(u => u.id === this.user.uid).payed
   }
 
-  getParticipantsName(expense: Expense): string {
-    return expense.users
-      .map(u => this.getFbInfo(u.id).name)
+  get participantsNames(): string {
+    return this.expense.users
+      .map(u => this.fbInfo(u.id).name)
       .join(", ")
+  }
+
+  get participantsDebtAmount(): number {
+    return this.expense.users.filter(u => u.id !== this.user.uid && !u.payed)
+      .map(u => u.individualAmount)
+      .reduce((a, b) => a + b, 0);
+  }
+
+  get participantsPaymentAmount(): number {
+    return this.expense.users.filter(u => u.id !== this.user.uid && u.payed)
+      .map(u => u.individualAmount)
+      .reduce((a, b) => a + b, 0);
+  }
+
+  get numberOfUsers(): number {
+    return this.expense.users.length
+  }
+
+  fbInfo(id: string): FacebookUser {
+    return this.friends.find(u => u.id === id)
+  }
+
+  get myFbInfo(): FacebookUser {
+    return {
+      id: this.user.uid,
+      name: this.user.displayName,
+      picture: this.user.photoURL
+    } as FacebookUser
+  }
+
+  pay() {
+    this.dialog.open(SelectPaymentMethodDialogComponent, {
+      width: '300px',
+      data: { expenses: [this.expense] }
+    });
   }
 
   delete(expense: Expense) {
@@ -61,21 +87,7 @@ export class ExpenseCardComponent implements OnInit {
       width: '250px',
       data: { title: 'Delete expense?', subtitle: 'Are you sure you want to delete the expense?' }
     });
-
-    dialogRef.afterClosed().subscribe(result => result ? this.expenseService.deleteExpense(expense) : null );
-    
-  }
-
-  get participantsDebt() {
-    return this.expense.users.filter( u => u.id !== this.user.uid && !u.payed )
-                             .map( u => u.individualAmount )
-                             .reduce((a, b) => a + b, 0);
-  }
-
-  get participantsPayment() {
-    return this.expense.users.filter( u => u.id !== this.user.uid && u.payed )
-                             .map( u => u.individualAmount )
-                             .reduce((a, b) => a + b, 0);
+    dialogRef.afterClosed().subscribe(result => result ? this.expenseService.deleteExpense(this.expense) : null);
   }
 }
 

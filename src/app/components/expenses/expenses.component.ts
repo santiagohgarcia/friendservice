@@ -17,9 +17,7 @@ import { ExpenseUser } from '../../model/expense-user';
   styleUrls: ['./expenses.component.css']
 })
 export class ExpensesComponent implements OnInit {
-  expenses: Observable<Expense[]>;
-  ownExpenses: Observable<Expense[]>;
-  otherExpenses: Observable<Expense[]>;
+  expenses: Expense[] = [];
   friends: FacebookUser[] = [];
   user = this.afAuth.auth.currentUser.providerData[0];
 
@@ -28,23 +26,14 @@ export class ExpensesComponent implements OnInit {
     private afAuth: AngularFireAuth,
     private facebookService: FacebookService,
     private messageService: MessagesService) {
-
   }
 
   ngOnInit() {
-
-    this.expenses = Observable
-      .combineLatest(this.expenseService.getOtherExpenses(), this.expenseService.getOwnExpenses())
-      .map(([own, other]) => [...own, ...other]
-        .sort((e1, e2) => e2.date.getMilliseconds() - e1.date.getMilliseconds()))
-      .catch(e => {
-        this.messagesService.error(e.message);
-        return [];
-      })
-
-    this.facebookService.getFriends()
-      .then(friends => this.friends = friends)
-      .catch(e => this.messageService.error(e.message));
+    this.expenseService.getAllExpenses().subscribe(expenses => this.expenses = expenses,
+                                                   err => this.messageService.error(err.message))
+    
+    this.facebookService.getFriends().subscribe(friends => this.friends = friends,
+                                                err => this.messageService.error(err.message) )
   }
 
 

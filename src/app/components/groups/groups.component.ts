@@ -14,7 +14,7 @@ import FacebookUser from '../../model/facebook-user';
 })
 export class GroupsComponent implements OnInit {
 
-  groups: Observable<Group[]>;
+  groups: Group[] = [];
   friends: FacebookUser[] = [];
   user = this.afAuth.auth.currentUser.providerData[0];
 
@@ -26,15 +26,11 @@ export class GroupsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.groups = this.groupService.getGroups()
-      .catch(e => {
-        this.messagesService.error(e.message);
-        return [];
-      })
+    this.groupService.getGroups().subscribe(groups => this.groups = groups,
+                                            err => this.messagesService.error(err.message))
 
-    this.facebookService.getFriends()
-      .then(friends => this.friends = friends)
-      .catch(e => this.messageService.error(e.message));
+    this.facebookService.getFriends().subscribe(friends => this.friends = friends,
+                                                err => this.messageService.error(err.message));
   }
 
 
