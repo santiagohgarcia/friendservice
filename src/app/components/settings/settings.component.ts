@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { UserService } from '../../services/user.service';
+import { Router, ActivatedRoute, Params } from '@angular/router';
 
 @Component({
   selector: 'app-settings',
@@ -9,9 +10,14 @@ import { UserService } from '../../services/user.service';
 })
 export class SettingsComponent implements OnInit {
 
-  constructor(private userService: UserService) { }
+  constructor(private userService: UserService,
+    private activatedRoute: ActivatedRoute) { }
 
   ngOnInit() {
+    // subscribe to router event
+    this.activatedRoute.queryParams.subscribe((params: Params) => {
+      const code = params['code'];
+    });
   }
 
   get user() {

@@ -32,7 +32,8 @@ const routes: Routes = [
   { path: 'groups/:id', component: GroupDetailComponent },
   {
     path: 'settings', component: HomeComponent,
-    children: [{ path: '', component: SettingsComponent, pathMatch: 'full' }]
+    children: [{ path: '', component: SettingsComponent, pathMatch: 'full' },
+    { path: 'acceptMercadoPago', component: SettingsComponent, pathMatch: 'full' }]
   },
 ];
 

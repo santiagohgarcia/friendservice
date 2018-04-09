@@ -33,6 +33,7 @@ import { SelectPaymentMethodDialogComponent } from './components/select-payment-
 import { AuthService } from './services/auth.service';
 import { SettingsComponent } from './components/settings/settings.component';
 import { UserService } from './services/user.service';
+import { CommonModule } from '@angular/common';  
 
 import {
   MatAutocompleteModule,
@@ -131,6 +132,7 @@ export class MaterialModule { }
     SelectPaymentMethodDialogComponent
   ],
   imports: [
+    CommonModule,
     BrowserModule,
     BrowserAnimationsModule,
     FormsModule,
