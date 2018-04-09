@@ -1,7 +1,7 @@
 <div *ngIf="!expenses">
     <mat-progress-bar mode="indeterminate" color="accent"></mat-progress-bar>
 </div>
-<app-expense-card *ngFor="let expense of expenses" [expense]="expense" class="card">
+<app-expense-card *ngFor="let expense of expenses" [expense]="expense" >
 </app-expense-card>
 <a mat-fab color="primary" routerLink="/expenses/new" class="fab">
     <mat-icon>add</mat-icon>

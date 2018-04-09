@@ -11,6 +11,7 @@ import { FacebookService } from '../../services/facebook.service';
 import { MessagesService } from '../../services/messages.service';
 import { GroupsService } from '../../services/groups.service';
 import { startWith, map } from 'rxjs/operators';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-group-detail',
@@ -22,12 +23,9 @@ export class GroupDetailComponent {
   @ViewChild('chipList') chiplist: MatChipList;
 
   loading: boolean = true;
-  friends: FacebookUser[] = [];
   filteredFriends: Observable<FacebookUser[]>;
   formattedAmount: String = '';
   saveFunction;
-
-  creator = this.afAuth.auth.currentUser.providerData[0];
 
   group: Group = InitialGroup(this.creator.uid);
 
@@ -46,6 +44,7 @@ export class GroupDetailComponent {
     private afAuth: AngularFireAuth,
     private groupService: GroupsService,
     private facebookService: FacebookService,
+    private authService: AuthService,
     private messageService: MessagesService) {
 
   }
@@ -53,6 +52,10 @@ export class GroupDetailComponent {
   ngAfterViewInit(): void {
     this.getGroup();
     this.getFriends();
+  }
+
+  get creator(){
+    return this.authService.user
   }
 
   async getGroup() {
@@ -75,8 +78,6 @@ export class GroupDetailComponent {
       .pipe(
         startWith(''),
         map(val => this.filter(val)));
-    this.facebookService.getFriends().subscribe(friends => this.friends = friends,
-      err => this.messageService.error(err.message));
   }
 
   filter(val: string): FacebookUser[] {
@@ -124,6 +125,10 @@ export class GroupDetailComponent {
     } else {
       return this.friends.find(f => f.id === id);
     }
+  }
+
+  get friends() {
+    return this.facebookService.getFriends()
   }
 
 }

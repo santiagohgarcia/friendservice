@@ -30,6 +30,9 @@ import { ExpenseCardComponent } from './components/expenses/expense-card/expense
 import { PersonCardComponent } from './components/persons/person-card/person-card.component';
 import { ConfirmDeleteDialogComponent } from './components/confirm-delete-dialog/confirm-delete-dialog.component';
 import { SelectPaymentMethodDialogComponent } from './components/select-payment-method-dialog/select-payment-method-dialog.component';
+import { AuthService } from './services/auth.service';
+import { SettingsComponent } from './components/settings/settings.component';
+import { UserService } from './services/user.service';
 
 import {
   MatAutocompleteModule,
@@ -65,7 +68,6 @@ import {
   MatStepperModule,
   MAT_DATE_LOCALE,
 } from '@angular/material';
-
 
 @NgModule({
   exports: [
@@ -121,7 +123,8 @@ export class MaterialModule { }
     ExpenseCardComponent,
     PersonCardComponent,
     ConfirmDeleteDialogComponent,
-    SelectPaymentMethodDialogComponent
+    SelectPaymentMethodDialogComponent,
+    SettingsComponent
   ],
   entryComponents: [
     ConfirmDeleteDialogComponent,
@@ -146,7 +149,9 @@ export class MaterialModule { }
     ExpenseService,
     FacebookService,
     MessagesService,
-    GroupsService],
+    GroupsService,
+    AuthService,
+    UserService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

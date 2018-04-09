@@ -6,6 +6,7 @@ import { FacebookService } from '../../services/facebook.service';
 import { Observable } from 'rxjs/Observable';
 import { Group } from '../../model/group';
 import FacebookUser from '../../model/facebook-user';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-groups',
@@ -15,40 +16,34 @@ import FacebookUser from '../../model/facebook-user';
 export class GroupsComponent implements OnInit {
 
   groups: Group[] = [];
-  friends: FacebookUser[] = [];
-  user = this.afAuth.auth.currentUser.providerData[0];
 
   constructor(private groupService: GroupsService,
     private messagesService: MessagesService,
-    private afAuth: AngularFireAuth,
     private facebookService: FacebookService,
+    private authService: AuthService,
     private messageService: MessagesService) {
   }
 
   ngOnInit() {
     this.groupService.getGroups().subscribe(groups => this.groups = groups,
                                             err => this.messagesService.error(err.message))
-
-    this.facebookService.getFriends().subscribe(friends => this.friends = friends,
-                                                err => this.messageService.error(err.message));
   }
 
+  get user(){
+    return this.authService.user
+  }
 
-  getFbInfo(id: string): FacebookUser {
-    if (id === this.user.uid) {
-      return {
-        id: this.user.uid,
-        name: this.user.displayName,
-        picture: this.user.photoURL
-      } as FacebookUser
-    } else {
-      return this.friends.find(f => f.id === id);
-    }
+  get friends(){
+    return this.facebookService.getFriends();
+  }
+
+  fbInfo(id: string): FacebookUser {
+    return this.facebookService.getFbInfo(id)
   }
 
   getUsersName(group: Group) {
     return group.users
-      .map(u => this.getFbInfo(u).name)
+      .map(u => this.fbInfo(u).name)
       .join(", ")
   }
 

@@ -1,0 +1,10 @@
+<mat-card class="card">
+  <mat-card-header>
+    <mat-slide-toggle color="primary" (change)="acceptMP($event)" [(ngModel)]="isAcceptingMP" [(checked)]="isAcceptingMP">
+      {{ isAcceptingMP ? 'You are accepting payments by MercadoPago' : 'You are not accepting payments by Mercadopago' }}
+    </mat-slide-toggle>
+  </mat-card-header>
+  <mat-card-content>
+
+  </mat-card-content>
+</mat-card>

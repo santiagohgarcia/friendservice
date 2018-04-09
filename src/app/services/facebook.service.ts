@@ -7,41 +7,45 @@ import { Expense } from '../model/expense';
 import 'rxjs/add/operator/elementAt';
 import { UserInfo } from 'firebase/app';
 import { AngularFirestore } from 'angularfire2/firestore';
+import { AuthService } from './auth.service';
 @Injectable()
 export class FacebookService {
 
-  user = this.afAuth.auth.currentUser.providerData[0];
-
-  private friends: Observable<FacebookUser[]> = this.loadFriends();
+  private friends: FacebookUser[]
 
   constructor(private afAuth: AngularFireAuth,
+    private authService: AuthService,
     private http: HttpClient) {
+    this.loadFriends()
   }
 
-  private loadFriends(): Observable<FacebookUser[]> {
-    return this.http.get('https://graph.facebook.com/v2.12/' + this.user.uid +
-      '/friends?access_token=' +
-      localStorage.getItem('facebookToken') +
-      '&fields=cover,name&limit=10')
+  get user() { return this.authService.user }
+
+  get facebookToken() { return this.authService.facebookToken }
+
+  private loadFriends(): void {
+    this.http.get(`https://graph.facebook.com/v2.12/me/friends?
+                   access_token=${this.facebookToken}&fields=picture,name`)
       .map(facebookFriend => facebookFriend['data']
-        .map(data => this.createUser(data.id, data.name, data.cover.source)))
-      .first()
+        .map(data => this.createUser(data.id, data.name, data.picture.data.url)))
+      .subscribe(friends => this.friends = friends,
+                 err => console.log(err))
   }
 
-  getFriends(): Observable<FacebookUser[]> {
-    return this.friends
-  }
-
-  getUserInfo(id: string): Observable<FacebookUser> {
-    if (id === this.user.uid) {
-      return Observable.of({
-            id: this.user.uid,
-            name: this.user.displayName,
-            picture: this.user.photoURL
-      } as FacebookUser)
+  getFbInfo(id: string): FacebookUser {
+    if (this.user.uid === id) {
+      return {
+        id: this.user.uid,
+        name: this.user.displayName,
+        picture: this.user.photoURL
+      } as FacebookUser
     } else {
-      return this.friends.map(users => users.find(user => user.id === id))
+      return this.friends.find(u => u.id === id)
     }
+  }
+
+  getFriends(): FacebookUser[] {
+    return this.friends
   }
 
   private createUser(id, name, picture) {

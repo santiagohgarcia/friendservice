@@ -9,6 +9,7 @@ import { ConfirmDeleteDialogComponent } from '../../confirm-delete-dialog/confir
 import { SelectPaymentMethodDialogComponent } from '../../select-payment-method-dialog/select-payment-method-dialog.component';
 import { FacebookService } from '../../../services/facebook.service';
 import { MessagesService } from '../../../services/messages.service';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-expense-card',
@@ -18,15 +19,18 @@ import { MessagesService } from '../../../services/messages.service';
 export class ExpenseCardComponent implements OnInit {
 
   @Input() expense: Expense;
-  user = this.afAuth.auth.currentUser.providerData[0];
 
   constructor(private expenseService: ExpenseService,
     private facebookService: FacebookService,
+    private authService: AuthService,
     private messagesService: MessagesService,
-    private afAuth: AngularFireAuth,
     public dialog: MatDialog) { }
 
   ngOnInit() {
+  }
+
+  get user(){
+    return this.authService.user
   }
 
   get isMyExpense(): boolean {
@@ -63,16 +67,16 @@ export class ExpenseCardComponent implements OnInit {
     return this.expense.users.length
   }
 
-  fbInfo(id: string): FacebookUser {
-    return this.friends.find(u => u.id === id)
+  get friends() {
+    return this.facebookService.getFriends()
   }
 
   get myFbInfo(): FacebookUser {
-    return {
-      id: this.user.uid,
-      name: this.user.displayName,
-      picture: this.user.photoURL
-    } as FacebookUser
+    return this.facebookService.getFbInfo(this.user.uid)
+  }
+
+  fbInfo(id: string): FacebookUser {
+    return this.facebookService.getFbInfo(id)
   }
 
   pay() {

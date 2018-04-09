@@ -30,12 +30,16 @@ export class PersonCardComponent implements OnInit {
   ngOnInit() { 
   }
 
-  getUserInfo(id: string): Observable<FacebookUser> {
-    return this.facebookService.getUserInfo(id);
+  get friends() {
+    return this.facebookService.getFriends()
   }
 
-  getUserDebt(expense: Expense,userId: string): ExpenseUser {
-    return expense.users.find( u => u.id === userId )
+  fbInfo(id: string){
+    return this.facebookService.getFbInfo(id)
+  }
+
+  getUserDebt(expense: Expense): number {
+    return expense.users.find( u => u.id === this.relation.userId ).individualAmount
   }
 
   pay(){

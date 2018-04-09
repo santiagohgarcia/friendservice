@@ -1,6 +1,6 @@
-<mat-card class="card">
+<mat-card class="card" *ngIf="expense && friends">
   <mat-card-header>
-    <img mat-card-avatar src="{{fbInfo(expense.creator)?.picture}}" />
+    <img mat-card-avatar src="{{fbInfo(expense.creator).picture}}" />
     <mat-card-title class="header-title">{{expense.title | titlecase}}</mat-card-title>
 
     <mat-card-subtitle class="content-container">
@@ -28,13 +28,13 @@
 
       <!-- Other Expense -> I owe XXX ARS NNNN -->
       <div class="label-container" *ngIf="!isMyExpense && !iPayed">
-        <label class="lose content-label">I owe {{fbInfo(expense.creator)?.name}} </label>
+        <label class="lose content-label">I owe {{fbInfo(expense.creator).name}} </label>
         <span class="lose content-value">ARS {{myDebt | number:'1.2-2'}}</span>
       </div>
 
       <!-- Other Expense -> I payed XXX ARS NNNN -->
       <div class="label-container" *ngIf="!isMyExpense && iPayed">
-        <label class="win content-label">I payed {{fbInfo(expense.creator)?.name}} </label>
+        <label class="win content-label">I payed {{fbInfo(expense.creator).name}} </label>
         <span class="content-value win">ARS {{myDebt | number:'1.2-2'}}</span>
       </div>
 
@@ -69,11 +69,11 @@
         <div class="user-card-container">
           <mat-card *ngFor="let user of expense.users" class="user-card">
             <mat-card-header>
-              <img mat-card-avatar src="{{myFbInfo.picture}}">
-              <mat-card-title class="user-card-title">{{myFbInfo.name}}{{(user.id === expense.creator) ? ' (Creator)' : ''}}</mat-card-title>
+              <img mat-card-avatar src="{{fbInfo(user.id).picture}}">
+              <mat-card-title class="user-card-title">{{fbInfo(user.id).name}}{{(user.id === expense.creator) ? ' (Creator)' : ''}}</mat-card-title>
               <mat-card-subtitle *ngIf="user.id === expense.creator" class="win subtitle">Payed ARS {{user.individualAmount | number:'1.2-2'}}</mat-card-subtitle>
-              <mat-card-subtitle *ngIf="user.payed && user.id !== expense.creator" class="win subtitle">Payed ARS {{user.individualAmount | number:'1.2-2'}} to {{fbInfo(expense.creator)?.name}}</mat-card-subtitle>
-              <mat-card-subtitle *ngIf="!user.payed && user.id !== expense.creator" class="lose subtitle">Owes ARS {{user.individualAmount | number:'1.2-2'}} to {{fbInfo(expense.creator)?.name}}</mat-card-subtitle>
+              <mat-card-subtitle *ngIf="user.payed && user.id !== expense.creator" class="win subtitle">Payed ARS {{user.individualAmount | number:'1.2-2'}} to {{fbInfo(expense.creator).name}}</mat-card-subtitle>
+              <mat-card-subtitle *ngIf="!user.payed && user.id !== expense.creator" class="lose subtitle">Owes ARS {{user.individualAmount | number:'1.2-2'}} to {{fbInfo(expense.creator).name}}</mat-card-subtitle>
             </mat-card-header>
           </mat-card>
         </div>

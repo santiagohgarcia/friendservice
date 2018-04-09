@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -13,10 +14,9 @@ import { Observable } from 'rxjs/Observable';
 
 export class HomeComponent implements OnInit {
   @ViewChild('sidenav') sidenav: MatSidenav;
-  user = this.afAuth.auth.currentUser.providerData[0];
 
   constructor(private router: Router,
-    private afAuth: AngularFireAuth) {
+    private authService: AuthService) {
   }
 
   ngOnInit() {
@@ -27,6 +27,10 @@ export class HomeComponent implements OnInit {
       .debounceTime(200)
     $resizeEvent.subscribe(data => this.handleWidth(data))
     this.handleWidth(document.documentElement.clientWidth)
+  }
+
+  get user(){
+   return this.authService.user
   }
 
   handleWidth(size: number) {
@@ -43,13 +47,14 @@ export class HomeComponent implements OnInit {
     this.sidenav.close();
   }
 
-  logout() {
-    this.afAuth.auth.signOut();
-  }
-
   navTo(path: string) {
     this.router.navigate([path])
   }
+
+  logout(){
+    this.authService.logout()
+  }
+
 
 }
 

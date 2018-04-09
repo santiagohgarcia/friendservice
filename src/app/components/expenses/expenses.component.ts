@@ -17,23 +17,16 @@ import { ExpenseUser } from '../../model/expense-user';
   styleUrls: ['./expenses.component.css']
 })
 export class ExpensesComponent implements OnInit {
+  
   expenses: Expense[] = [];
-  friends: FacebookUser[] = [];
-  user = this.afAuth.auth.currentUser.providerData[0];
 
   constructor(private expenseService: ExpenseService,
-    private messagesService: MessagesService,
-    private afAuth: AngularFireAuth,
-    private facebookService: FacebookService,
-    private messageService: MessagesService) {
+    private messagesService: MessagesService) {
   }
 
   ngOnInit() {
     this.expenseService.getAllExpenses().subscribe(expenses => this.expenses = expenses,
-                                                   err => this.messageService.error(err.message))
-    
-    this.facebookService.getFriends().subscribe(friends => this.friends = friends,
-                                                err => this.messageService.error(err.message) )
+                                                   err => this.messagesService.error(err.message))
   }
 
 

@@ -1,14 +1,30 @@
 <mat-sidenav-container class="example-container">
     <mat-sidenav #sidenav class="sidenav">
 
-        <mat-toolbar color="primary">
+        <mat-toolbar color="primary" *ngIf="user">
             <mat-toolbar-row>
-                <button mat-button class="user-button">
+                <button mat-button [matMenuTriggerFor]="menu" class="user-button">
                     <span>{{user.displayName}}</span>
                     <img mat-card-avatar class="user-avatar" src="{{user.photoURL}}" />
                 </button>
+                <mat-menu #menu="matMenu">
+                    <button mat-menu-item (click)="navTo('/settings')">
+                        <mat-icon>settings</mat-icon>
+                        <span>Settings</span>
+                    </button>
+                    <!--<div mat-menu-item >
+                        <mat-slide-toggle color="primary">Allow payments by MercadoPago</mat-slide-toggle>
+                    </div>
+                     (change)="rememberMe()" [(ngModel)]="rememberMeChecked" [(checked)]="rememberMeChecked" -->
+                    <button mat-menu-item (click)="logout()">
+                        <mat-icon color="warn">highlight_off</mat-icon>
+                        <span class="logout">Log Out</span>
+                    </button>
+                </mat-menu>
             </mat-toolbar-row>
         </mat-toolbar>
+
+
 
         <mat-nav-list class="list">
             <h3 mat-subheader>Navigate to</h3>
@@ -37,12 +53,10 @@
                     <mat-icon>menu</mat-icon>
                 </button>
                 <span class="example-spacer"></span>
-                <button mat-icon-button class="invite-friends-button"><mat-icon svgIcon="facebook_icon"></mat-icon>Invite Friends</button>
-             <!--    <button mat-icon-button class="logout" (click)="logout()">
-                    <mat-icon>highlight_off</mat-icon>
-                </button> -->
+                <button mat-icon-button class="invite-friends-button">
+                    <mat-icon svgIcon="facebook_icon"></mat-icon>Invite Friends</button>
             </mat-toolbar-row>
         </mat-toolbar>
-        <router-outlet class="cards-container"></router-outlet>
+        <router-outlet class="cards-container" *ngIf="user"></router-outlet>
     </mat-sidenav-content>
 </mat-sidenav-container>

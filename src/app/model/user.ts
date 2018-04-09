@@ -1,3 +1,5 @@
 export default interface User {
-    id: string
+    id: string,
+    mercadopago: any,
+    facebookToken: string
 }

@@ -20,6 +20,7 @@ import { GroupsService } from '../../services/groups.service';
 import { Group } from '../../model/group';
 import { ConfirmDeleteDialogComponent } from '../confirm-delete-dialog/confirm-delete-dialog.component';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-expense-detail',
@@ -31,14 +32,11 @@ export class ExpenseDetailComponent {
   @ViewChild('chipList') chiplist: MatChipList;
 
   loading: boolean = true;
-  friends: FacebookUser[] = [];
   filteredFriends: FacebookUser[];
   groups: Group[];
   filteredGroups: Group[];
   formattedAmount: String = '';
   saveFunction;
-
-  creator = this.afAuth.auth.currentUser.providerData[0];
 
   expense: Expense = InitialExpense(this.creator.uid);
 
@@ -65,6 +63,7 @@ export class ExpenseDetailComponent {
     private facebookService: FacebookService,
     private groupService: GroupsService,
     private messageService: MessagesService,
+    private authService: AuthService,
     public dialog: MatDialog) {
 
   }
@@ -73,6 +72,10 @@ export class ExpenseDetailComponent {
     this.getExpense();
     this.getFriends();
     this.getGroups();
+  }
+
+  get creator(){
+    return this.authService.user
   }
 
   async getExpense() {
@@ -94,8 +97,6 @@ export class ExpenseDetailComponent {
 
   async getFriends() {
     this.friendsCtrl.valueChanges.subscribe(val => this.filterFriends(val))
-    this.facebookService.getFriends().subscribe( friends => this.filteredFriends = this.friends = friends,
-                                                 err => this.messageService.error(err.message) )
   }
 
   getGroups() {
@@ -200,6 +201,10 @@ export class ExpenseDetailComponent {
     return group.users
       .map(u => this.getFbInfo(u).name)
       .join(", ")
+  }
+
+  get friends() {
+    return this.facebookService.getFriends()
   }
 }
 

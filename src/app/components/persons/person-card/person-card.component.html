@@ -1,7 +1,7 @@
-<mat-card class="card">
+<mat-card class="card" *ngIf="relation && friends">
     <mat-card-header>
-        <img mat-card-avatar src="{{(getUserInfo(relation.userId) | async).picture}}" />
-        <mat-card-title class="header-title">{{(getUserInfo(relation.userId) | async).name | titlecase}}</mat-card-title>
+        <img mat-card-avatar src="{{fbInfo(relation.userId).picture}}" />
+        <mat-card-title class="header-title">{{fbInfo(relation.userId).name | titlecase}}</mat-card-title>
         <mat-card-subtitle class="subtitle">
             <div *ngIf="relation.owesMe > relation.iOwe">
                 <label class="lose content-label">Owes me </label>
@@ -30,11 +30,10 @@
                 <div class="exp-card-container">
                     <mat-card *ngFor="let expense of relation.pendingExpenses" class="exp-card">
                         <mat-card-header>
-                            <img mat-card-avatar src="{{(getUserInfo(expense.creator) | async ).picture}}">
+                            <img mat-card-avatar src="{{fbInfo(expense.creator).picture}}">
                             <mat-card-title class="exp-card-title">{{expense.title | titlecase}}</mat-card-title>
-                            <mat-card-subtitle *ngIf="user.uid === expense.creator" class="lose subtitle">{{(getUserInfo(relation.userId) | async).name}} owes you ARS {{(getUserDebt(expense,relation.userId) | async).individualAmount
-                                | number:'1.2-2'}}</mat-card-subtitle>
-                            <mat-card-subtitle *ngIf="user.uid !== expense.creator" class="lose subtitle">You owe ARS {{getUserDebt(expense,user.uid).individualAmount | number:'1.2-2'}} to {{(getUserInfo(relation.userId) | async).name}}</mat-card-subtitle>
+                            <mat-card-subtitle *ngIf="user.uid === expense.creator" class="lose subtitle">{{fbInfo(relation.userId).name}} owes you ARS {{getUserDebt(expense) | number:'1.2-2'}}</mat-card-subtitle>
+                            <mat-card-subtitle *ngIf="user.uid !== expense.creator" class="lose subtitle">You owe ARS {{getUserDebt(expense) | number:'1.2-2'}} to {{fbInfo(relation.userId).name}}</mat-card-subtitle>
                         </mat-card-header>
                     </mat-card>
                 </div>
@@ -49,11 +48,10 @@
                 <div class="exp-card-container">
                     <mat-card *ngFor="let expense of relation.payedExpenses" class="exp-card">
                         <mat-card-header>
-                            <img mat-card-avatar src="{{(getUserInfo(expense.creator) | async).picture}}">
+                            <img mat-card-avatar src="{{fbInfo(expense.creator).picture}}">
                             <mat-card-title class="exp-card-title">{{expense.title | titlecase}}</mat-card-title>
-                            <mat-card-subtitle *ngIf="user.uid === expense.creator" class="win subtitle">{{(getUserInfo(relation.userId) | async).name}} payed you ARS {{getUserDebt(expense,relation.userId).individualAmount
-                                | number:'1.2-2'}}</mat-card-subtitle>
-                            <mat-card-subtitle *ngIf="user.uid !== expense.creator" class="win subtitle">You payed ARS {{getUserDebt(expense,user.uid).individualAmount | number:'1.2-2'}} to {{(getUserInfo(relation.userId) | async).name}}</mat-card-subtitle>
+                            <mat-card-subtitle *ngIf="user.uid === expense.creator" class="win subtitle">{{fbInfo(relation.userId).name}} payed you ARS {{getUserDebt(expense) | number:'1.2-2'}}</mat-card-subtitle>
+                            <mat-card-subtitle *ngIf="user.uid !== expense.creator" class="win subtitle">You payed ARS {{getUserDebt(expense) | number:'1.2-2'}} to {{fbInfo(relation.userId).name}}</mat-card-subtitle>
                         </mat-card-header>
                     </mat-card>
                 </div>

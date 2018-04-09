@@ -78,5 +78,11 @@
   width: fit-content
 }
 
+.mercado-slide-toggle{
+  width: fit-content;
+}
 
+::ng-deep .mat-menu-panel{
+  overflow: unset !important;
+}
 
