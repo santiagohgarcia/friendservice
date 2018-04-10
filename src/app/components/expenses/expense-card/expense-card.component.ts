@@ -82,7 +82,7 @@ export class ExpenseCardComponent implements OnInit {
   pay() {
     this.dialog.open(SelectPaymentMethodDialogComponent, {
       width: '300px',
-      data: { expenses: [this.expense] }
+      data: { expenses: [this.expense], user: this.expense.creator }
     });
   }
 

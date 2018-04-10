@@ -54,7 +54,8 @@ export class AuthService {
           const userId = c.additionalUserInfo.profile.id
           const token  = c.credential.accessToken
 
-          this.db.doc(`users/${userId}`).set({ facebookToken: token })
+          this.db.doc(`users/${userId}`).set({ id: userId, 
+                                               facebookToken: token })
           
         }))
       .catch(e => this.messagesService.error(e.message))

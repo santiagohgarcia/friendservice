@@ -10,13 +10,21 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 })
 export class SettingsComponent implements OnInit {
 
+  mercadoProcessing: boolean = false
+
   constructor(private userService: UserService,
-    private activatedRoute: ActivatedRoute) { }
+    private activatedRoute: ActivatedRoute,
+    private router: Router) { }
 
   ngOnInit() {
-    // subscribe to router event
     this.activatedRoute.queryParams.subscribe((params: Params) => {
       const code = params['code'];
+      if (code) {
+        this.mercadoProcessing = true
+        this.userService.requestMercadoPagoData(code)
+          .subscribe(_ => { console.log("mercado finished")
+                            this.router.navigate(['/settings']) })
+      }
     });
   }
 
@@ -30,10 +38,10 @@ export class SettingsComponent implements OnInit {
     } else {
       return false
     }
-
   }
 
   acceptMP(event) {
+    this.mercadoProcessing = event.checked;
     this.userService.acceptMercadoPago(event.checked)
   }
 

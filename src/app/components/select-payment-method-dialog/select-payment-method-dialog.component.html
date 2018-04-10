@@ -1,8 +1,7 @@
 <h1 mat-dialog-title>You are about to pay {{data.expenses.length}} expenses</h1>
 <div mat-dialog-content>
-  {{getExpensesDescription()}}
 </div>
-<div mat-dialog-actions>
-  <button mat-raised-button color="primary" cdkFocusInitial>MercadoPago</button>
+<div mat-dialog-actions *ngIf="user">
+  <button mat-raised-button *ngIf="isAcceptingMP" color="primary" cdkFocusInitial (click)="payWithMercadoPago()">MercadoPago</button>
   <button mat-raised-button class="cash-button" (click)="markAsPayed()">Cash</button>
 </div>
