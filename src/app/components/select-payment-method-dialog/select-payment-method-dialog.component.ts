@@ -55,7 +55,7 @@ export class SelectPaymentMethodDialogComponent {
 
   payWithMercadoPago() {
     this.userService.requestMercadoPagoPayment(this.data.expenses)
-      .subscribe( checkoutLink => window.location.href = checkoutLink )
+      .subscribe( checkoutLink => window.location.href = checkoutLink.sandbox_init_point )
   }
 
 }

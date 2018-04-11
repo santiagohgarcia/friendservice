@@ -11,7 +11,7 @@ import { switchMap } from 'rxjs/operators';
 import { Expense } from '../model/expense';
 @Injectable()
 export class UserService {
-
+ 
   user: User
 
   constructor(private authService: AuthService,
@@ -28,10 +28,7 @@ export class UserService {
 
   acceptMercadoPago(value: boolean) {
     if (value) {
-      const url = this.sanitizer.bypassSecurityTrustResourceUrl(
-        "https://auth.mercadopago.com.br/authorization?client_id=5813011101711907&response_type=code&platform_id=mp&redirect_uri=http://localhost:4200/settings/acceptMercadoPago"
-      );
-      window.location.href = "https://auth.mercadopago.com.br/authorization?client_id=5813011101711907&response_type=code&platform_id=mp&redirect_uri=http://localhost:4200/settings/acceptMercadoPago";
+      window.location.href = "https://auth.mercadopago.com.ar/authorization?client_id=5813011101711907&response_type=code&platform_id=mp&redirect_uri=http://localhost:4200/settings/acceptMercadoPago";
     } else {
       this.db.doc<User>(`/users/${this.authService.user.uid}`).update({ mercadopago: null })
         .catch(err => this.messagesService.error(err.message))
@@ -42,7 +39,8 @@ export class UserService {
     const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded')
       .set('accept', 'application/json')
     const body = new HttpParams()
-      .set('client_secret', 'TEST-5813011101711907-041008-2fcab659fe515b838e41a23cb806574a-312636358')
+      .set('client_id','5813011101711907')
+      .set('client_secret', 'tKV3lnpU9A7kB4QWb97c7xROHS9NskHM')
       .set('grant_type', 'authorization_code')
       .set('code', authCode)
       .set('redirect_uri', 'http://localhost:4200/settings/acceptMercadoPago')
@@ -50,7 +48,7 @@ export class UserService {
       .pipe(switchMap(mpData => this.db.doc(`users/${this.authService.user.uid}`).update({ mercadopago: mpData })))
   }
 
-  requestMercadoPagoPayment(expenses: Expense[]): Observable<string> {
+  requestMercadoPagoPayment(expenses: Expense[]): Observable<any> {
     const headers = new HttpHeaders().set('Content-Type', 'application/json')
       .set('accept', 'application/json')
 
@@ -75,9 +73,8 @@ export class UserService {
         return actions.payload.data().mercadopago.access_token
       })
       .pipe(
-        switchMap(sellerAT => this.http.post<any>("https://api.mercadolibre.com/checkout/preferences?access_token=" + sellerAT, body.toString(), { headers: headers })),
-        switchMap(checkout => checkout.init_point as string)
-      )
+        switchMap(sellerAT => this.http.post<any>("https://api.mercadolibre.com/checkout/preferences?access_token=" + sellerAT, body, { headers: headers })),
+      ) 
   }
 
 }
